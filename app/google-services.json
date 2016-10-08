@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "473246512720",
+    "firebase_url": "https://kdu-survey-system.firebaseio.com",
+    "project_id": "kdu-survey-system",
+    "storage_bucket": "kdu-survey-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473246512720:android:14c2e81fd2a0d04d",
+        "android_client_info": {
+          "package_name": "com.point2points.kdusurveysystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473246512720-ufbc85shtr10r7t4qkv6rc3a9dq457i0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASkOam_ivc2U9ZULR7wAUFj6y0_DjauYU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffffff</color>
+    <color name="dark_kdu_blue">#01517d</color>
+    <color name="kdu_blue">#0173b1</color>
+    <color name="grey">#d3d5d7</color>
+    <color name="sky_blue">#78b5ef</color>
+    <color name="blue">	#4FA2C0</color>
+    <color name="green">#28a92b</color>
+    <color name="light_blue">#e6e6ff</color>
+    <color name="black">#000000</color>
+    <color name="dark_grey_blue">#296E86</color>
+    <color name="dark_grey_blue_extra">#264e6e</color>
+    <color name="dark_purple_blue">#21215f</color>
+    <color name="emerald">#5CC3B5</color>
+    <color name="dark_emerald">#18caa7</color>
+    <color name="light_red">#FC5A73</color>
+    <color name="dark_green">#157F7F</color>
+    <color name="dark_blue">#1065cc</color>
+    <color name="yellow_gold">#f9ab35</color>
+    <color name="light_purple">#BF538E</color>
+
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_300">#E0E0E0</color>
+
+    //26 colours for alphabet icon
+    <color name="a_red">#ff0400</color>
+    <color name="b_orange">#ff8800</color>
+    <color name="c_yellow">#ffdd00</color>
+    <color name="d_yellow_green">#bfeb00</color>
+    <color name="e_green">#59ff00</color>
+    <color name="f_emerald">#00ff7b</color>
+    <color name="g_aqua">#00eede</color>\
+    <color name="h_blue">#0095ff</color>
+    <color name="i_dark_blue">#0015ff</color>
+    <color name="j_purple">#a200ed</color>
+    <color name="k_pink">#ff12ef</color>
+    <color name="l_purple_pink">#e500a1</color>
+    <color name="m_light_red">#ff655c</color>
+    <color name="n_gold">#ffcc00</color>
+    <color name="o_blood_red">#b80c0c</color>
+    <color name="p_light_brown">#b8590c</color>
+    <color name="q_dark_green">#27850a</color>
+    <color name="r_light_purple">#ae81f2</color>
+    <color name="s_sky_blue">#97a0ff</color>
+    <color name="t_dark_purple">#642f95</color>
+    <color name="u_dark_pink">#ce40c2</color>
+    <color name="v_light_pink">#f584c8</color>
+    <color name="w_dark_deep_blue">#01517d</color>
+    <color name="x_grey">#d5d5d5</color>
+    <color name="y_light_orange">#ffc756</color>
+    <color name="z_dark_aqua">#239fa5</color>
+
+</resources>
