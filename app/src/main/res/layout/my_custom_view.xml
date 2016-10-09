@@ -1,41 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
 
-    <ImageButton android:src="@drawable/ic_option"
-                 android:background="?attr/actionBarItemBackground"
-                 android:layout_width="?attr/actionBarSize"
-                 android:layout_height="match_parent"
-                 android:scaleType="centerInside"
-                 android:id="@+id/item_option"
-                 android:layout_alignParentLeft="true"
-                 android:layout_alignParentTop="true"/>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tToolbar"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:gravity="top|start"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+        <ImageButton android:src="@drawable/ic_option"
+                     android:background="?attr/actionBarItemBackground"
+                     android:layout_width="?attr/actionBarSize"
+                     android:layout_height="match_parent"
+                     android:scaleType="centerInside"
+                     android:id="@+id/menu_item_option"
+                />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="100"
+            />
 
     <ImageButton android:src="@drawable/ic_search"
                  android:background="?attr/actionBarItemBackground"
                  android:layout_width="?attr/actionBarSize"
                  android:layout_height="match_parent"
                  android:scaleType="centerInside"
-                 android:id="@+id/item_search"
-                 android:layout_alignParentRight="true"
-                 android:layout_alignParentTop="true"/>
+                 android:id="@+id/menu_item_search"
+                 android:layout_gravity="right"
+
+                 />
 
     <ImageButton android:src="@drawable/ic_sort"
                  android:background="?attr/actionBarItemBackground"
                  android:layout_width="?attr/actionBarSize"
                  android:layout_height="match_parent"
                  android:scaleType="centerInside"
-                 android:id="@+id/item_sort"
-                 android:layout_alignParentRight="true"
-                 android:layout_alignParentTop="true"/>
+                 android:id="@+id/menu_item_sort"
+                 android:layout_gravity="right"
+                 />
 
-    <ImageButton android:src="@drawable/ic_menu_add"
-                 android:background="?attr/actionBarItemBackground"
-                 android:layout_width="?attr/actionBarSize"
-                 android:layout_height="match_parent"
-                 android:scaleType="centerInside"
-                 android:id="@+id/item_add"
-                 android:layout_alignParentRight="true"
-                 android:layout_alignParentTop="true"/>
-</RelativeLayout>
+        <ImageButton android:src="@drawable/ic_menu_add"
+                     android:background="?attr/actionBarItemBackground"
+                     android:layout_width="?attr/actionBarSize"
+                     android:layout_height="match_parent"
+                     android:scaleType="centerInside"
+                     android:id="@+id/menu_item_add"
+                     android:layout_gravity="right"
+                     />
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>

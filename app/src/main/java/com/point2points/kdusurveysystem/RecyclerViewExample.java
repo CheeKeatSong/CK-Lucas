@@ -15,6 +15,7 @@ package com.point2points.kdusurveysystem;
         import android.view.MenuItem;
         import android.view.View;
         import android.widget.ImageButton;
+        import android.widget.Toast;
 
         import com.daimajia.swipe.util.Attributes;
         import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
@@ -41,7 +42,7 @@ public class RecyclerViewExample extends AppCompatActivity {
 
     private ArrayList<String> mDataSet;
 
-    private ActionMenuView amvMenu;
+    private ImageButton optionButton, sortButton, addButton, searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,48 @@ public class RecyclerViewExample extends AppCompatActivity {
 
         setContentView(R.layout.recycler_view);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle("RecyclerView");
+            }
+        }
+
+        optionButton = (ImageButton) findViewById(R.id.menu_item_option);
+        optionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        sortButton = (ImageButton) findViewById(R.id.menu_item_sort);
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        searchButton = (ImageButton) findViewById(R.id.menu_item_search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        addButton = (ImageButton) findViewById(R.id.menu_item_add);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Toolbar mToolBar = (Toolbar) findViewById(R.id.tToolbar);
+        setSupportActionBar(mToolBar);
+
 
         // Layout Managers:
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -94,9 +137,8 @@ public class RecyclerViewExample extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         return super.onOptionsItemSelected(item);
     }
 }
+
