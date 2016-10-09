@@ -13,4 +13,10 @@
     <string name="search">Search</string>
     <string name="option">Option</string>
 
+    <string-array name="sort_array">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Latest</item>
+        <item>Earliest</item>
+    </string-array>
 </resources>

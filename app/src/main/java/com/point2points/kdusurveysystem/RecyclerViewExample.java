@@ -14,7 +14,10 @@ package com.point2points.kdusurveysystem;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.AdapterView;
         import android.widget.ImageButton;
+        import android.widget.Spinner;
+        import android.widget.TextView;
         import android.widget.Toast;
 
         import com.daimajia.swipe.util.Attributes;
@@ -42,7 +45,8 @@ public class RecyclerViewExample extends AppCompatActivity {
 
     private ArrayList<String> mDataSet;
 
-    private ImageButton optionButton, sortButton, addButton, searchButton;
+    private ImageButton optionButton, addButton, searchButton;
+    private Spinner sortButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +69,34 @@ public class RecyclerViewExample extends AppCompatActivity {
             }
         });
 
-        sortButton = (ImageButton) findViewById(R.id.menu_item_sort);
-        sortButton.setOnClickListener(new View.OnClickListener() {
+        sortButton = (Spinner) findViewById(R.id.menu_item_sort);
+        sortButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                String sortType = String.valueOf(sortButton.getSelectedItem());
+                ((TextView)selectedItemView).setText(null);
+                ListSorter listSorter = new ListSorter();
+
+                if (sortType == "A-Z"){
+
+                }
+                else if(sortType == "Z-A"){
+
+                }
+                else if(sortType == "Latest"){
+
+                }
+                else if(sortType == "Earliest"){
+
+                }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
         });
 
         searchButton = (ImageButton) findViewById(R.id.menu_item_search);
@@ -127,7 +153,6 @@ public class RecyclerViewExample extends AppCompatActivity {
             // Could hide open views here if you wanted. //
         }
     };
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
