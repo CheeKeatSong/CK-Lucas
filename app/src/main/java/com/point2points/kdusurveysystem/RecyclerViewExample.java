@@ -2,19 +2,25 @@ package com.point2points.kdusurveysystem;
 
         import android.app.ActionBar;
         import android.app.Activity;
+        import android.content.DialogInterface;
+        import android.media.Image;
         import android.os.Build;
         import android.os.Bundle;
+        import android.support.v7.app.AlertDialog;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.ActionMenuView;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
         import android.support.v7.widget.Toolbar;
+        import android.text.InputType;
         import android.util.Log;
         import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
+        import android.view.MotionEvent;
         import android.view.View;
         import android.widget.AdapterView;
+        import android.widget.EditText;
         import android.widget.ImageButton;
         import android.widget.Spinner;
         import android.widget.TextView;
@@ -111,7 +117,57 @@ public class RecyclerViewExample extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+                LayoutInflater li = LayoutInflater.from(RecyclerViewExample.this);
+                View promptsView = li.inflate(R.layout.lecturer_prompt, null);
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(RecyclerViewExample.this);
+
+                alertDialogBuilder.setView(promptsView);
+                alertDialogBuilder.setTitle("CREATE A LECTURER INFO");
+
+                final EditText email = (EditText) promptsView.findViewById(R.id.lecturer_dialog_email);
+                final EditText password = (EditText) promptsView.findViewById(R.id.lecturer_dialog_password);
+                final EditText fullname = (EditText) promptsView.findViewById(R.id.lecturer_dialog_fullname);
+                final EditText username = (EditText) promptsView.findViewById(R.id.lecturer_dialog_username);
+
+                final ImageButton showpass = (ImageButton) promptsView.findViewById(R.id.lecturer_dialog_show_password);
+                showpass.setOnTouchListener(new View.OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        switch ( event.getAction() ) {
+                            case MotionEvent.ACTION_DOWN:
+                                password.setInputType(InputType.TYPE_CLASS_TEXT);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        final String inputEmail = email.getText().toString();
+                                        final String inputPassword = password.getText().toString();
+                                        final String inputFullName = fullname.getText().toString();
+                                        final String inputUsername = username.getText().toString();
+
+                                        Lecturer lecturer = new Lecturer();
+                                        lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername);
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 

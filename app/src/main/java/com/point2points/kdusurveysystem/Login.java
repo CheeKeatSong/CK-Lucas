@@ -2,12 +2,16 @@ package com.point2points.kdusurveysystem;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ public class Login extends Activity{
     private Button mLoginButton;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+    private ImageButton showpass;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,17 +50,26 @@ public class Login extends Activity{
         inputPassword = (EditText) findViewById(R.id.password_edit_text);
         mLoginButton = (Button)findViewById(R.id.login_button);
 
-        progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
+        showpass = (ImageButton) findViewById(R.id.login_show_password);
+        showpass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch ( event.getAction() ) {
+                    case MotionEvent.ACTION_DOWN:
+                        inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
 
-        mAuth = FirebaseAuth.getInstance();
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
 
         mLoginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
-                Intent i = new Intent(Login.this, RecyclerViewExample.class);
-                startActivity(i);
-                finish();
 
                 String email = inputEmailAddress.getText().toString();
                 final String password = inputPassword.getText().toString();

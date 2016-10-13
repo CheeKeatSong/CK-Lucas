@@ -70,6 +70,7 @@
             android:layout_gravity="center_horizontal"/>
 
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -83,13 +84,23 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:id="@+id/password_edit_text"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:layout_marginRight="30dp"
+                android:layout_weight="3"
+                android:contentDescription="@string/show_password"
+                android:src="@drawable/eye_sight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/login_show_password"
+                android:background="?attr/actionBarItemBackground"/>
 
         </LinearLayout>
 

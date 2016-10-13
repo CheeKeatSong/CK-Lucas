@@ -6,19 +6,22 @@ import java.util.UUID;
 
 public class Lecturer {
 
-    private UUID mID;
     private String emailAddress;
     private String password;
     private String fullName;
     private String username;
     private int point;
 
+    Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
+
     public Lecturer() {
     }
 
-    public Lecturer(String fullName, String username, int point) {
+    public Lecturer(String email, String password, String fullName, String username, int point) {
         this.fullName = fullName;
         this.username = username;
+        this.emailAddress = email;
+        this.password = password;
         this.point = point;
     }
 
@@ -46,15 +49,10 @@ public class Lecturer {
         this.point = point;
     }
 
-
-    public void createLecturer(String fullNameEntry, String usernameEntry) {
-
-        Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
-
-        Firebase lecturerRef = ref.child("user").child("lecturer");
-        Lecturer mLecturer = new Lecturer(fullNameEntry, usernameEntry, 0);
+    public void createLecturer(String emailEntry, String passwordEntry, String fullNameEntry, String usernameEntry) {
+        Firebase lecturerRef = ref.child("user/lecturer/");
+        Lecturer mLecturer = new Lecturer(emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0);
         lecturerRef.setValue(mLecturer);
-
     }
 
 }
