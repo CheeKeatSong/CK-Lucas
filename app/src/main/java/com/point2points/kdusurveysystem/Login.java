@@ -2,7 +2,6 @@ package com.point2points.kdusurveysystem;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputType;
@@ -21,7 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
 
 public class Login extends Activity{
 
@@ -70,6 +69,9 @@ public class Login extends Activity{
         mLoginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                Intent i = new Intent(Login.this, RecyclerViewExample.class);
+                startActivity(i);
+                finish();
 
                 String email = inputEmailAddress.getText().toString();
                 final String password = inputPassword.getText().toString();

@@ -27,7 +27,7 @@
         </activity>
         <activity android:name=".AdminMainActivity">
         </activity>
-        <activity android:name=".RecyclerViewExample">
+        <activity android:name=".RecylcerView.RecyclerViewExample">
         </activity>
 
     </application>

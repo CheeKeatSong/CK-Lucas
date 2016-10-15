@@ -1,18 +1,20 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.RecylcerView;
 
         import android.app.ActionBar;
         import android.app.Activity;
         import android.content.DialogInterface;
-        import android.media.Image;
         import android.os.Build;
         import android.os.Bundle;
+        import android.support.v4.widget.Space;
         import android.support.v7.app.AlertDialog;
         import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.ActionMenuView;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
+        import android.support.v7.widget.SearchView;
         import android.support.v7.widget.Toolbar;
+        import android.text.Editable;
         import android.text.InputType;
+        import android.text.TextWatcher;
         import android.util.Log;
         import android.view.LayoutInflater;
         import android.view.Menu;
@@ -27,11 +29,17 @@ package com.point2points.kdusurveysystem;
         import android.widget.Toast;
 
         import com.daimajia.swipe.util.Attributes;
+        import com.point2points.kdusurveysystem.Lecturer;
+        import com.point2points.kdusurveysystem.ListSorter;
+        import com.point2points.kdusurveysystem.R;
         import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
         import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
+        import com.point2points.kdusurveysystem.model.ExampleModel;
 
         import java.util.ArrayList;
         import java.util.Arrays;
+        import java.util.Comparator;
+        import java.util.List;
 
         import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
@@ -51,8 +59,17 @@ public class RecyclerViewExample extends AppCompatActivity {
 
     private ArrayList<String> mDataSet;
 
-    private ImageButton optionButton, addButton, searchButton;
+    private ImageButton optionButton, addButton, searchButton, backButton;
     private Spinner sortButton;
+    private SearchView searchEditText;
+    private Space mSpace;
+    private Toolbar mToolBar, mToolBar2;
+
+    private int pointer = 0;
+
+    private static final String[] MOVIES = new String[]{
+
+};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +84,49 @@ public class RecyclerViewExample extends AppCompatActivity {
             }
         }
 
+        mToolBar = (Toolbar) findViewById(R.id.tToolbar);
+        setSupportActionBar(mToolBar);
+        mToolBar2 = (Toolbar) findViewById(R.id.t2Toolbar);
+        setSupportActionBar(mToolBar2);
+
         optionButton = (ImageButton) findViewById(R.id.menu_item_option);
         optionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        backButton = (ImageButton)findViewById(R.id.menu_item_back);
+        mSpace = (Space) findViewById(R.id.toolbar_space);
+        searchEditText = (SearchView) findViewById(R.id.search_edit_text);
+        searchEditText.setIconified(false);
+        searchEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+        searchButton = (ImageButton) findViewById(R.id.menu_item_search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mToolBar.setVisibility(View.GONE);
+                mToolBar2.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mToolBar.setVisibility(View.VISIBLE);
+                mToolBar2.setVisibility(View.GONE);
             }
         });
 
@@ -103,14 +158,6 @@ public class RecyclerViewExample extends AppCompatActivity {
                 // your code here
             }
 
-        });
-
-        searchButton = (ImageButton) findViewById(R.id.menu_item_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
-            }
         });
 
         addButton = (ImageButton) findViewById(R.id.menu_item_add);
@@ -171,10 +218,6 @@ public class RecyclerViewExample extends AppCompatActivity {
             }
         });
 
-        Toolbar mToolBar = (Toolbar) findViewById(R.id.tToolbar);
-        setSupportActionBar(mToolBar);
-
-
         // Layout Managers:
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -185,7 +228,7 @@ public class RecyclerViewExample extends AppCompatActivity {
         // Adapter:
         String[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
         mDataSet = new ArrayList<String>(Arrays.asList(adapterData));
-        mAdapter = new RecyclerViewAdapter(this, mDataSet);
+
         ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(mAdapter);
 

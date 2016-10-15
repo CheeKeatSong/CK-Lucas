@@ -14,6 +14,7 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="option">Option</string>
+    <string name="search_hint">Search...</string>
 
     <string-array name="sort_array">
         <item>A-Z</item>
