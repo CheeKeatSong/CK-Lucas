@@ -4,8 +4,6 @@
               android:orientation="vertical"
               xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include layout="@layout/drawer_content"/>
-
     <include
         android:id="@+id/tToolbar"
         android:layout_height="wrap_content"

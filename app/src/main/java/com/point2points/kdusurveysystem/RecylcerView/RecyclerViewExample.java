@@ -1,52 +1,27 @@
 package com.point2points.kdusurveysystem.RecylcerView;
 
         import android.app.ActionBar;
-        import android.app.Activity;
-        import android.content.DialogInterface;
         import android.os.Build;
         import android.os.Bundle;
-        import android.support.v4.widget.Space;
-        import android.support.v7.app.AlertDialog;
-        import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
-        import android.support.v7.widget.SearchView;
-        import android.support.v7.widget.Toolbar;
-        import android.text.Editable;
-        import android.text.InputType;
-        import android.text.TextWatcher;
         import android.util.Log;
-        import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.EditText;
-        import android.widget.ImageButton;
-        import android.widget.Spinner;
-        import android.widget.TextView;
-        import android.widget.Toast;
 
         import com.daimajia.swipe.util.Attributes;
-        import com.point2points.kdusurveysystem.Fragment.AdminDrawerFragment;
-        import com.point2points.kdusurveysystem.Lecturer;
-        import com.point2points.kdusurveysystem.ListSorter;
         import com.point2points.kdusurveysystem.R;
         import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
         import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
-        import com.point2points.kdusurveysystem.model.ExampleModel;
 
         import java.util.ArrayList;
         import java.util.Arrays;
-        import java.util.Comparator;
-        import java.util.List;
 
         import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
-        import static android.support.v7.recyclerview.R.attr.layoutManager;
+        import com.point2points.kdusurveysystem.AdminToolbarDrawer;
 
-public class RecyclerViewExample extends AppCompatActivity {
+public class RecyclerViewExample extends AdminToolbarDrawer {
 
     /**
      * RecyclerView: The new recycler view replaces the list view. Its more modular and therefore we
@@ -61,14 +36,6 @@ public class RecyclerViewExample extends AppCompatActivity {
 
     private ArrayList<String> mDataSet;
 
-    private ImageButton optionButton, addButton, searchButton, backButton;
-    private Spinner sortButton;
-    private SearchView searchEditText;
-    private Space mSpace;
-    private Toolbar mToolBar, mToolBar2;
-
-    private int pointer = 0;
-
     private static final String[] MOVIES = new String[]{
 
 };
@@ -76,8 +43,10 @@ public class RecyclerViewExample extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.recycler_view);
+        super.onCreateDrawer();
+        super.onCreateToolbar();
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ActionBar actionBar = getActionBar();
@@ -85,140 +54,6 @@ public class RecyclerViewExample extends AppCompatActivity {
                 actionBar.setTitle("RecyclerView");
             }
         }
-
-        mToolBar = (Toolbar) findViewById(R.id.tToolbar);
-        setSupportActionBar(mToolBar);
-        mToolBar2 = (Toolbar) findViewById(R.id.t2Toolbar);
-        setSupportActionBar(mToolBar2);
-
-        optionButton = (ImageButton) findViewById(R.id.menu_item_option);
-        optionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        backButton = (ImageButton)findViewById(R.id.menu_item_back);
-        mSpace = (Space) findViewById(R.id.toolbar_space);
-        searchEditText = (SearchView) findViewById(R.id.search_edit_text);
-        searchEditText.setIconified(false);
-        searchEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-        searchButton = (ImageButton) findViewById(R.id.menu_item_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mToolBar.setVisibility(View.GONE);
-                mToolBar2.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mToolBar.setVisibility(View.VISIBLE);
-                mToolBar2.setVisibility(View.GONE);
-            }
-        });
-
-        sortButton = (Spinner) findViewById(R.id.menu_item_sort);
-        sortButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
-                String sortType = String.valueOf(sortButton.getSelectedItem());
-                ((TextView)selectedItemView).setText(null);
-                ListSorter listSorter = new ListSorter();
-
-                if (sortType == "A-Z"){
-
-                }
-                else if(sortType == "Z-A"){
-
-                }
-                else if(sortType == "Latest"){
-
-                }
-                else if(sortType == "Earliest"){
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
-
-        addButton = (ImageButton) findViewById(R.id.menu_item_add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(RecyclerViewExample.this);
-                View promptsView = li.inflate(R.layout.lecturer_prompt, null);
-
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(RecyclerViewExample.this);
-
-                alertDialogBuilder.setView(promptsView);
-                alertDialogBuilder.setTitle("CREATE A LECTURER INFO");
-
-                final EditText email = (EditText) promptsView.findViewById(R.id.lecturer_dialog_email);
-                final EditText password = (EditText) promptsView.findViewById(R.id.lecturer_dialog_password);
-                final EditText fullname = (EditText) promptsView.findViewById(R.id.lecturer_dialog_fullname);
-                final EditText username = (EditText) promptsView.findViewById(R.id.lecturer_dialog_username);
-
-                final ImageButton showpass = (ImageButton) promptsView.findViewById(R.id.lecturer_dialog_show_password);
-                showpass.setOnTouchListener(new View.OnTouchListener() {
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        switch ( event.getAction() ) {
-                            case MotionEvent.ACTION_DOWN:
-                                password.setInputType(InputType.TYPE_CLASS_TEXT);
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                                break;
-                        }
-                        return true;
-                    }
-                });
-
-                alertDialogBuilder
-                        .setCancelable(false)
-                        .setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        final String inputEmail = email.getText().toString();
-                                        final String inputPassword = password.getText().toString();
-                                        final String inputFullName = fullname.getText().toString();
-                                        final String inputUsername = username.getText().toString();
-
-                                        Lecturer lecturer = new Lecturer();
-                                        lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername);
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            }
-        });
 
         // Layout Managers:
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
