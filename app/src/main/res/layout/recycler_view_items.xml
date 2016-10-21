@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:swipe="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
-              android:layout_height="match_parent"
-              android:layout_width="match_parent">
+              >
+
     <data>
         <variable
             name="listener"
@@ -12,9 +12,10 @@
         <variable
             name="model"
             type="com.point2points.kdusurveysystem.model.ExampleModel"/>
+
     </data>
 
-    <com.daimajia.swipe.SwipeLayout
+<com.daimajia.swipe.SwipeLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -41,18 +42,18 @@
                 android:background="@color/yellow_gold"/>
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/light_red">
-            <ImageButton
-                android:src="@drawable/ic_delete"
-                android:id="@+id/delete"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:background="@color/light_red"/>
-        </LinearLayout>
+                android:layout_weight="1"
+                android:background="@color/light_red">
+                <ImageButton
+                    android:src="@drawable/ic_delete"
+                    android:id="@+id/delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_red"/>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -60,7 +61,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:elevation="5dp">
+            android:elevation="5dp"
+            android:onClick="@{view -> listener.onExampleModelClicked(model)}">
 
             <ImageView
                 android:layout_gravity="center"
@@ -83,11 +85,10 @@
                 android:textSize="14dp"/>
 
         </LinearLayout>
+
     </com.daimajia.swipe.SwipeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#cccccc"/>
-
-</LinearLayout>
+   <!-- <View
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:background="#cccccc"/>-->
+</layout>

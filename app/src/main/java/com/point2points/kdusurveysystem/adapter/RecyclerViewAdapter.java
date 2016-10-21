@@ -25,6 +25,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.model.ExampleModel;
 
@@ -34,6 +35,10 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapter.SimpleViewHolder> {
 
+    public interface Listener {
+        void onExampleModelClicked(ExampleModel model);
+    }
+
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
         TextView textViewPos;
@@ -41,6 +46,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         ImageButton buttonDelete;
         ImageButton  buttonEdit;
         ImageView letterimage;
+
 
         public SimpleViewHolder(View itemView) {
             super(itemView);
@@ -62,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     }
 
     //SortedList
-    private final SortedList<ExampleModel> mSortedList = new SortedList<>(ExampleModel.class, new SortedList.Callback<ExampleModel>() {
+   /* private final SortedList<ExampleModel> mSortedList = new SortedList<>(ExampleModel.class, new SortedList.Callback<ExampleModel>() {
         @Override
         public int compare(ExampleModel a, ExampleModel b) {
             return mComparator.compare(a, b);
@@ -133,17 +139,19 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     }
     //add or remove end
 
+    private final LayoutInflater mInflater;
+    private final Comparator<ExampleModel> mComparator;*/
+
     private Context mContext;
     private ArrayList<String> mDataset;
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
 
-    private final LayoutInflater mInflater;
-    private final Comparator<ExampleModel> mComparator;
 
-    public RecyclerViewAdapter(Context context, Comparator<ExampleModel> comparator) {
-        mInflater = LayoutInflater.from(context);
-        mComparator = comparator;
+
+    public RecyclerViewAdapter(Context context, ArrayList<String> objects) {
+        this.mContext = context;
+        this.mDataset = objects;
     }
 
     @Override
@@ -193,7 +201,6 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewData.getText().toString() + "!", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         String firstletter = item.substring(0,1);
 

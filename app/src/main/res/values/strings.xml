@@ -16,6 +16,9 @@
     <string name="option">Option</string>
     <string name="search_hint">Search...</string>
 
+    <string name="drawer_open">OPEN</string>
+    <string name="drawer_close">CLOSE</string>
+
     <string-array name="sort_array">
         <item>A-Z</item>
         <item>Z-A</item>

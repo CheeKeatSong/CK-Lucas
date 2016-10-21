@@ -29,6 +29,7 @@ package com.point2points.kdusurveysystem.RecylcerView;
         import android.widget.Toast;
 
         import com.daimajia.swipe.util.Attributes;
+        import com.point2points.kdusurveysystem.Fragment.AdminDrawerFragment;
         import com.point2points.kdusurveysystem.Lecturer;
         import com.point2points.kdusurveysystem.ListSorter;
         import com.point2points.kdusurveysystem.R;
@@ -43,6 +44,8 @@ package com.point2points.kdusurveysystem.RecylcerView;
 
         import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
+        import static android.support.v7.recyclerview.R.attr.layoutManager;
+
 public class RecyclerViewExample extends AppCompatActivity {
 
     /**
@@ -53,7 +56,6 @@ public class RecyclerViewExample extends AppCompatActivity {
      * 2) Animate & Decorate views: This is done with ItemAnimators & ItemDecorators
      * 3) Handle any touch events apart from scrolling: This is now done in our adapter's ViewHolder
      */
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -93,7 +95,7 @@ public class RecyclerViewExample extends AppCompatActivity {
         optionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RecyclerViewExample.this,"DoubleClick", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -222,13 +224,13 @@ public class RecyclerViewExample extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Item Decorator:
-        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.divider)));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
 
         // Adapter:
         String[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
         mDataSet = new ArrayList<String>(Arrays.asList(adapterData));
-
+        mAdapter = new RecyclerViewAdapter(this, mDataSet);
         ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(mAdapter);
 
