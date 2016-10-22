@@ -1,11 +1,14 @@
 package com.point2points.kdusurveysystem;
 
 import android.content.DialogInterface;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +22,11 @@ import android.widget.Toast;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -33,6 +41,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
+
 public class AdminToolbarDrawer extends AppCompatActivity {
 
     private ImageButton optionButton, addButton, searchButton, backButton;
@@ -42,8 +52,31 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     private Drawer adminDrawer;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private static final String TAG = "AdminToolbarDrawer";
 
     protected void onCreateToolbar() {
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
+
+
 
         mToolBar = (Toolbar) findViewById(R.id.tToolbar);
         setSupportActionBar(mToolBar);
@@ -127,8 +160,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com");
 
-                AuthData authData = ref.getAuth();
-                if (authData != null) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
 
                 LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
                 View promptsView = li.inflate(R.layout.lecturer_prompt, null);
@@ -171,6 +204,21 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                                             Lecturer lecturer = new Lecturer();
                                             lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername);
+
+                                            mAuth = FirebaseAuth.getInstance();
+
+                                            mAuth.createUserWithEmailAndPassword(inputEmail, inputPassword)
+                                                    .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                                                            if (!task.isSuccessful()) {
+                                                                Toast.makeText(AdminToolbarDrawer.this, R.string.auth_failed,
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
                                         }
                                     })
                             .setNegativeButton("Cancel",
@@ -234,5 +282,19 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     }
                 })
                 .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }

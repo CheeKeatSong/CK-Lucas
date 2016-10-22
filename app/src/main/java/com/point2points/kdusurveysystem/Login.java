@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -22,13 +23,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
+
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 public class Login extends Activity{
 
     private EditText inputEmailAddress, inputPassword;
     private Button mLoginButton;
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressBar progressBar;
     private ImageButton showpass;
 
@@ -38,9 +45,24 @@ public class Login extends Activity{
         Firebase.setAndroidContext(this);
         setContentView(R.layout.login);
 
+        mAuth = FirebaseAuth.getInstance();
+
         final Firebase myFirebaseRef = new Firebase("https://kdu-survey-system.firebaseio.com");
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
 
         if (mAuth.getCurrentUser() != null) {
 
@@ -92,25 +114,43 @@ public class Login extends Activity{
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                myFirebaseRef.authWithPassword(email, password, new Firebase.AuthResultHandler() {
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onAuthenticated(AuthData authData) {
-                                Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(Login.this, RecyclerViewExample.class);
-                                startActivity(i);
-                                finish();
-                            }
-                            @Override
-                            public void onAuthenticationError(FirebaseError firebaseError) {
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
                                 progressBar.setVisibility(View.GONE);
-                                if (password.length() < 6) {
-                                    inputPassword.setError(getString(R.string.minimum_password));
+                                if (!task.isSuccessful()) {
+                                    // there was an error
+                                    if (password.length() < 6) {
+                                        inputPassword.setError(getString(R.string.minimum_password));
+                                    } else {
+                                        Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                    }
                                 } else {
-                                    Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(Login.this, RecyclerViewExample.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             }
                         });
             }});
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }
 

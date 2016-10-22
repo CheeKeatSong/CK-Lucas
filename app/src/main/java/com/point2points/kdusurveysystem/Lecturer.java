@@ -1,22 +1,32 @@
 package com.point2points.kdusurveysystem;
 
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.UUID;
 
-public class Lecturer {
+import static android.content.ContentValues.TAG;
+
+public class Lecturer{
 
     private String emailAddress;
     private String password;
     private String fullName;
     private String username;
     private int point;
-    private FirebaseAuth mAuth;
 
     Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public Lecturer() {
     }
@@ -55,15 +65,9 @@ public class Lecturer {
 
     public void createLecturer(String emailEntry, String passwordEntry, String fullNameEntry, String usernameEntry) {
 
-        AuthData authData = ref.getAuth();
-        if (authData != null) {
-            Firebase lecturerRef = ref.child("users/lecturer/" + ref.getAuth().getUid());
+            Firebase lecturerRef = ref.child("users/lecturer/" + user.getUid());
             Lecturer mLecturer = new Lecturer(emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0);
             lecturerRef.setValue(mLecturer);
-        } else {
-            // no user authenticated
-        }
-
     }
 
 }
