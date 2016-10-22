@@ -19,30 +19,44 @@ import static android.content.ContentValues.TAG;
 
 public class Lecturer{
 
-    private String emailAddress;
+    /*private String emailAddress;
     private String password;
     private String fullName;
     private String username;
-    private int point;
+    private int point;*/
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    /*public String emailAddress;
+    public String password;
+    public String fullName;
+    public String username;
+    public long point;*/
 
-    Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public String test1;
+    public String test2;
+
+    //private FirebaseAuth mAuth;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
+
+    //Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
+    //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public Lecturer() {
     }
 
-    public Lecturer(String email, String password, String fullName, String username, int point) {
+    /*public Lecturer(String email, String password, String fullName, String username, int point) {
         this.fullName = fullName;
         this.username = username;
         this.emailAddress = email;
         this.password = password;
         this.point = point;
+    }*/
+
+    public Lecturer(String email, String password) {
+        this.test1 = email;
+        this.test2= password;
     }
 
-    public String getUsername() {
+    /*public String getUsername() {
         return username;
     }
 
@@ -56,17 +70,21 @@ public class Lecturer{
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
+    }*/
 
-    public int getPoint() {
+    /*public int getPoint() {
+        return point;
+    }*/
+
+    /*public long getPoint() {
         return point;
     }
 
     public void setPoint(int point) {
         this.point = point;
-    }
+    }*/
 
-    public void createLecturer(final String emailEntry, final String passwordEntry,final String fullNameEntry, final String usernameEntry,final  String UID) {
+    /*public void createLecturer(final String emailEntry, final String passwordEntry,final String fullNameEntry, final String usernameEntry,final  String UID) {
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -90,6 +108,6 @@ public class Lecturer{
         };
 
 
-    }
+    }*/
 
 }

@@ -43,6 +43,14 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+//import com.google.firebase.quickstart.database.models.Post;
+//import com.google.firebase.quickstart.database.models.User;
+
 public class AdminToolbarDrawer extends AppCompatActivity {
 
     private ImageButton optionButton, addButton, searchButton, backButton;
@@ -53,13 +61,18 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private Drawer adminDrawer;
 
     private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuthSecondary;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private static final String TAG = "AdminToolbarDrawer";
 
+    private DatabaseReference mDatabase;
+
+
     protected void onCreateToolbar() {
 
         mAuth = FirebaseAuth.getInstance();
+        //mAuthSecondary = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -158,7 +171,32 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com");
+                Toast.makeText(AdminToolbarDrawer.this, "Your mother ass",
+                               Toast.LENGTH_SHORT).show();
+
+                //Lecturer lecturer = new Lecturer();
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+                /*private void writeNewUser() {
+                    Lecturer lecturer = new Lecturer("babayaga@email.com", "password123", "Baba Yaga", "babayaga123", 0);
+
+                    mDatabase.child("users").child(userId).setValue(user);
+                }*/
+
+                //final String testId = getUid();
+                final String testId = "TESTID123456";
+                Lecturer lecturer = new Lecturer("babayaga@email.com", "password123");
+                //lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername,user.getUid());
+
+                //UserTest user = new UserTest("babayaga@email.com", "password123");
+                //mDatabase.child("users").child("lecturer").child(testId).setValue(user);
+                //mDatabase.child("users").child(testId).setValue(user);
+
+                mDatabase.child("users").child("lecturer").child(testId).setValue(lecturer);
+                //mDatabase.child("users").child(testId).setValue(lecturer);
+
+                /*Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com");
 
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
@@ -215,13 +253,30 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                                             lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername,user.getUid());
 
                                                             if (!task.isSuccessful()) {
-                                                                Log.d(TAG, "onComplete: uid=" + user.getUid());
+                                                                //Log.d(TAG, "onComplete: uid=" + user.getUid());
                                                             }
                                                         }
                                                     });
 
+                                            //mAuthSecondary = FirebaseAuth.getInstance();
 
+                                            //mAuthSecondary.createUserWithEmailAndPassword("baba@yourmother.com", "fuckyourself123")
+                                            //        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                            //            @Override
+                                            //            public void onComplete(@NonNull Task<AuthResult> task) {
+                                            //                Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
+                                                            // If sign in fails, display a message to the user. If sign in succeeds
+                                                            // the auth state listener will be notified and logic to handle the
+                                                            // signed in user can be handled in the listener.
+                                            //                if (!task.isSuccessful()) {
+                                                                //Toast.makeText(AdminToolbarDrawer.this, R.string.auth_failed,
+                                                                //        Toast.LENGTH_SHORT).show();
+                                            //                }
+
+                                                            // ...
+                                            //            }
+                                            //        });
                                         }
                                     })
                             .setNegativeButton("Cancel",
@@ -235,7 +290,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(AdminToolbarDrawer.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-                }
+                }*/
 
             }
         });
