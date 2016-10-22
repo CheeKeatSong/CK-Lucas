@@ -25,6 +25,9 @@ public class Lecturer{
     private String username;
     private int point;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -63,11 +66,30 @@ public class Lecturer{
         this.point = point;
     }
 
-    public void createLecturer(String emailEntry, String passwordEntry, String fullNameEntry, String usernameEntry) {
+    public void createLecturer(final String emailEntry, final String passwordEntry,final String fullNameEntry, final String usernameEntry,final  String UID) {
 
-            Firebase lecturerRef = ref.child("users/lecturer/" + user.getUid());
-            Lecturer mLecturer = new Lecturer(emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0);
-            lecturerRef.setValue(mLecturer);
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+
+                    Firebase lecturerRef = ref.child("users/lecturer/");
+                    Lecturer mLecturer = new Lecturer(emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0);
+                    lecturerRef.child(UID).setValue(mLecturer);
+
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
+
+
     }
 
 }

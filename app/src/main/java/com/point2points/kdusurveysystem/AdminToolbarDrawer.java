@@ -202,9 +202,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             final String inputFullName = fullname.getText().toString();
                                             final String inputUsername = username.getText().toString();
 
-                                            Lecturer lecturer = new Lecturer();
-                                            lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername);
-
                                             mAuth = FirebaseAuth.getInstance();
 
                                             mAuth.createUserWithEmailAndPassword(inputEmail, inputPassword)
@@ -213,12 +210,18 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                                             Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
+                                                            FirebaseUser user = task.getResult().getUser();
+                                                            Lecturer lecturer = new Lecturer();
+                                                            lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername,user.getUid());
+
                                                             if (!task.isSuccessful()) {
-                                                                Toast.makeText(AdminToolbarDrawer.this, R.string.auth_failed,
-                                                                        Toast.LENGTH_SHORT).show();
+                                                                Log.d(TAG, "onComplete: uid=" + user.getUid());
                                                             }
                                                         }
                                                     });
+
+
+
                                         }
                                     })
                             .setNegativeButton("Cancel",
