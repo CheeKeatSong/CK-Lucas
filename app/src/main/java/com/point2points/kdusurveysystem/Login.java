@@ -14,8 +14,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,7 +38,7 @@ public class Login extends Activity{
         Firebase.setAndroidContext(this);
         setContentView(R.layout.login);
 
-        Firebase myFirebaseRef = new Firebase("https://kdu-survey-system.firebaseio.com/");
+        final Firebase myFirebaseRef = new Firebase("https://kdu-survey-system.firebaseio.com");
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -69,9 +71,6 @@ public class Login extends Activity{
         mLoginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(Login.this, RecyclerViewExample.class);
-                startActivity(i);
-                finish();
 
                 String email = inputEmailAddress.getText().toString();
                 final String password = inputPassword.getText().toString();
@@ -93,25 +92,24 @@ public class Login extends Activity{
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressBar.setVisibility(View.GONE);
-                                    if (!task.isSuccessful()) {
-                                        // there was an error
-                                        if (password.length() < 6) {
-                                            inputPassword.setError(getString(R.string.minimum_password));
-                                        } else {
-                                            Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-                                        }
-                                    } else {
-                                        Intent i = new Intent(Login.this, RecyclerViewExample.class);
-                                        startActivity(i);
-                                        finish();
-                                    }
+                myFirebaseRef.authWithPassword(email, password, new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(Login.this, RecyclerViewExample.class);
+                                startActivity(i);
+                                finish();
+                            }
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+                                progressBar.setVisibility(View.GONE);
+                                if (password.length() < 6) {
+                                    inputPassword.setError(getString(R.string.minimum_password));
+                                } else {
+                                    Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                 }
-                            });
+                            }
+                        });
             }});
     }
 }

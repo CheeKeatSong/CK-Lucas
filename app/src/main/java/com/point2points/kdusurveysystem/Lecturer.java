@@ -1,6 +1,9 @@
 package com.point2points.kdusurveysystem;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.UUID;
 
@@ -11,6 +14,7 @@ public class Lecturer {
     private String fullName;
     private String username;
     private int point;
+    private FirebaseAuth mAuth;
 
     Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
 
@@ -50,9 +54,16 @@ public class Lecturer {
     }
 
     public void createLecturer(String emailEntry, String passwordEntry, String fullNameEntry, String usernameEntry) {
-        Firebase lecturerRef = ref.child("user/lecturer/");
-        Lecturer mLecturer = new Lecturer(emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0);
-        lecturerRef.setValue(mLecturer);
+
+        AuthData authData = ref.getAuth();
+        if (authData != null) {
+            Firebase lecturerRef = ref.child("users/lecturer/" + ref.getAuth().getUid());
+            Lecturer mLecturer = new Lecturer(emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0);
+            lecturerRef.setValue(mLecturer);
+        } else {
+            // no user authenticated
+        }
+
     }
 
 }

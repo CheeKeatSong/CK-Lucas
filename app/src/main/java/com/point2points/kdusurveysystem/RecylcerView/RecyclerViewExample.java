@@ -6,8 +6,6 @@ package com.point2points.kdusurveysystem.RecylcerView;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
         import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
 
         import com.daimajia.swipe.util.Attributes;
         import com.point2points.kdusurveysystem.R;
@@ -89,17 +87,5 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
             // Could hide open views here if you wanted. //
         }
     };
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
-    }
 }
 

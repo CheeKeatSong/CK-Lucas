@@ -14,6 +14,7 @@
     <string name="student">STUDENT</string>
     <string name="drawer_item_settings">SETTINGS</string>
     <string name="drawer_item_home">HOME</string>
+    <string name="sign_out">SIGN OUT</string>
 
     <string name="add">Add a data</string>
     <string name="sort">Sort</string>

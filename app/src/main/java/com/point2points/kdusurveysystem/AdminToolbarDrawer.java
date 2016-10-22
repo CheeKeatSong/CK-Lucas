@@ -14,7 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -25,6 +29,9 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminToolbarDrawer extends AppCompatActivity {
 
@@ -117,10 +124,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com");
+
+                AuthData authData = ref.getAuth();
+                if (authData != null) {
+
                 LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
                 View promptsView = li.inflate(R.layout.lecturer_prompt, null);
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this);
 
                 alertDialogBuilder.setView(promptsView);
                 alertDialogBuilder.setTitle("CREATE A LECTURER INFO");
@@ -146,28 +159,33 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     }
                 });
 
-                alertDialogBuilder
-                        .setCancelable(false)
-                        .setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        final String inputEmail = email.getText().toString();
-                                        final String inputPassword = password.getText().toString();
-                                        final String inputFullName = fullname.getText().toString();
-                                        final String inputUsername = username.getText().toString();
+                    alertDialogBuilder
+                            .setCancelable(false)
+                            .setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            final String inputEmail = email.getText().toString();
+                                            final String inputPassword = password.getText().toString();
+                                            final String inputFullName = fullname.getText().toString();
+                                            final String inputUsername = username.getText().toString();
 
-                                        Lecturer lecturer = new Lecturer();
-                                        lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername);
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                                            Lecturer lecturer = new Lecturer();
+                                            lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername);
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+
+                } else {
+                    Toast.makeText(AdminToolbarDrawer.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -180,6 +198,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.lecturer);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.student);
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName(R.string.drawer_item_settings);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName(R.string.sign_out);
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -204,7 +223,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         new DividerDrawerItem(),
                         item2,
                         item3,
-                        item4
+                        item4,
+                        new DividerDrawerItem(),
+                        item5
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -214,5 +235,4 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 })
                 .build();
     }
-
 }

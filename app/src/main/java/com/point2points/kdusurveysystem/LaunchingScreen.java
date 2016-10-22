@@ -6,15 +6,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
 
 public class LaunchingScreen extends Activity {
 
     private final int SPLASH_DISPLAY_LENGTH = 500;
+
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
 
     private ImageView mImageView;
 
@@ -29,9 +36,8 @@ public class LaunchingScreen extends Activity {
             new Handler().postDelayed(new Runnable(){
                 @Override
                 public void run() {
-                    Intent i = new Intent (LaunchingScreen.this, Login.class);
-                    startActivity(i);
-                    finish();
+                                startActivity(new Intent(LaunchingScreen.this, Login.class));
+                                finish();
                 }
             }, SPLASH_DISPLAY_LENGTH);
         }
