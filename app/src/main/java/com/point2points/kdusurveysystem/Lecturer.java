@@ -19,22 +19,33 @@ import static android.content.ContentValues.TAG;
 
 public class Lecturer{
 
-    private String emailAddress;
+    /*private String emailAddress;
     private String password;
     private String fullName;
     private String username;
-    private int point;
+    private int point;*/
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    public String emailAddress;
+    public String password;
+    public String fullName;
+    public String username;
+    public double point;
 
-    Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //private FirebaseAuth mAuth;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
 
     public Lecturer() {
     }
 
-    public Lecturer(String email, String password, String fullName, String username, int point) {
+    /*public Lecturer(String email, String password, String fullName, String username, int point) {
+        this.fullName = fullName;
+        this.username = username;
+        this.emailAddress = email;
+        this.password = password;
+        this.point = point;
+    }*/
+
+    public Lecturer(String email, String password, String fullName, String username, double point) {
         this.fullName = fullName;
         this.username = username;
         this.emailAddress = email;
@@ -58,7 +69,7 @@ public class Lecturer{
         this.fullName = fullName;
     }
 
-    public int getPoint() {
+    public double getPoint() {
         return point;
     }
 
@@ -68,9 +79,15 @@ public class Lecturer{
 
     public void createLecturer(final String emailEntry, final String passwordEntry,final String fullNameEntry, final String usernameEntry,final  String UID) {
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth;
+        FirebaseAuth.AuthStateListener mAuthListener;
 
+        final Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com/");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
+
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();

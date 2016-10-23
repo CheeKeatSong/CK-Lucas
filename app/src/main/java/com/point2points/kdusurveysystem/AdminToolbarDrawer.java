@@ -43,6 +43,14 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseError;
+//import com.google.firebase.database.ValueEventListener;
+//import com.google.firebase.quickstart.database.models.Post;
+//import com.google.firebase.quickstart.database.models.User;
+
 public class AdminToolbarDrawer extends AppCompatActivity {
 
     private ImageButton optionButton, addButton, searchButton, backButton;
@@ -54,6 +62,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
 
     private static final String TAG = "AdminToolbarDrawer";
 
@@ -75,8 +84,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 // ...
             }
         };
-
-
 
         mToolBar = (Toolbar) findViewById(R.id.tToolbar);
         setSupportActionBar(mToolBar);
@@ -158,6 +165,22 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Toast.makeText(AdminToolbarDrawer.this, "Your mother ass",
+                               Toast.LENGTH_SHORT).show();
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+                //final String testId = "TESTID123456";
+
+                //Lecturer lecturer = new Lecturer("babayaga@email.com", "password123");
+                //UserTest user = new UserTest("babayaga@email.com", "password123");
+
+                //mDatabase.child("users").child(testId).setValue(user);
+                //mDatabase.child("users").child("lecturer").child(testId).setValue(user);
+                //mDatabase.child("users").child("lecturer").child(testId).setValue(lecturer);
+                //mDatabase.child("users").child(testId).setValue(lecturer);
+
                 Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com");
 
                 FirebaseUser user = mAuth.getCurrentUser();
@@ -211,17 +234,20 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                                             Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                                                             FirebaseUser user = task.getResult().getUser();
-                                                            Lecturer lecturer = new Lecturer();
-                                                            lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername,user.getUid());
+                                                            //Lecturer lecturer = new Lecturer();
+                                                            //lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername,user.getUid());
+
+                                                            Double zero = 0.00;
+                                                            final String testId = "TESTID7890";
+
+                                                            Lecturer lecturer = new Lecturer(inputEmail,inputPassword,inputFullName,inputUsername,zero);
+                                                            mDatabase.child("users").child("lecturer").child(testId).setValue(lecturer);
 
                                                             if (!task.isSuccessful()) {
                                                                 Log.d(TAG, "onComplete: uid=" + user.getUid());
                                                             }
                                                         }
                                                     });
-
-
-
                                         }
                                     })
                             .setNegativeButton("Cancel",
