@@ -11,6 +11,11 @@
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
     </style>
 
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/dark_kdu_blue</item>
+        <item name="android:textColor">@color/dark_emerald</item>
+    </style>
+
     <style name="Widget.Styled.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:displayOptions">showHome|useLogo</item>
         <item name="displayOptions">showHome|useLogo</item>

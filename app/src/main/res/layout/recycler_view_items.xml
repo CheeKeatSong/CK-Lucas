@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:swipe="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              >
+              android:orientation="vertical">
 
     <data>
         <variable
@@ -70,25 +69,39 @@
                 android:layout_height="54dp"
                 android:id="@+id/letter_icon"/>
 
-
             <TextView
-                android:id="@+id/position"
+                android:id="@+id/lecturer_fullname_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"/>
 
             <TextView
-                android:id="@+id/text_data"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:tag="Hover"
+                android:id="@+id/lecturer_ID_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="6dp"
                 android:textSize="14dp"/>
+
+            <TextView
+                android:id="@+id/lecturer_point_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="6dp"
+                android:textSize="14dp"/>
+
+            <TextView
+                android:id="@+id/lecturer_email_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:textSize="14dp"
+                android:layout_gravity="bottom|right"/>
 
         </LinearLayout>
 
     </com.daimajia.swipe.SwipeLayout>
-   <!-- <View
-    android:layout_width="match_parent"
-    android:layout_height="1px"
-    android:background="#cccccc"/>-->
+
 </layout>

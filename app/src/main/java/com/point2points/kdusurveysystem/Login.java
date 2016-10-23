@@ -2,6 +2,7 @@ package com.point2points.kdusurveysystem;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputType;
@@ -78,6 +79,9 @@ public class Login extends Activity{
         inputEmailAddress = (EditText) findViewById(R.id.email_edit_Text);
         inputPassword = (EditText) findViewById(R.id.password_edit_text);
         mLoginButton = (Button)findViewById(R.id.login_button);
+
+        inputEmailAddress.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+        inputPassword.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
 
         showpass = (ImageButton) findViewById(R.id.login_show_password);
         showpass.setOnTouchListener(new View.OnTouchListener() {

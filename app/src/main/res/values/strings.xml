@@ -10,21 +10,27 @@
     <string name="auth_failed">Authentication failed</string>
     <string name="show_password">Show Password</string>
 
-    <string name="lecturer">LECTURER</string>
-    <string name="student">STUDENT</string>
-    <string name="drawer_item_settings">SETTINGS</string>
-    <string name="drawer_item_home">HOME</string>
-    <string name="sign_out">SIGN OUT</string>
-
+    //toolbar
     <string name="add">Add a data</string>
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="option">Option</string>
     <string name="search_hint">Search...</string>
 
+    //data creation dialog
+    <string name="lecturer_data_creation_success">LECTURER DATA SUCCESSFULLY CREATED</string>
+    <string name="lecturer_data_creation_fail">LECTURER DATA CREATION FAILED</string>
+
+    //drawer
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>
+    <string name="lecturer">LECTURER</string>
+    <string name="student">STUDENT</string>
+    <string name="drawer_item_settings">SETTINGS</string>
+    <string name="drawer_item_home">HOME</string>
+    <string name="sign_out">SIGN OUT</string>
 
+    //sort list
     <string-array name="sort_array">
         <item>A-Z</item>
         <item>Z-A</item>
