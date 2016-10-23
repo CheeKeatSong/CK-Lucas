@@ -1,6 +1,8 @@
 package com.point2points.kdusurveysystem;
 
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -165,21 +167,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(AdminToolbarDrawer.this, "Your mother ass",
-                               Toast.LENGTH_SHORT).show();
-
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
-                //final String testId = "TESTID123456";
-
-                //Lecturer lecturer = new Lecturer("babayaga@email.com", "password123");
-                //UserTest user = new UserTest("babayaga@email.com", "password123");
-
-                //mDatabase.child("users").child(testId).setValue(user);
-                //mDatabase.child("users").child("lecturer").child(testId).setValue(user);
-                //mDatabase.child("users").child("lecturer").child(testId).setValue(lecturer);
-                //mDatabase.child("users").child(testId).setValue(lecturer);
 
                 Firebase ref = new Firebase("https://kdu-survey-system.firebaseio.com");
 
@@ -189,7 +177,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
                 View promptsView = li.inflate(R.layout.lecturer_prompt, null);
 
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
 
                 alertDialogBuilder.setView(promptsView);
                 alertDialogBuilder.setTitle("CREATE A LECTURER INFO");
@@ -198,6 +186,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final EditText password = (EditText) promptsView.findViewById(R.id.lecturer_dialog_password);
                 final EditText fullname = (EditText) promptsView.findViewById(R.id.lecturer_dialog_fullname);
                 final EditText username = (EditText) promptsView.findViewById(R.id.lecturer_dialog_username);
+
+                    email.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                    password.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                    fullname.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                    username.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
 
                 final ImageButton showpass = (ImageButton) promptsView.findViewById(R.id.lecturer_dialog_show_password);
                 showpass.setOnTouchListener(new View.OnTouchListener() {
@@ -234,17 +227,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                                             Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                                                             FirebaseUser user = task.getResult().getUser();
-                                                            //Lecturer lecturer = new Lecturer();
-                                                            //lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername,user.getUid());
+                                                            String uid = user.getUid();
 
-                                                            Double zero = 0.00;
-                                                            final String testId = "TESTID7890";
+                                                            Lecturer lecturer = new Lecturer();
+                                                            lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername, uid);
 
-                                                            Lecturer lecturer = new Lecturer(inputEmail,inputPassword,inputFullName,inputUsername,zero);
-                                                            mDatabase.child("users").child("lecturer").child(testId).setValue(lecturer);
+                                                            Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
 
                                                             if (!task.isSuccessful()) {
                                                                 Log.d(TAG, "onComplete: uid=" + user.getUid());
+                                                                Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_fail, Toast.LENGTH_SHORT).show();
                                                             }
                                                         }
                                                     });
@@ -281,7 +273,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.kdu_glenmarie_view)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.kdu_logo))
+                        new ProfileDrawerItem().withName("CK Song").withEmail("0116708@kdu-online.com").withIcon(getResources().getDrawable(R.drawable.kdu_logo))
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -300,8 +292,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         new DividerDrawerItem(),
                         item2,
                         item3,
-                        item4,
                         new DividerDrawerItem(),
+                        item4,
                         item5
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {

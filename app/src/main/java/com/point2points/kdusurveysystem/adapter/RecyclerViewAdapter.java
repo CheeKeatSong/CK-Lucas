@@ -26,6 +26,12 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.point2points.kdusurveysystem.Lecturer;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.model.ExampleModel;
 
@@ -41,8 +47,10 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
-        TextView textViewPos;
-        TextView textViewData;
+        TextView textViewFullName;
+        TextView textViewID;
+        TextView textViewEmail;
+        TextView textViewPoint;
         ImageButton buttonDelete;
         ImageButton  buttonEdit;
         ImageView letterimage;
@@ -51,8 +59,10 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         public SimpleViewHolder(View itemView) {
             super(itemView);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
-            textViewPos = (TextView) itemView.findViewById(R.id.position);
-            textViewData = (TextView) itemView.findViewById(R.id.text_data);
+            textViewFullName = (TextView) itemView.findViewById(R.id.lecturer_fullname_text_view);
+            textViewID = (TextView) itemView.findViewById(R.id.lecturer_ID_text_view);
+            textViewEmail = (TextView) itemView.findViewById(R.id.lecturer_email_text_view);
+            textViewPoint = (TextView) itemView.findViewById(R.id.lecturer_point_text_view);
             buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
             buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
@@ -60,8 +70,8 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(getClass().getSimpleName(), "onItemSelected: " + textViewData.getText().toString());
-                    Toast.makeText(view.getContext(), "onItemSelected: " + textViewData.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Log.d(getClass().getSimpleName(), "onItemSelected: " + textViewFullName.getText().toString());
+                    Toast.makeText(view.getContext(), "onItemSelected: " + textViewFullName.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -143,13 +153,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     private final Comparator<ExampleModel> mComparator;*/
 
     private Context mContext;
-    private ArrayList<String> mDataset;
+    private ArrayList<Lecturer> mDataset;
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
 
-
-
-    public RecyclerViewAdapter(Context context, ArrayList<String> objects) {
+    public RecyclerViewAdapter(Context context, ArrayList<Lecturer> objects) {
         this.mContext = context;
         this.mDataset = objects;
     }
@@ -163,7 +171,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
-        String item = mDataset.get(position);
+        Lecturer item = mDataset.get(position);
+        String fullname = item.fullName;
+        String email = item.emailAddress;
+        String ID = item.lecturer_ID;
+        String point = Double.toString(item.point);
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -187,7 +199,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mDataset.size());
                 mItemManger.closeAllItems();
-                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewData.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
             }
         });
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
@@ -198,11 +210,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mDataset.size());
                 mItemManger.closeAllItems();
-                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewData.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        String firstletter = item.substring(0,1);
+        String firstletter = fullname.substring(0,1);
 
         String color = "#ff0400";
 
@@ -247,10 +259,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 .buildRound(firstletter,android_color);
 
         viewHolder.letterimage.setImageDrawable(drawable);
-        viewHolder.textViewPos.setText("   " + (position + 1) + ". ");
-        viewHolder.textViewData.setText(item);
+        viewHolder.textViewFullName.setText(fullname);
+        viewHolder.textViewID.setText(ID);
+        viewHolder.textViewEmail.setText(email);
+        viewHolder.textViewPoint.setText(point);
         mItemManger.bindView(viewHolder.itemView, position);
-
     }
 
     @Override
