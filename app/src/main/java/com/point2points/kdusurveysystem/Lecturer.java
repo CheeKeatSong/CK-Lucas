@@ -30,7 +30,7 @@ public class Lecturer{
     public String password;
     public String fullName;
     public String username;
-    public double point;
+    public String point;
 
     private DatabaseReference ref;
 
@@ -43,15 +43,15 @@ public class Lecturer{
         this.username = username;
         this.emailAddress = email;
         this.password = password;
-        this.point = point;
+        this.point = Double.toString(point);
     }
 
     public String getLecturer_ID() {
         return lecturer_ID;
     }
 
-    public void setLecuter_ID(String lecuter_ID) {
-        this.lecturer_ID = lecuter_ID;
+    public void setLecuter_ID(String lecturer_ID) {
+        this.lecturer_ID = lecturer_ID;
     }
 
     public String getEmailAddress() {
@@ -87,10 +87,10 @@ public class Lecturer{
     }
 
     public double getPoint() {
-        return point;
+        return Double.parseDouble(point);
     }
 
-    public void setPoint(int point) {
+    public void setPoint(String point) {
         this.point = point;
     }
 

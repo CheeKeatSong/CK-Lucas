@@ -1,13 +1,16 @@
 package com.point2points.kdusurveysystem.RecylcerView;
 
 import android.app.ActionBar;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.support.v7.widget.LinearLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.util.Log;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.Toast;
 
-        import com.daimajia.swipe.util.Attributes;
+import com.daimajia.swipe.util.Attributes;
+import com.firebase.client.FirebaseError;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,15 +18,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Lecturer;
 import com.point2points.kdusurveysystem.R;
-        import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
-        import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
+import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
+import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 
-        import java.util.ArrayList;
-        import java.util.Arrays;
+import java.util.ArrayList;
 
-        import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
-        import com.point2points.kdusurveysystem.AdminToolbarDrawer;
+import com.point2points.kdusurveysystem.AdminToolbarDrawer;
 
 public class RecyclerViewExample extends AdminToolbarDrawer {
 
@@ -40,9 +42,11 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
     private ArrayList<String> mDataSet;
 
+    private static final String TAG = "RecyclerViewExample";
+
     private static final String[] MOVIES = new String[]{
 
-};
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,23 +75,44 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
         final ArrayList<Lecturer> lecturers = new ArrayList<>();
 
-        ref = FirebaseDatabase.getInstance().getReference().child("users").child("lecturer");
         String key = ref.push().getKey();
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("lecturer");
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("There are " + snapshot.getChildrenCount() + " lecturer data");
-                for (DataSnapshot msgSnapshot: snapshot.getChildren()) {
-                    lecturers.add(msgSnapshot.getValue(Lecturer.class));
-                    Log.i("Lecturer", msgSnapshot.getValue(Lecturer.class).getFullName());
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    lecturers.add(postSnapshot.getValue(Lecturer.class));
+                    Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
                 }
             }
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("Lecturer", "The read failed: " + firebaseError.getMessage());
+                Log.e("The read failed: " ,firebaseError.getMessage());
             }
         });
+
+        /*ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("There are " + snapshot.getChildrenCount() + " lecturer data");
+                for (DataSnapshot msgSnapshot : snapshot.getChildren()) {
+                    lecturers.add(msgSnapshot.getValue(Lecturer.class));
+                    Log.i("Lecturer", msgSnapshot.getValue(Lecturer.class).getFullName());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        ref.addValueEventListener(postListener);
+*/
 
         // Adapter:
         //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:swipe="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical">
+        xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
 
     <data>
+
         <variable
             name="listener"
-            type="com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.Listener" />
+            type="com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.Listener"/>
 
         <variable
             name="model"
@@ -14,7 +15,7 @@
 
     </data>
 
-<com.daimajia.swipe.SwipeLayout
+    <com.daimajia.swipe.SwipeLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -22,23 +23,24 @@
         swipe:rightEdgeSwipeOffset="0dp">
 
         <LinearLayout
+            android:id="@+id/bottom_wrapper"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:tag="Bottom3"
-            android:weightSum="10"
-            android:id="@+id/bottom_wrapper">
+            android:weightSum="10">
 
             <LinearLayout
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/yellow_gold">
+
                 <ImageButton
-                android:src="@drawable/ic_edit"
-                android:id="@+id/edit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/yellow_gold"/>
+                    android:id="@+id/edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/yellow_gold"
+                    android:src="@drawable/ic_edit"/>
             </LinearLayout>
 
             <LinearLayout
@@ -46,12 +48,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/light_red">
+
                 <ImageButton
-                    android:src="@drawable/ic_delete"
                     android:id="@+id/delete"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/light_red"/>
+                    android:background="@color/light_red"
+                    android:src="@drawable/ic_delete"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -59,47 +62,74 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:elevation="5dp"
-            android:onClick="@{view -> listener.onExampleModelClicked(model)}">
+            android:onClick="@{view -> listener.onExampleModelClicked(model)}"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
 
             <ImageView
-                android:layout_gravity="center"
+                android:id="@+id/letter_icon"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
-                android:id="@+id/letter_icon"/>
+                android:layout_gravity="start|center_vertical"/>
 
-            <TextView
-                android:id="@+id/lecturer_fullname_text_view"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lecturer_ID_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="6dp"
-                android:textSize="14dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/lecturer_point_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginRight="6dp"
-                android:textSize="14dp"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/lecturer_fullname_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:textSize="16dp"/>
 
-            <TextView
-                android:id="@+id/lecturer_email_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginRight="6dp"
-                android:textSize="14dp"
-                android:layout_gravity="bottom|right"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/lecturer_point_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="16dp"/>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/lecturer_ID_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:textSize="16dp"/>
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/lecturer_email_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:textSize="16dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
     </com.daimajia.swipe.SwipeLayout>
