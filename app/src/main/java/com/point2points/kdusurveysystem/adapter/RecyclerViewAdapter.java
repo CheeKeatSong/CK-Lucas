@@ -38,6 +38,7 @@ import com.point2points.kdusurveysystem.model.ExampleModel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapter.SimpleViewHolder> {
 
@@ -172,10 +173,12 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
         Lecturer item = mDataset.get(position);
-        String fullname = item.fullName;
+        String fullname = (item.fullName).substring(0, 1).toUpperCase() + (item.fullName).substring(1);
         String email = item.emailAddress;
         String ID = item.lecturer_ID;
-        String point = Double.toString(item.point);
+        String point = item.point;
+        StringTokenizer tokens = new StringTokenizer(point, ".");
+        point = tokens.nextToken();
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -262,7 +265,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.textViewFullName.setText(fullname);
         viewHolder.textViewID.setText(ID);
         viewHolder.textViewEmail.setText(email);
-        viewHolder.textViewPoint.setText(point);
+        viewHolder.textViewPoint.setText("Point: " + point);
         mItemManger.bindView(viewHolder.itemView, position);
     }
 
