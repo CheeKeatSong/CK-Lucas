@@ -1,6 +1,7 @@
 package com.point2points.kdusurveysystem;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -47,6 +49,8 @@ import static android.content.ContentValues.TAG;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
+import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 //import com.google.firebase.database.DataSnapshot;
 //import com.google.firebase.database.DatabaseError;
 //import com.google.firebase.database.ValueEventListener;
@@ -60,6 +64,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private SearchView searchEditText;
     private Toolbar mToolBar, mToolBar2;
 
+    public int sortoption = 0;
+
     private Drawer adminDrawer;
 
     private FirebaseAuth mAuth;
@@ -69,6 +75,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String TAG = "AdminToolbarDrawer";
 
     protected void onCreateToolbar() {
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -139,19 +147,22 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 String sortType = String.valueOf(sortButton.getSelectedItem());
                 ((TextView)selectedItemView).setText(null);
-                ListSorter listSorter = new ListSorter();
 
-                if (sortType == "A-Z"){
-
+                if (sortType.equals("A-Z")){
+                    sortoption = 1;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
-                else if(sortType == "Z-A"){
-
+                else if(sortType.equals("Z-A")){
+                    sortoption = 2;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
-                else if(sortType == "Latest"){
-
+                else if(sortType.equals("Latest")){
+                    sortoption = 3;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
-                else if(sortType == "Earliest"){
-
+                else if(sortType.equals("Earliest")){
+                    sortoption = 4;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
             }
 

@@ -1,27 +1,20 @@
 package com.point2points.kdusurveysystem.RecylcerView;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.inputmethod.InputMethodManager;
 
 import com.daimajia.swipe.util.Attributes;
-import com.firebase.client.FirebaseError;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.point2points.kdusurveysystem.Lecturer;
+
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
-
-import java.util.ArrayList;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
@@ -38,15 +31,17 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
      * 3) Handle any touch events apart from scrolling: This is now done in our adapter's ViewHolder
      */
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private static RecyclerView.Adapter mAdapter;
 
-    private ArrayList<String> mDataSet;
+    private int option;
 
     private static final String TAG = "RecyclerViewExample";
 
-    private static final String[] MOVIES = new String[]{
-
-    };
+    public void sorting(int option){
+        this.option = option;
+        mAdapter = new RecyclerViewAdapter(this);
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +49,6 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         setContentView(R.layout.recycler_view);
         super.onCreateDrawer();
         super.onCreateToolbar();
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -72,27 +65,6 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         // Item Decorator:
         recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
-
-        final ArrayList<Lecturer> lecturers = new ArrayList<>();
-
-        String key = ref.push().getKey();
-        ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("lecturer");
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    lecturers.add(postSnapshot.getValue(Lecturer.class));
-                    Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
-            }
-        });
 
         /*ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -117,14 +89,19 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         // Adapter:
         //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
         //mDataSet = new ArrayList<String>(Arrays.asList(adapterData));
-        mAdapter = new RecyclerViewAdapter(this, lecturers);
+
+        mAdapter = new RecyclerViewAdapter(this);
         ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
         /* Listeners */
         recyclerView.setOnScrollListener(onScrollListener);
     }
 
+    public static void notifyDataChanges(){
+        mAdapter.notifyDataSetChanged();
+    }
     /**
      * Substitute for our onScrollListener for RecyclerView
      */

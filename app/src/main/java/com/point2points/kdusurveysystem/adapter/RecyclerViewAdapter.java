@@ -1,46 +1,44 @@
 package com.point2points.kdusurveysystem.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Lecturer;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
 import com.point2points.kdusurveysystem.model.ExampleModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapter.SimpleViewHolder> {
+
+    static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    static Query query;
 
     public interface Listener {
         void onExampleModelClicked(ExampleModel model);
@@ -55,7 +53,6 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         ImageButton buttonDelete;
         ImageButton  buttonEdit;
         ImageView letterimage;
-
 
         public SimpleViewHolder(View itemView) {
             super(itemView);
@@ -154,13 +151,111 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     private final Comparator<ExampleModel> mComparator;*/
 
     private Context mContext;
-    private ArrayList<Lecturer> mDataset;
+    private static ArrayList<Lecturer> lecturers = new ArrayList<>();
+    private static ArrayList<Lecturer> mDataset = new ArrayList<>();
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
-
-    public RecyclerViewAdapter(Context context, ArrayList<Lecturer> objects) {
+    public RecyclerViewAdapter(Context context) {
         this.mContext = context;
-        this.mDataset = objects;
+
+        //String key = ref.push().getKey();
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("lecturer");
+        query = ref;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    boolean found = false;
+                    for (Lecturer lecturer : lecturers) {
+                        if (lecturer.getFullName() == postSnapshot.getValue(Lecturer.class).getFullName()) {
+                            found = true;
+                        }
+                    }
+                    if (!found){
+                    lecturers.add(postSnapshot.getValue(Lecturer.class));
+                    Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
+                }}
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });
+        mDataset = lecturers;
+        }
+
+    public static void sortingData(int sortoption){
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("lecturer");
+        query = ref;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    boolean found = false;
+                    for (Lecturer lecturer : lecturers) {
+                        if (lecturer.getFullName() == postSnapshot.getValue(Lecturer.class).getFullName()) {
+                            found = true;
+                        }
+                    }
+                    if (!found){
+                        lecturers.add(postSnapshot.getValue(Lecturer.class));
+                        Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
+                    }}
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });
+        mDataset = lecturers;
+
+        switch (sortoption) {
+            case 1:
+                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                    @Override
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                        return (lecturer1.getFullName().substring(0, 1).toUpperCase() + lecturer1.getFullName().substring(1)).compareTo(lecturer2.getFullName().substring(0, 1).toUpperCase() + lecturer2.getFullName().substring(1));
+                    }
+                });
+
+                break;
+            case 2:
+                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                    @Override
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                        return lecturer1.getFullName().compareTo(lecturer2.getFullName());
+                    }
+                });
+                Collections.reverse(mDataset);
+                break;
+            case 3:
+                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                    @Override
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                        return lecturer1.getDate().compareTo(lecturer2.getDate());
+                    }
+                });
+                Collections.reverse(mDataset);
+                break;
+            case 4:
+                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                    @Override
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                        return lecturer1.getDate().compareTo(lecturer2.getDate());
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+        RecyclerViewExample.notifyDataChanges();
     }
 
     @Override
