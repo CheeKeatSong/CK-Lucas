@@ -1,14 +1,14 @@
 package com.point2points.kdusurveysystem.RecylcerView;
 
 import android.app.ActionBar;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
 
@@ -32,6 +32,9 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
      */
     private RecyclerView recyclerView;
     private static RecyclerView.Adapter mAdapter;
+
+    Handler handler = new Handler();ProgressBar progressBar;
+
 
     private int option;
 
@@ -66,6 +69,10 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
+        progressBar.setVisibility(View.VISIBLE);
+
         /*ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -93,10 +100,29 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         mAdapter = new RecyclerViewAdapter(this);
         ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+
 
         /* Listeners */
         recyclerView.setOnScrollListener(onScrollListener);
+
+        new Thread(new Runnable() {
+            public void run() {
+                try{
+                    Thread.sleep(3500);
+                }
+                catch (Exception e) { } // Just catch the InterruptedException
+
+                // Now we use the Handler to post back to the main thread
+                handler.post(new Runnable() {
+                    public void run() {
+                        // Set the View's visibility back on the main UI Thread
+                        progressBar.setVisibility(View.GONE);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+
     }
 
     public static void notifyDataChanges(){

@@ -124,7 +124,7 @@ public class Login extends Activity{
                     return;
                 }
 
-                progressBar.setVisibility(View.VISIBLE);
+                progressBar .setVisibility(View.VISIBLE);
 
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {

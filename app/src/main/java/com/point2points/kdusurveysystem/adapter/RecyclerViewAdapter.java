@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.point2points.kdusurveysystem.model.ExampleModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapter.SimpleViewHolder> {
@@ -177,6 +179,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                     if (!found){
                     lecturers.add(postSnapshot.getValue(Lecturer.class));
                     Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
+                        RecyclerViewExample.notifyDataChanges();
                 }}
             }
             @Override
@@ -185,6 +188,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             }
         });
         mDataset = lecturers;
+
         }
 
     public static void sortingData(int sortoption){
@@ -362,6 +366,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.textViewEmail.setText(email);
         viewHolder.textViewPoint.setText("Point: " + point);
         mItemManger.bindView(viewHolder.itemView, position);
+
     }
 
     @Override
@@ -372,5 +377,29 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     @Override
     public int getSwipeLayoutResourceId(int position) {
         return R.id.swipe;
+    }
+
+    public static void filter(String charText) {
+
+        charText = charText.toLowerCase(Locale.getDefault());
+        mDataset = new ArrayList<Lecturer>();
+
+        if (charText.length() == 0) {
+            mDataset = lecturers;
+        }
+        else
+        {
+            for (Lecturer lecturer : lecturers)
+            {
+                if (lecturer.getFullName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || lecturer.getEmailAddress().toLowerCase(Locale.getDefault()).contains(charText)
+                        || lecturer.getLecturer_ID().toLowerCase(Locale.getDefault()).contains(charText)
+                        || lecturer.getUsername().toLowerCase(Locale.getDefault()).contains(charText))
+                {
+                    mDataset.add(lecturer);
+                }
+            }
+        }
+        RecyclerViewExample.notifyDataChanges();
     }
 }

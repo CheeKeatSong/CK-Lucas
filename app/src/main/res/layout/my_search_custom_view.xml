@@ -24,12 +24,12 @@
             android:scaleType="centerInside"
             android:id="@+id/menu_item_back"/>
 
-        <android.support.v7.widget.SearchView
+        <EditText
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textSize="18dp"
-            android:queryHint="@string/search_hint"
+            android:hint="@string/search_hint"
             android:id="@+id/search_edit_text"
             android:textColor="@color/white"/>
 
