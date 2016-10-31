@@ -144,7 +144,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                 String sortType = String.valueOf(sortButton.getSelectedItem());
-                ((TextView)selectedItemView).setText(null);
 
                 if (sortType.equals("A-Z")){
                     sortoption = 1;

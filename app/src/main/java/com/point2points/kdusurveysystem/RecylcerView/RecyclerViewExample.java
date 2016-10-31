@@ -1,6 +1,8 @@
 package com.point2points.kdusurveysystem.RecylcerView;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
 
+import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
@@ -30,11 +33,12 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
      * 2) Animate & Decorate views: This is done with ItemAnimators & ItemDecorators
      * 3) Handle any touch events apart from scrolling: This is now done in our adapter's ViewHolder
      */
+    private static Context context;
+
     private RecyclerView recyclerView;
     private static RecyclerView.Adapter mAdapter;
 
     Handler handler = new Handler();ProgressBar progressBar;
-
 
     private int option;
 
@@ -42,7 +46,7 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
     public void sorting(int option){
         this.option = option;
-        mAdapter = new RecyclerViewAdapter(this);
+        mAdapter = new RecyclerViewAdapter(getApplicationContext());
         mAdapter.notifyDataSetChanged();
     }
 
@@ -52,6 +56,8 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         setContentView(R.layout.recycler_view);
         super.onCreateDrawer();
         super.onCreateToolbar();
+
+        RecyclerViewExample.context = getApplicationContext();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -125,9 +131,6 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
     }
 
-    public static void notifyDataChanges(){
-        mAdapter.notifyDataSetChanged();
-    }
     /**
      * Substitute for our onScrollListener for RecyclerView
      */
@@ -145,6 +148,9 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         }
     };
 
+    public static void notifyDataChanges(){
+        mAdapter.notifyDataSetChanged();
+    }
 
 }
 

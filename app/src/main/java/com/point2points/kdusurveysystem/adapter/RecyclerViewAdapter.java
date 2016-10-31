@@ -1,6 +1,7 @@
 package com.point2points.kdusurveysystem.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
 import com.point2points.kdusurveysystem.Lecturer;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
@@ -52,11 +53,12 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         TextView textViewID;
         TextView textViewEmail;
         TextView textViewPoint;
+        TextView textViewUid;
         ImageButton buttonDelete;
         ImageButton  buttonEdit;
         ImageView letterimage;
 
-        public SimpleViewHolder(View itemView) {
+        public SimpleViewHolder(final View itemView) {
             super(itemView);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
             textViewFullName = (TextView) itemView.findViewById(R.id.lecturer_fullname_text_view);
@@ -66,12 +68,15 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
             buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
+            textViewUid = (TextView) itemView.findViewById(R.id.lecturer_uid_text_view);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.d(getClass().getSimpleName(), "onItemSelected: " + textViewFullName.getText().toString());
                     Toast.makeText(view.getContext(), "onItemSelected: " + textViewFullName.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = LecturerFragmentPagerActivity.newIntent(itemView.getContext(), textViewUid.getText().toString());
+                    itemView.getContext().startActivity(intent);
                 }
             });
         }
@@ -154,7 +159,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
 
     private Context mContext;
     private static ArrayList<Lecturer> lecturers = new ArrayList<>();
-    private static ArrayList<Lecturer> mDataset = new ArrayList<>();
+    public static ArrayList<Lecturer> mDataset = new ArrayList<>();
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
     public RecyclerViewAdapter(Context context) {
@@ -172,7 +177,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
                     for (Lecturer lecturer : lecturers) {
-                        if (lecturer.getFullName() == postSnapshot.getValue(Lecturer.class).getFullName()) {
+                        if (lecturer.getUid() == postSnapshot.getValue(Lecturer.class).getUid()) {
                             found = true;
                         }
                     }
@@ -188,7 +193,6 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             }
         });
         mDataset = lecturers;
-
         }
 
     public static void sortingData(int sortoption){
@@ -204,7 +208,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
                     for (Lecturer lecturer : lecturers) {
-                        if (lecturer.getFullName() == postSnapshot.getValue(Lecturer.class).getFullName()) {
+                        if (lecturer.getUid() == postSnapshot.getValue(Lecturer.class).getUid()) {
                             found = true;
                         }
                     }
@@ -276,6 +280,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         String email = item.emailAddress;
         String ID = item.lecturer_ID;
         String point = item.point;
+        String uid = item.uid;
         StringTokenizer tokens = new StringTokenizer(point, ".");
         point = tokens.nextToken();
 
@@ -365,6 +370,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.textViewID.setText(ID);
         viewHolder.textViewEmail.setText(email);
         viewHolder.textViewPoint.setText("Point: " + point);
+        viewHolder.textViewUid.setText(uid);
         mItemManger.bindView(viewHolder.itemView, position);
 
     }
