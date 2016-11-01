@@ -38,7 +38,7 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
     private RecyclerView recyclerView;
     private static RecyclerView.Adapter mAdapter;
 
-    Handler handler = new Handler();ProgressBar progressBar;
+    static ProgressBar progressBar;
 
     private int option;
 
@@ -77,7 +77,7 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);
         progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
-        progressBar.setVisibility(View.VISIBLE);
+        onProgressBar();
 
         /*ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -110,25 +110,6 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
         /* Listeners */
         recyclerView.setOnScrollListener(onScrollListener);
-
-        new Thread(new Runnable() {
-            public void run() {
-                try{
-                    Thread.sleep(3500);
-                }
-                catch (Exception e) { } // Just catch the InterruptedException
-
-                // Now we use the Handler to post back to the main thread
-                handler.post(new Runnable() {
-                    public void run() {
-                        // Set the View's visibility back on the main UI Thread
-                        progressBar.setVisibility(View.GONE);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();
-
     }
 
     /**
@@ -150,6 +131,14 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
     public static void notifyDataChanges(){
         mAdapter.notifyDataSetChanged();
+    }
+
+    public static void onProgressBar(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public static void offProgressBar(){
+        progressBar.setVisibility(View.GONE);
     }
 
 }

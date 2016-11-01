@@ -19,10 +19,12 @@
     <color name="emerald">#5CC3B5</color>
     <color name="dark_emerald">#1fb699</color>
     <color name="light_red">#FC5A73</color>
-    <color name="dark_green">#157F7F</color>
+    <color name="dark_green">#0c861a</color>
     <color name="dark_blue">#1065cc</color>
-    <color name="yellow_gold">#f9ab35</color>
+    <color name="yellow_gold">#f9df35</color>
     <color name="light_purple">#BF538E</color>
+    <color name="apple_green">#6af95a</color>
+    <color name="red">#f91b1b</color>
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
