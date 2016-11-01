@@ -1,12 +1,16 @@
 package com.point2points.kdusurveysystem.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.Lecturer;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 
 import static com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.mDataset;
 
@@ -171,20 +176,45 @@ public class LecturerFragment extends Fragment{
             @Override
             public void onClick(View v){
 
-                DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("lecturer").child(mLecturer.getUid());
+                //Log.d("Check 1", lecturers.toString());
 
-                Map<String, Object> updateLecturer = new HashMap<String, Object>();
+                final Context context = lecturerDataEditButton.getContext();
 
-                updateLecturer.put("fullName", mLecturer.getFullName());
-                updateLecturer.put("username", mLecturer.getUsername());
-                updateLecturer.put("point",mLecturer.getPoint());
-                updateLecturer.put("password", mLecturer.getPassword());
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-                mDatabase.updateChildren(updateLecturer);
+                alertDialogBuilder.setMessage("Confirm making changes to " + mLecturer.getLecturer_ID() + "?");
 
-                Toast.makeText(lecturerDataEditButton.getContext(), "Changes applied to " + mLecturer.getLecturer_ID(), Toast.LENGTH_SHORT).show();
-                getActivity().onBackPressed();
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+
+                                        DatabaseReference mDatabase;
+                                        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("lecturer").child(mLecturer.getUid());
+
+                                        Map<String, Object> updateLecturer = new HashMap<String, Object>();
+
+                                        updateLecturer.put("fullName", mLecturer.getFullName());
+                                        updateLecturer.put("username", mLecturer.getUsername());
+                                        updateLecturer.put("point",mLecturer.getPoint());
+                                        updateLecturer.put("password", mLecturer.getPassword());
+
+                                        mDatabase.updateChildren(updateLecturer);
+
+                                        Toast.makeText(context, "Changes applied to " + mLecturer.getLecturer_ID(), Toast.LENGTH_SHORT).show();
+                                        refreshAdapter(mLecturer);
+                                        getActivity().onBackPressed();
+                                    }
+                                })
+
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 
@@ -198,7 +228,6 @@ public class LecturerFragment extends Fragment{
 
         return v;
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -215,5 +244,21 @@ public class LecturerFragment extends Fragment{
             }
         }
         return null;
+    }
+
+    public void refreshAdapter(Lecturer changedLecturer) {
+
+        for (Lecturer lecturer : lecturerData) {
+            if (lecturer.getUid().equals(changedLecturer.getUid())) {
+                lecturer = changedLecturer;
+
+                break;
+            }
+        }
+
+        RecyclerViewAdapter.updateArrayList(lecturerData);
+
+        //Log.d("Check 2", lecturers.toString());
+        //RecyclerViewExample.notifyDataChanges();
     }
 }

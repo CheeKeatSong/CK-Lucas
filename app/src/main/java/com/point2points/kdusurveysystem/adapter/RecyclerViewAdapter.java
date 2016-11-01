@@ -266,6 +266,13 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         RecyclerViewExample.notifyDataChanges();
     }
 
+    public static void updateArrayList(ArrayList updatedLecturers) {
+
+        lecturers = updatedLecturers;
+
+        RecyclerViewExample.notifyDataChanges();
+    }
+
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_items, parent, false);
