@@ -315,12 +315,16 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
+                ref.child(viewHolder.textViewUid.getText().toString()).removeValue();
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                mDataset.remove(position);
+                lecturers.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mDataset.size());
                 mItemManger.closeAllItems();
                 Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+
+                mDataset = lecturers;
             }
         });
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
