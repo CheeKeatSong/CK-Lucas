@@ -71,7 +71,7 @@ public class Lecturer{
         return lecturer_ID;
     }
 
-    public void setLecuter_ID(String lecturer_ID) {
+    public void setLecturer_ID(String lecturer_ID) {
         this.lecturer_ID = lecturer_ID;
     }
 

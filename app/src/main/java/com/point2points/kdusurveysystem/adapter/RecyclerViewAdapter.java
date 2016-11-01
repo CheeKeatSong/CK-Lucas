@@ -73,10 +73,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(getClass().getSimpleName(), "onItemSelected: " + textViewFullName.getText().toString());
                     Toast.makeText(view.getContext(), "onItemSelected: " + textViewFullName.getText().toString(), Toast.LENGTH_SHORT).show();
-                    Intent intent = LecturerFragmentPagerActivity.newIntent(itemView.getContext(), textViewUid.getText().toString());
-                    itemView.getContext().startActivity(intent);
                 }
             });
         }
@@ -184,8 +181,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                     if (!found){
                     lecturers.add(postSnapshot.getValue(Lecturer.class));
                     Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                        RecyclerViewExample.notifyDataChanges();
                 }}
+                if (lecturers.size() == snapshot.getChildrenCount()){
+                    RecyclerViewExample.offProgressBar();
+                    RecyclerViewExample.notifyDataChanges();
+                }
             }
             @Override
             public void onCancelled(DatabaseError firebaseError) {
@@ -204,6 +204,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                RecyclerViewExample.onProgressBar();
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
@@ -216,6 +217,10 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                         lecturers.add(postSnapshot.getValue(Lecturer.class));
                         Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
                     }}
+                if (lecturers.size() == snapshot.getChildrenCount()){
+                    RecyclerViewExample.offProgressBar();
+                    RecyclerViewExample.notifyDataChanges();
+                }
             }
             @Override
             public void onCancelled(DatabaseError firebaseError) {
@@ -302,7 +307,9 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                Toast.makeText(mContext, "DoubleClick", Toast.LENGTH_SHORT).show();
+                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewFullName.getText().toString());
+                Intent intent = LecturerFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewUid.getText().toString());
+                viewHolder.swipeLayout.getContext().startActivity(intent);
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -319,12 +326,8 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                mDataset.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mDataset.size());
-                mItemManger.closeAllItems();
-                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+                Intent intent = LecturerFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewUid.getText().toString());
+                viewHolder.swipeLayout.getContext().startActivity(intent);
             }
         });
 

@@ -33,13 +33,13 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/yellow_gold">
+                android:background="@color/md_cyan_400">
 
                 <ImageButton
                     android:id="@+id/edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/yellow_gold"
+                    android:background="@color/md_cyan_400"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
 
@@ -47,13 +47,13 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/light_red">
+                android:background="@color/dark_green">
 
                 <ImageButton
                     android:id="@+id/delete"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/light_red"
+                    android:background="@color/dark_green"
                     android:src="@drawable/ic_delete"/>
             </LinearLayout>
 
