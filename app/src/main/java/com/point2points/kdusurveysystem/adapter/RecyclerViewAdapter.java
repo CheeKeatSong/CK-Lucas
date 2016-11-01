@@ -1,10 +1,11 @@
 package com.point2points.kdusurveysystem.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
-import com.point2points.kdusurveysystem.Lecturer;
+import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecylcerView.RecyclerViewExample;
-import com.point2points.kdusurveysystem.model.ExampleModel;
+import com.point2points.kdusurveysystem.RecylcerView.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,11 +43,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
-    public interface Listener {
-        void onExampleModelClicked(ExampleModel model);
-    }
-
-    public static class SimpleViewHolder extends RecyclerView.ViewHolder {
+    public static class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
         TextView textViewFullName;
         TextView textViewID;
@@ -183,8 +179,8 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                     Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
                 }}
                 if (lecturers.size() == snapshot.getChildrenCount()){
-                    RecyclerViewExample.offProgressBar();
-                    RecyclerViewExample.notifyDataChanges();
+                    RecyclerView.offProgressBar();
+                    RecyclerView.notifyDataChanges();
                 }
             }
             @Override
@@ -204,7 +200,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                RecyclerViewExample.onProgressBar();
+                RecyclerView.onProgressBar();
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
@@ -218,8 +214,8 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                         Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
                     }}
                 if (lecturers.size() == snapshot.getChildrenCount()){
-                    RecyclerViewExample.offProgressBar();
-                    RecyclerViewExample.notifyDataChanges();
+                    RecyclerView.offProgressBar();
+                    RecyclerView.notifyDataChanges();
                 }
             }
             @Override
@@ -268,26 +264,26 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             default:
                 break;
         }
-        RecyclerViewExample.notifyDataChanges();
+        RecyclerView.notifyDataChanges();
     }
 
     public static void updateArrayList(ArrayList updatedLecturers) {
 
         lecturers = updatedLecturers;
 
-        RecyclerViewExample.notifyDataChanges();
+        RecyclerView.notifyDataChanges();
     }
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_items, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lecturer_recycler_view_items, parent, false);
         return new SimpleViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
-        Lecturer item = mDataset.get(position);
+        final Lecturer item = mDataset.get(position);
         String fullname = (item.fullName).substring(0, 1).toUpperCase() + (item.fullName).substring(1);
         String email = item.emailAddress;
         String ID = item.lecturer_ID;
@@ -314,17 +310,41 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
-                ref.child(viewHolder.textViewUid.getText().toString()).removeValue();
-                mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                lecturers.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mDataset.size());
-                mItemManger.closeAllItems();
-                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+            public void onClick(final View view) {
 
-                mDataset = lecturers;
+                final Context context = view.getContext();
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+                alertDialogBuilder.setMessage("Confirm deleting " + item.getLecturer_ID() + "?");
+
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+
+                                //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
+                                ref.child(viewHolder.textViewUid.getText().toString()).removeValue();
+                                mItemManger.removeShownLayouts(viewHolder.swipeLayout);
+                                lecturers.remove(position);
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, mDataset.size());
+                                mItemManger.closeAllItems();
+                                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+
+                                mDataset = lecturers;
+                            }
+                        })
+
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
             }
         });
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
@@ -420,6 +440,6 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                 }
             }
         }
-        RecyclerViewExample.notifyDataChanges();
+        RecyclerView.notifyDataChanges();
     }
 }

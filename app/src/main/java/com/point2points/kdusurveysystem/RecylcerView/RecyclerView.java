@@ -2,28 +2,24 @@ package com.point2points.kdusurveysystem.RecylcerView;
 
 import android.app.ActionBar;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
 
-import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
-import com.point2points.kdusurveysystem.AdminToolbarDrawer;
+import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 
-public class RecyclerViewExample extends AdminToolbarDrawer {
+public class RecyclerView extends AdminToolbarDrawer {
 
     /**
      * RecyclerView: The new recycler view replaces the list view. Its more modular and therefore we
@@ -35,14 +31,14 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
      */
     private static Context context;
 
-    private RecyclerView recyclerView;
-    private static RecyclerView.Adapter mAdapter;
+    private android.support.v7.widget.RecyclerView recyclerView;
+    private static android.support.v7.widget.RecyclerView.Adapter mAdapter;
 
     static ProgressBar progressBar;
 
     private int option;
 
-    private static final String TAG = "RecyclerViewExample";
+    private static final String TAG = "RecyclerView";
 
     public void sorting(int option){
         this.option = option;
@@ -57,9 +53,9 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         super.onCreateDrawer();
         super.onCreateToolbar();
 
-        RecyclerViewExample.context = getApplicationContext();
+        RecyclerView.context = getApplicationContext();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (android.support.v7.widget.RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
@@ -115,15 +111,15 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
     /**
      * Substitute for our onScrollListener for RecyclerView
      */
-    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+    android.support.v7.widget.RecyclerView.OnScrollListener onScrollListener = new android.support.v7.widget.RecyclerView.OnScrollListener() {
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        public void onScrollStateChanged(android.support.v7.widget.RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             Log.e("ListView", "onScrollStateChanged");
         }
 
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(android.support.v7.widget.RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             // Could hide open views here if you wanted. //
         }

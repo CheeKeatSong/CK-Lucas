@@ -1,11 +1,10 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.admin;
 
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
@@ -20,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -42,6 +40,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.point2points.kdusurveysystem.datamodel.Lecturer;
+import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 
 import java.util.Locale;
@@ -225,6 +225,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             final String inputPassword = password.getText().toString();
                                             final String inputFullName = fullname.getText().toString();
                                             final String inputUsername = username.getText().toString();
+
+                                            if (!(inputEmail.contains("@")) || !(inputEmail.contains(".com"))) {
+                                                Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
 
                                             if (TextUtils.isEmpty(inputEmail)) {
                                                 Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();

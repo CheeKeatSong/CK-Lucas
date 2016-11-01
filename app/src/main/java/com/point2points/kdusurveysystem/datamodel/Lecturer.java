@@ -1,28 +1,9 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.datamodel;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.StringTokenizer;
-
-import static android.content.ContentValues.TAG;
 
 public class Lecturer{
 

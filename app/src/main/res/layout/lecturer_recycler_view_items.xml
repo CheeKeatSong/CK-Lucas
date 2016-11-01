@@ -3,18 +3,6 @@
         xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
-    <data>
-
-        <variable
-            name="listener"
-            type="com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.Listener"/>
-
-        <variable
-            name="model"
-            type="com.point2points.kdusurveysystem.model.ExampleModel"/>
-
-    </data>
-
     <com.daimajia.swipe.SwipeLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"

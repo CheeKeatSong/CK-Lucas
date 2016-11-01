@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.point2points.kdusurveysystem.Lecturer;
+import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class LecturerFragmentPagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lecturer_fragment_pager);
+        setContentView(R.layout.lecturer_fragment_pager);
 
         this.lecturerData = mDataset;
 

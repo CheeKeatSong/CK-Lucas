@@ -1,6 +1,6 @@
 // Added this comment for testing. 5.41PM
 
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.admin;
 
 import android.app.Activity;
 import android.os.Bundle;
