@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.Lecturer;
 import com.point2points.kdusurveysystem.R;
 
@@ -22,6 +25,8 @@ import static com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.mData
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LecturerFragment extends Fragment{
 
@@ -166,6 +171,20 @@ public class LecturerFragment extends Fragment{
             @Override
             public void onClick(View v){
 
+                DatabaseReference mDatabase;
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("lecturer").child(mLecturer.getUid());
+
+                Map<String, Object> updateLecturer = new HashMap<String, Object>();
+
+                updateLecturer.put("fullName", mLecturer.getFullName());
+                updateLecturer.put("username", mLecturer.getUsername());
+                updateLecturer.put("point",mLecturer.getPoint());
+                updateLecturer.put("password", mLecturer.getPassword());
+
+                mDatabase.updateChildren(updateLecturer);
+
+                Toast.makeText(lecturerDataEditButton.getContext(), "Changes applied to " + mLecturer.getLecturer_ID(), Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
 
