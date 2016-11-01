@@ -17,6 +17,10 @@
     <string name="option">Option</string>
     <string name="search_hint">Search...</string>
 
+    //button
+    <string name="okay">OKAY</string>
+    <string name="cancel">CANCEL</string>
+
     //data creation dialog
     <string name="lecturer_data_creation_success">LECTURER DATA SUCCESSFULLY CREATED</string>
     <string name="lecturer_data_creation_fail">LECTURER DATA CREATION FAILED</string>

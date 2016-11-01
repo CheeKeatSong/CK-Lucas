@@ -1,6 +1,7 @@
 package com.point2points.kdusurveysystem;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -122,7 +124,7 @@ public class Login extends Activity{
                     return;
                 }
 
-                progressBar.setVisibility(View.VISIBLE);
+                progressBar .setVisibility(View.VISIBLE);
 
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
@@ -146,7 +148,9 @@ public class Login extends Activity{
                                 }
                             }
                         });
+
             }});
+
     }
 
     @Override

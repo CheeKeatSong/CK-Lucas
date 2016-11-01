@@ -1,27 +1,23 @@
 package com.point2points.kdusurveysystem.RecylcerView;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
-import com.firebase.client.FirebaseError;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.point2points.kdusurveysystem.Lecturer;
+
+import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
-
-import java.util.ArrayList;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
@@ -37,16 +33,22 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
      * 2) Animate & Decorate views: This is done with ItemAnimators & ItemDecorators
      * 3) Handle any touch events apart from scrolling: This is now done in our adapter's ViewHolder
      */
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private static Context context;
 
-    private ArrayList<String> mDataSet;
+    private RecyclerView recyclerView;
+    private static RecyclerView.Adapter mAdapter;
+
+    Handler handler = new Handler();ProgressBar progressBar;
+
+    private int option;
 
     private static final String TAG = "RecyclerViewExample";
 
-    private static final String[] MOVIES = new String[]{
-
-    };
+    public void sorting(int option){
+        this.option = option;
+        mAdapter = new RecyclerViewAdapter(getApplicationContext());
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         super.onCreateDrawer();
         super.onCreateToolbar();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        RecyclerViewExample.context = getApplicationContext();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -73,26 +75,9 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
 
-        final ArrayList<Lecturer> lecturers = new ArrayList<>();
-
-        String key = ref.push().getKey();
-        ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("lecturer");
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    lecturers.add(postSnapshot.getValue(Lecturer.class));
-                    Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
-            }
-        });
+        progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
+        progressBar.setVisibility(View.VISIBLE);
 
         /*ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -117,12 +102,33 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         // Adapter:
         //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
         //mDataSet = new ArrayList<String>(Arrays.asList(adapterData));
-        mAdapter = new RecyclerViewAdapter(this, lecturers);
+
+        mAdapter = new RecyclerViewAdapter(this);
         ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(mAdapter);
 
+
         /* Listeners */
         recyclerView.setOnScrollListener(onScrollListener);
+
+        new Thread(new Runnable() {
+            public void run() {
+                try{
+                    Thread.sleep(3500);
+                }
+                catch (Exception e) { } // Just catch the InterruptedException
+
+                // Now we use the Handler to post back to the main thread
+                handler.post(new Runnable() {
+                    public void run() {
+                        // Set the View's visibility back on the main UI Thread
+                        progressBar.setVisibility(View.GONE);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+
     }
 
     /**
@@ -142,6 +148,9 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         }
     };
 
+    public static void notifyDataChanges(){
+        mAdapter.notifyDataSetChanged();
+    }
 
 }
 

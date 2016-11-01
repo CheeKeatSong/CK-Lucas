@@ -1,19 +1,21 @@
 package com.point2points.kdusurveysystem;
 
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,9 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -40,25 +40,20 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.content.ContentValues.TAG;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.DataSnapshot;
-//import com.google.firebase.database.DatabaseError;
-//import com.google.firebase.database.ValueEventListener;
-//import com.google.firebase.quickstart.database.models.Post;
-//import com.google.firebase.quickstart.database.models.User;
+import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
+
+import java.util.Locale;
 
 public class AdminToolbarDrawer extends AppCompatActivity {
 
     private ImageButton optionButton, addButton, searchButton, backButton;
     private Spinner sortButton;
-    private SearchView searchEditText;
+    private EditText searchEditText;
     private Toolbar mToolBar, mToolBar2;
+
+    public int sortoption = 0;
 
     private Drawer adminDrawer;
 
@@ -69,6 +64,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String TAG = "AdminToolbarDrawer";
 
     protected void onCreateToolbar() {
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -101,17 +98,26 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         });
 
         backButton = (ImageButton)findViewById(R.id.menu_item_back);
-        searchEditText = (SearchView) findViewById(R.id.search_edit_text);
-        searchEditText.setIconified(false);
-        searchEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchEditText = (EditText) findViewById(R.id.search_edit_text);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+                String text = searchEditText.getText().toString().toLowerCase(Locale.getDefault());
+                RecyclerViewAdapter.filter(text);
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+                // TODO Auto-generated method stub
             }
         });
         searchButton = (ImageButton) findViewById(R.id.menu_item_search);
@@ -138,20 +144,22 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                 String sortType = String.valueOf(sortButton.getSelectedItem());
-                ((TextView)selectedItemView).setText(null);
-                ListSorter listSorter = new ListSorter();
 
-                if (sortType == "A-Z"){
-
+                if (sortType.equals("A-Z")){
+                    sortoption = 1;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
-                else if(sortType == "Z-A"){
-
+                else if(sortType.equals("Z-A")){
+                    sortoption = 2;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
-                else if(sortType == "Latest"){
-
+                else if(sortType.equals("Latest")){
+                    sortoption = 3;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
-                else if(sortType == "Earliest"){
-
+                else if(sortType.equals("Earliest")){
+                    sortoption = 4;
+                    RecyclerViewAdapter.sortingData(sortoption);
                 }
             }
 
@@ -217,6 +225,19 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             final String inputPassword = password.getText().toString();
                                             final String inputFullName = fullname.getText().toString();
                                             final String inputUsername = username.getText().toString();
+
+                                            if (TextUtils.isEmpty(inputEmail)) {
+                                                Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            if (TextUtils.isEmpty(inputPassword)) {
+                                                Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            if (inputPassword.length() < 6) {
+                                                Toast.makeText(getApplicationContext(), getString(R.string.minimum_password), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
 
                                             mAuth = FirebaseAuth.getInstance();
 

@@ -18,8 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.StringTokenizer;
-import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
 
@@ -31,19 +32,39 @@ public class Lecturer{
     public String fullName;
     public String username;
     public String point;
+    public String date;
+    public String uid;
 
     private DatabaseReference ref;
 
     public Lecturer() {
     }
 
-    public Lecturer(String lecturer_ID, String email, String password, String fullName, String username, double point) {
+    public Lecturer(String lecturer_ID, String email, String password, String fullName, String username, String point, long date, String uid) {
         this.lecturer_ID = lecturer_ID;
         this.fullName = fullName;
         this.username = username;
         this.emailAddress = email;
         this.password = password;
-        this.point = Double.toString(point);
+        this.point = point;
+        this.date = String.valueOf(date);
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getLecturer_ID() {
@@ -86,8 +107,8 @@ public class Lecturer{
         this.fullName = fullName;
     }
 
-    public double getPoint() {
-        return Double.parseDouble(point);
+    public String getPoint() {
+        return point;
     }
 
     public void setPoint(String point) {
@@ -101,9 +122,8 @@ public class Lecturer{
 
         ref = FirebaseDatabase.getInstance().getReference();
 
-        Lecturer lecturer = new Lecturer(lecturer_id, emailEntry, passwordEntry, fullNameEntry, usernameEntry, 0.00);
+        Lecturer lecturer = new Lecturer(lecturer_id, emailEntry, passwordEntry, fullNameEntry, usernameEntry, "100", System.currentTimeMillis(), UID);
         ref.child("users").child("lecturer").child(UID).setValue(lecturer);
 
     }
-
 }
