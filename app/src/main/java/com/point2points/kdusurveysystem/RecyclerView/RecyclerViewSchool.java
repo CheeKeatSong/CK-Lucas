@@ -1,32 +1,28 @@
-package com.point2points.kdusurveysystem.RecylcerView;
+package com.point2points.kdusurveysystem.RecyclerView;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
-
-import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
+import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
-import com.point2points.kdusurveysystem.AdminToolbarDrawer;
-
-public class RecyclerViewExample extends AdminToolbarDrawer {
+public class RecyclerViewSchool extends AdminToolbarDrawer {
 
     /**
-     * RecyclerView: The new recycler view replaces the list view. Its more modular and therefore we
+     * RecyclerViewSchool: The new recycler view replaces the list view. Its more modular and therefore we
      * must implement some of the functionality ourselves and attach it to our recyclerview.
      * <p/>
      * 1) Position items on the screen: This is done with LayoutManagers
@@ -34,36 +30,39 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
      * 3) Handle any touch events apart from scrolling: This is now done in our adapter's ViewHolder
      */
     private static Context context;
+    static Activity activity;
 
-    private RecyclerView recyclerView;
-    private static RecyclerView.Adapter mAdapter;
+    private android.support.v7.widget.RecyclerView recyclerView;
+    private static android.support.v7.widget.RecyclerView.Adapter mAdapter;
 
     static ProgressBar progressBar;
 
     private int option;
 
-    private static final String TAG = "RecyclerViewExample";
+    private static final String TAG = "RecyclerViewSchool";
 
     public void sorting(int option){
         this.option = option;
-        mAdapter = new RecyclerViewAdapter(getApplicationContext());
+        mAdapter = new RecyclerLecturerTabAdapter(getApplicationContext());
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activity = this;
+        context = getApplicationContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_view);
         super.onCreateDrawer();
         super.onCreateToolbar();
 
-        RecyclerViewExample.context = getApplicationContext();
+        RecyclerViewSchool.context = getApplicationContext();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (android.support.v7.widget.RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
-                actionBar.setTitle("RecyclerView");
+                actionBar.setTitle("RecyclerViewSchool");
             }
         }
 
@@ -101,29 +100,29 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
 
         // Adapter:
         //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
-        //mDataSet = new ArrayList<String>(Arrays.asList(adapterData));
+        //LecturerDataset = new ArrayList<String>(Arrays.asList(adapterData));
 
-        mAdapter = new RecyclerViewAdapter(this);
-        ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
+        tabIdentifier = 2;
+        mAdapter = new RecyclerSchoolTabAdapter(this);
+        ((RecyclerSchoolTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
+
         recyclerView.setAdapter(mAdapter);
-
-
         /* Listeners */
         recyclerView.setOnScrollListener(onScrollListener);
     }
 
     /**
-     * Substitute for our onScrollListener for RecyclerView
+     * Substitute for our onScrollListener for RecyclerViewSchool
      */
-    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+    android.support.v7.widget.RecyclerView.OnScrollListener onScrollListener = new android.support.v7.widget.RecyclerView.OnScrollListener() {
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        public void onScrollStateChanged(android.support.v7.widget.RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             Log.e("ListView", "onScrollStateChanged");
         }
 
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(android.support.v7.widget.RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             // Could hide open views here if you wanted. //
         }
@@ -141,5 +140,10 @@ public class RecyclerViewExample extends AdminToolbarDrawer {
         progressBar.setVisibility(View.GONE);
     }
 
+    public static void closeRecyclerViewSchool(){
+        activity.finish();
+    }
+
 }
+
 

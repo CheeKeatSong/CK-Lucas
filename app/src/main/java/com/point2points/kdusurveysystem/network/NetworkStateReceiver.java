@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.network;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

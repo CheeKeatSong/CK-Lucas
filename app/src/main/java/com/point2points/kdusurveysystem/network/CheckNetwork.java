@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.network;
 
 import android.app.Activity;
 import android.content.Context;

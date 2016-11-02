@@ -2,15 +2,14 @@ package com.point2points.kdusurveysystem;
 
 import android.app.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.point2points.kdusurveysystem.network.CheckNetwork;
 
 public class LaunchingScreen extends Activity {
 

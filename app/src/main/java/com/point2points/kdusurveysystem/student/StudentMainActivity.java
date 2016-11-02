@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.student;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -8,13 +8,13 @@
         android:id="@+id/tToolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        layout="@layout/my_custom_view" />
+        layout="@layout/toolbar_custom_view" />
 
     <include
         android:id="@+id/t2Toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        layout="@layout/my_search_custom_view"
+        layout="@layout/toolbar_search_custom_view"
         android:visibility="gone"/>
 
     <ProgressBar

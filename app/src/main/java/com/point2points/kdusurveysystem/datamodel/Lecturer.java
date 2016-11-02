@@ -1,28 +1,9 @@
-package com.point2points.kdusurveysystem;
+package com.point2points.kdusurveysystem.datamodel;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.StringTokenizer;
-
-import static android.content.ContentValues.TAG;
 
 public class Lecturer{
 
@@ -34,13 +15,15 @@ public class Lecturer{
     public String point;
     public String date;
     public String uid;
+    public String schoolName;
+    public String schoolNameShort;
 
     private DatabaseReference ref;
 
     public Lecturer() {
     }
 
-    public Lecturer(String lecturer_ID, String email, String password, String fullName, String username, String point, long date, String uid) {
+    public Lecturer(String lecturer_ID, String email, String password, String fullName, String username, String point, long date, String uid, String schoolName, String schoolNameShort) {
         this.lecturer_ID = lecturer_ID;
         this.fullName = fullName;
         this.username = username;
@@ -49,6 +32,24 @@ public class Lecturer{
         this.point = point;
         this.date = String.valueOf(date);
         this.uid = uid;
+        this.schoolName = schoolName;
+        this.schoolNameShort = schoolNameShort;
+    }
+
+    public String getSchoolNameShort() {
+        return schoolNameShort;
+    }
+
+    public void setSchoolNameShort(String schoolNameShort) {
+        this.schoolNameShort = schoolNameShort;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 
     public String getUid() {
@@ -115,14 +116,14 @@ public class Lecturer{
         this.point = point;
     }
 
-    public void createLecturer(final String emailEntry, final String passwordEntry,final String fullNameEntry, final String usernameEntry,final  String UID) {
+    public void createLecturer(final String emailEntry, final String passwordEntry,final String fullNameEntry, final String usernameEntry,final  String UID, String schoolName, String schoolNameShort) {
 
         StringTokenizer tokens = new StringTokenizer(emailEntry, "@");
         String lecturer_id = tokens.nextToken();
 
         ref = FirebaseDatabase.getInstance().getReference();
 
-        Lecturer lecturer = new Lecturer(lecturer_id, emailEntry, passwordEntry, fullNameEntry, usernameEntry, "100", System.currentTimeMillis(), UID);
+        Lecturer lecturer = new Lecturer(lecturer_id, emailEntry, passwordEntry, fullNameEntry, usernameEntry, "100", System.currentTimeMillis(), UID, schoolName, schoolNameShort);
         ref.child("users").child("lecturer").child(UID).setValue(lecturer);
 
     }

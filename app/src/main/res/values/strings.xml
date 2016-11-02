@@ -24,12 +24,17 @@
     //data creation dialog
     <string name="lecturer_data_creation_success">LECTURER DATA SUCCESSFULLY CREATED</string>
     <string name="lecturer_data_creation_fail">LECTURER DATA CREATION FAILED</string>
+    <string name="school_name">School Name\nEg: School of Computing and Creative Media</string>
 
     //drawer
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>
     <string name="lecturer">LECTURER</string>
     <string name="student">STUDENT</string>
+    <string name="school">SCHOOL/DEPARTMENT</string>
+    <string name="subject">SUBJECT</string>
+    <string name="programme">PROGRAMME</string>
+    <string name="survey_list">SURVEY LIST</string>
     <string name="drawer_item_settings">SETTINGS</string>
     <string name="drawer_item_home">HOME</string>
     <string name="sign_out">SIGN OUT</string>

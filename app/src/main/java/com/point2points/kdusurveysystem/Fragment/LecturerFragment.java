@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,11 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.point2points.kdusurveysystem.Lecturer;
+import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.mDataset;
+import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.LecturerDataset;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,8 +37,8 @@ public class LecturerFragment extends Fragment{
     private static final String ARG_LECTURER_ID = "lecturer_id";
 
     private Lecturer mLecturer;
-    private TextView lecturerIdTextView, lecturerEmailTextView, lecturerDateTextView, lecturerFullNameTextView, lecturerUsernameTextView, lecturerPointTextView, lecturerPasswordTextView;
-    private EditText lecturerPasswordEditText, lecturerFullNameEditText, lecturerUsernameEditText, lecturerPointEditText;
+    private TextView lecturerIdTextView, lecturerEmailTextView, lecturerDateTextView, lecturerFullNameTextView, lecturerUsernameTextView, lecturerPointTextView, lecturerPasswordTextView, lecturerSchoolTextView;
+    private EditText lecturerPasswordEditText, schoolNameEditText, lecturerUsernameEditText, lecturerPointEditText;
     private Button lecturerDataEditButton, lecturerCancelButton;
 
     private static ArrayList<Lecturer> lecturerData = new ArrayList<>();
@@ -56,7 +55,7 @@ public class LecturerFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.lecturerData = mDataset;
+        this.lecturerData = LecturerDataset;
 
         String uid = (String) getArguments().getSerializable(ARG_LECTURER_ID);
 
@@ -65,7 +64,7 @@ public class LecturerFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_lecturer, container, false);
+        View v = inflater.inflate(R.layout.lecturer_fragment, container, false);
 
         lecturerIdTextView = (TextView) v.findViewById(R.id.fragment_lecturer_id_text_view);
         lecturerIdTextView.setText("Lecturer ID: " + mLecturer.getLecturer_ID());
@@ -73,10 +72,10 @@ public class LecturerFragment extends Fragment{
         lecturerFullNameTextView = (TextView) v.findViewById(R.id.fragment_lecturer_full_name_text_view);
         lecturerFullNameTextView.setText("Name: ");
 
-        lecturerFullNameEditText = (EditText) v.findViewById(R.id.fragment_lecturer_full_name_edit_text);
-        lecturerFullNameEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
-        lecturerFullNameEditText.setText(mLecturer.getFullName());
-        lecturerFullNameEditText.addTextChangedListener(new TextWatcher() {
+        schoolNameEditText = (EditText) v.findViewById(R.id.fragment_lecturer_full_name_edit_text);
+        schoolNameEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
+        schoolNameEditText.setText(mLecturer.getFullName());
+        schoolNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -165,6 +164,9 @@ public class LecturerFragment extends Fragment{
             }
         });
 
+        lecturerSchoolTextView = (TextView) v.findViewById(R.id.fragment_lecturer_school_text_view);
+        lecturerSchoolTextView.setText(mLecturer.getSchoolName() + " (" +  mLecturer.getSchoolNameShort() + ")");
+
         lecturerDateTextView = (TextView) v.findViewById(R.id.fragment_lecturer_date_text_view);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
         long lecturerEpoch = Long.parseLong(mLecturer.getDate());
@@ -177,7 +179,6 @@ public class LecturerFragment extends Fragment{
             public void onClick(View v){
 
                 //Log.d("Check 1", lecturers.toString());
-
                 final Context context = lecturerDataEditButton.getContext();
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -256,9 +257,9 @@ public class LecturerFragment extends Fragment{
             }
         }
 
-        RecyclerViewAdapter.updateArrayList(lecturerData);
+        RecyclerLecturerTabAdapter.LecturerArrayListUpdate(lecturerData);
 
         //Log.d("Check 2", lecturers.toString());
-        //RecyclerViewExample.notifyDataChanges();
+        //RecyclerViewLecturer.notifyDataChanges();
     }
 }
