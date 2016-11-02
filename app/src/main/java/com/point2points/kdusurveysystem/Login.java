@@ -23,7 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.point2points.kdusurveysystem.RecylcerView.RecyclerView;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerView;
 import com.point2points.kdusurveysystem.admin.AdminMainActivity;
 
 import static android.content.ContentValues.TAG;

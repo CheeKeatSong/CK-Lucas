@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem.RecylcerView;
+package com.point2points.kdusurveysystem.RecyclerView;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -12,7 +12,8 @@ import android.widget.ProgressBar;
 import com.daimajia.swipe.util.Attributes;
 
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
@@ -42,7 +43,7 @@ public class RecyclerView extends AdminToolbarDrawer {
 
     public void sorting(int option){
         this.option = option;
-        mAdapter = new RecyclerViewAdapter(getApplicationContext());
+        mAdapter = new RecyclerLecturerTabAdapter(getApplicationContext());
         mAdapter.notifyDataSetChanged();
     }
 
@@ -97,10 +98,25 @@ public class RecyclerView extends AdminToolbarDrawer {
 
         // Adapter:
         //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
-        //mDataSet = new ArrayList<String>(Arrays.asList(adapterData));
+        //LecturerDataset = new ArrayList<String>(Arrays.asList(adapterData));
 
-        mAdapter = new RecyclerViewAdapter(this);
-        ((RecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
+        switch (adapterIdentifier){
+            case 2:
+                tabIdentifier = 1;
+                mAdapter = new RecyclerLecturerTabAdapter(this);
+        ((RecyclerLecturerTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
+                break;
+            case 5:
+                tabIdentifier = 2;
+                mAdapter = new RecyclerSchoolTabAdapter(this);
+                ((RecyclerSchoolTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
+                break;
+            default:
+                tabIdentifier = 1;
+                mAdapter = new RecyclerLecturerTabAdapter(this);
+                ((RecyclerLecturerTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
+                break;
+        }
         recyclerView.setAdapter(mAdapter);
 
 

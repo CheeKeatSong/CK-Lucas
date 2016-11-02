@@ -20,11 +20,11 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerViewAdapter.mDataset;
+import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.LecturerDataset;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class LecturerFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.lecturerData = mDataset;
+        this.lecturerData = LecturerDataset;
 
         String uid = (String) getArguments().getSerializable(ARG_LECTURER_ID);
 
@@ -255,7 +255,7 @@ public class LecturerFragment extends Fragment{
             }
         }
 
-        RecyclerViewAdapter.updateArrayList(lecturerData);
+        RecyclerLecturerTabAdapter.LecturerArrayListUpdate(lecturerData);
 
         //Log.d("Check 2", lecturers.toString());
         //RecyclerView.notifyDataChanges();

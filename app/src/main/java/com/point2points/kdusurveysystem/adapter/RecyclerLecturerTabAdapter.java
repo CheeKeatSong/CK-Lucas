@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
+import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecylcerView.RecyclerView;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,9 @@ import java.util.Comparator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapter.SimpleViewHolder> {
+import static com.point2points.kdusurveysystem.admin.AdminToolbarDrawer.tabIdentifier;
+
+public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLecturerTabAdapter.SimpleViewHolder> {
 
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
@@ -152,82 +153,23 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
 
     private Context mContext;
     private static ArrayList<Lecturer> lecturers = new ArrayList<>();
-    public static ArrayList<Lecturer> mDataset = new ArrayList<>();
+    public static ArrayList<Lecturer> LecturerDataset = new ArrayList<>();
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
-    public RecyclerViewAdapter(Context context) {
+    public RecyclerLecturerTabAdapter(Context context) {
         this.mContext = context;
 
         //String key = ref.push().getKey();
-        ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("lecturer");
-        query = ref;
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    boolean found = false;
-                    for (Lecturer lecturer : lecturers) {
-                        if (lecturer.getUid() == postSnapshot.getValue(Lecturer.class).getUid()) {
-                            found = true;
-                        }
-                    }
-                    if (!found){
-                    lecturers.add(postSnapshot.getValue(Lecturer.class));
-                    Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                }}
-                if (lecturers.size() == snapshot.getChildrenCount()){
-                    RecyclerView.offProgressBar();
-                    RecyclerView.notifyDataChanges();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
-            }
-        });
-        mDataset = lecturers;
+        FirebaseLecturerDataRetrieval();
         }
 
     public static void sortingData(int sortoption){
 
-        ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("lecturer");
-        query = ref;
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                RecyclerView.onProgressBar();
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    boolean found = false;
-                    for (Lecturer lecturer : lecturers) {
-                        if (lecturer.getUid() == postSnapshot.getValue(Lecturer.class).getUid()) {
-                            found = true;
-                        }
-                    }
-                    if (!found){
-                        lecturers.add(postSnapshot.getValue(Lecturer.class));
-                        Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                    }}
-                if (lecturers.size() == snapshot.getChildrenCount()){
-                    RecyclerView.offProgressBar();
-                    RecyclerView.notifyDataChanges();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
-            }
-        });
-        mDataset = lecturers;
+        FirebaseLecturerDataRetrieval();
 
         switch (sortoption) {
             case 1:
-                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
                     public int compare(Lecturer lecturer1, Lecturer lecturer2){
                         return (lecturer1.getFullName().substring(0, 1).toUpperCase() + lecturer1.getFullName().substring(1)).compareTo(lecturer2.getFullName().substring(0, 1).toUpperCase() + lecturer2.getFullName().substring(1));
@@ -236,25 +178,25 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
 
                 break;
             case 2:
-                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
                     public int compare(Lecturer lecturer1, Lecturer lecturer2){
-                        return lecturer1.getFullName().compareTo(lecturer2.getFullName());
+                        return (lecturer1.getFullName().substring(0, 1).toUpperCase() + lecturer1.getFullName().substring(1)).compareTo(lecturer2.getFullName().substring(0, 1).toUpperCase() + lecturer2.getFullName().substring(1));
                     }
                 });
-                Collections.reverse(mDataset);
+                Collections.reverse(LecturerDataset);
                 break;
             case 3:
-                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
                     public int compare(Lecturer lecturer1, Lecturer lecturer2){
                         return lecturer1.getDate().compareTo(lecturer2.getDate());
                     }
                 });
-                Collections.reverse(mDataset);
+                Collections.reverse(LecturerDataset);
                 break;
             case 4:
-                Collections.sort(mDataset, new Comparator<Lecturer>() {
+                Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
                     public int compare(Lecturer lecturer1, Lecturer lecturer2){
                         return lecturer1.getDate().compareTo(lecturer2.getDate());
@@ -267,7 +209,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         RecyclerView.notifyDataChanges();
     }
 
-    public static void updateArrayList(ArrayList updatedLecturers) {
+    public static void LecturerArrayListUpdate(ArrayList updatedLecturers) {
 
         lecturers = updatedLecturers;
 
@@ -283,7 +225,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
-        final Lecturer item = mDataset.get(position);
+        final Lecturer item = LecturerDataset.get(position);
         String fullname = (item.fullName).substring(0, 1).toUpperCase() + (item.fullName).substring(1);
         String email = item.emailAddress;
         String ID = item.lecturer_ID;
@@ -328,11 +270,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                                 lecturers.remove(position);
                                 notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, mDataset.size());
+                                notifyItemRangeChanged(position, LecturerDataset.size());
                                 mItemManger.closeAllItems();
                                 Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
 
-                                mDataset = lecturers;
+                                LecturerDataset = lecturers;
                             }
                         })
 
@@ -355,49 +297,7 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
             }
         });
 
-        String firstletter = fullname.substring(0,1);
-
-        String color = "#ff0400";
-
-        switch (firstletter){
-            case "A":color = "#ff0400";break;
-            case "B":color = "#ff8800";break;
-            case "C":color = "#ffdd00";break;
-            case "D":color = "#bfeb00";break;
-            case "E":color = "#59ff00";break;
-            case "F":color = "#00ff7b";break;
-            case "G":color = "#00eede";break;
-            case "H":color = "#0095ff";break;
-            case "I":color = "#0015ff";break;
-            case "J":color = "#a200ed";break;
-            case "K":color = "#ff12ef";break;
-            case "L":color = "#e500a1";break;
-            case "M":color = "#ff655c";break;
-            case "N":color = "#ffcc00";break;
-            case "O":color = "#b80c0c";break;
-            case "P":color = "#b8590c";break;
-            case "Q":color = "#27850a";break;
-            case "R":color = "#ae81f2";break;
-            case "S":color = "#97a0ff";break;
-            case "T":color = "#642f95";break;
-            case "U":color = "#ce40c2";break;
-            case "V":color = "#f584c8";break;
-            case "W":color = "#01517d";break;
-            case "X":color = "#d5d5d5";break;
-            case "Y":color = "#ffc756";break;
-            case "Z":color = "#239fa5";break;
-        }
-
-        int android_color = Color.parseColor(color);
-
-                TextDrawable drawable = TextDrawable.builder()
-                .beginConfig()
-                .useFont(Typeface.DEFAULT)
-                .fontSize(64)
-                .bold()
-                .toUpperCase()
-                .endConfig()
-                .buildRound(firstletter,android_color);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(fullname);
 
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewFullName.setText(fullname);
@@ -406,12 +306,11 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
         viewHolder.textViewPoint.setText("Point: " + point);
         viewHolder.textViewUid.setText(uid);
         mItemManger.bindView(viewHolder.itemView, position);
-
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return LecturerDataset.size();
     }
 
     @Override
@@ -422,10 +321,10 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
     public static void filter(String charText) {
 
         charText = charText.toLowerCase(Locale.getDefault());
-        mDataset = new ArrayList<Lecturer>();
+        LecturerDataset = new ArrayList<Lecturer>();
 
         if (charText.length() == 0) {
-            mDataset = lecturers;
+            LecturerDataset = lecturers;
         }
         else
         {
@@ -436,10 +335,45 @@ public class RecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerViewAdapte
                         || lecturer.getLecturer_ID().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getUsername().toLowerCase(Locale.getDefault()).contains(charText))
                 {
-                    mDataset.add(lecturer);
+                    LecturerDataset.add(lecturer);
                 }
             }
         }
         RecyclerView.notifyDataChanges();
     }
+
+    public static void FirebaseLecturerDataRetrieval(){
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("lecturer");
+        query = ref;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                RecyclerView.onProgressBar();
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    boolean found = false;
+                    for (Lecturer lecturer : lecturers) {
+                        if (lecturer.getUid() == postSnapshot.getValue(Lecturer.class).getUid()) {
+                            found = true;
+                        }
+                    }
+                    if (!found){
+                        lecturers.add(postSnapshot.getValue(Lecturer.class));
+                        Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
+                    }}
+                if (lecturers.size() == snapshot.getChildrenCount()){
+                    RecyclerView.offProgressBar();
+                    RecyclerView.notifyDataChanges();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });
+        LecturerDataset = lecturers;
+    }
+
 }

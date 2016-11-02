@@ -35,10 +35,13 @@
         </activity>
         <activity android:name=".admin.AdminMainActivity">
         </activity>
-        <activity android:name=".RecylcerView.RecyclerView">
+        <activity android:name=".RecyclerView.RecyclerView">
         </activity>
         <activity
             android:name=".Fragment.LecturerFragmentPagerActivity">
+        </activity>
+        <activity
+            android:name=".Fragment.SchoolFragmentPagerActivity">
         </activity>
 
     </application>

@@ -9,25 +9,25 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.datamodel.School;
 
 import java.util.ArrayList;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.LecturerDataset;
+import static com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter.SchoolDataset;
 
-public class LecturerFragmentPagerActivity extends AppCompatActivity {
+public class SchoolFragmentPagerActivity extends AppCompatActivity{
 
-    private static final String EXTRA_LECTURER_UID =
-            "com.point2points.kdusurveysystem.lecturer_uid";
+    private static final String EXTRA_SCHOOL_UID =
+            "com.point2points.kdusurveysystem.school_uid";
 
-    private static ArrayList<Lecturer> lecturerData = new ArrayList<>();
+    private static ArrayList<School> schoolData = new ArrayList<>();
 
     private ViewPager mViewPager;
 
     public static Intent newIntent(Context packageContext, String uid) {
-        Intent intent = new Intent(packageContext, LecturerFragmentPagerActivity.class);
-        intent.putExtra(EXTRA_LECTURER_UID, uid);
+        Intent intent = new Intent(packageContext, SchoolFragmentPagerActivity.class);
+        intent.putExtra(EXTRA_SCHOOL_UID, uid);
         return intent;
     }
 
@@ -36,10 +36,10 @@ public class LecturerFragmentPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_pager);
 
-        this.lecturerData = LecturerDataset;
+        this.schoolData = SchoolDataset;
 
         String uid = (String) getIntent()
-                .getSerializableExtra(EXTRA_LECTURER_UID);
+                .getSerializableExtra(EXTRA_SCHOOL_UID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_fragment_view_pager);
 
@@ -47,18 +47,18 @@ public class LecturerFragmentPagerActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                Lecturer lecturer = lecturerData.get(position);
-                return LecturerFragment.newInstance(lecturer.getUid());
+                School school = schoolData.get(position);
+                return SchoolFragment.newInstance(school.getSchoolUid());
             }
 
             @Override
             public int getCount() {
-                return lecturerData.size();
+                return schoolData.size();
             }
         });
 
-        for (int i = 0; i <lecturerData.size(); i++) {
-            if (lecturerData.get(i).getUid().equals(uid)) {
+        for (int i = 0; i <schoolData.size(); i++) {
+            if (schoolData.get(i).getSchoolUid().equals(uid)) {
                 mViewPager.setCurrentItem(i);
                 break;
             }
