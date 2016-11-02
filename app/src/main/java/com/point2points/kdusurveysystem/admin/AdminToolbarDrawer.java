@@ -1,8 +1,11 @@
 package com.point2points.kdusurveysystem.admin;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -41,7 +43,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerView;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
@@ -59,7 +62,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     public int sortoption = 0;
     public static int tabIdentifier;
-    public static int adapterIdentifier;
+    static Context mContext;
+
+    static String schoolName = null;
+    static String schoolNameShort = null;
 
     private Drawer adminDrawer;
 
@@ -70,6 +76,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String TAG = "AdminToolbarDrawer";
 
     protected void onCreateToolbar() {
+
+        mContext = this;
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -211,162 +219,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-
-                    LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
-
-                    switch(tabIdentifier){
-                        case 1:
-
-                View lecturerPromptsView = li.inflate(R.layout.lecturer_creation_dialog, null);
-
-                final AlertDialog.Builder lecturerDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
-
-                            lecturerDialogBuilder.setView(lecturerPromptsView);
-                            lecturerDialogBuilder.setTitle("CREATE A LECTURER INFO");
-
-                final EditText email = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_email);
-                final EditText password = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_password);
-                final EditText fullname = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_fullname);
-                final EditText username = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_username);
-
-                    email.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
-                    password.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
-                    fullname.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
-                    username.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
-
-                final ImageButton showpass = (ImageButton) lecturerPromptsView.findViewById(R.id.lecturer_dialog_show_password);
-                showpass.setOnTouchListener(new View.OnTouchListener() {
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        switch ( event.getAction() ) {
-                            case MotionEvent.ACTION_DOWN:
-                                password.setInputType(InputType.TYPE_CLASS_TEXT);
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                                break;
-                        }
-                        return true;
-                    }
-                });
-
-                            lecturerDialogBuilder
-                            .setCancelable(false)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,int id) {
-                                            final String inputEmail = email.getText().toString();
-                                            final String inputPassword = password.getText().toString();
-                                            final String inputFullName = fullname.getText().toString();
-                                            final String inputUsername = username.getText().toString();
-
-                                            if (!(inputEmail.contains("@")) || !(inputEmail.contains(".com"))) {
-                                                Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-
-                                            if (TextUtils.isEmpty(inputEmail)) {
-                                                Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-                                            if (TextUtils.isEmpty(inputPassword)) {
-                                                Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-                                            if (inputPassword.length() < 6) {
-                                                Toast.makeText(getApplicationContext(), getString(R.string.minimum_password), Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-
-                                            final String schoolName = "";
-                                            final String schoolNameShort = "";
-
-                                            mAuth = FirebaseAuth.getInstance();
-
-                                            mAuth.createUserWithEmailAndPassword(inputEmail, inputPassword)
-                                                    .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                                                            FirebaseUser user = task.getResult().getUser();
-                                                            String uid = user.getUid();
-
-                                                            Lecturer lecturer = new Lecturer();
-                                                            lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername, uid, schoolName, schoolNameShort);
-
-                                                            Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
-
-                                                            if (!task.isSuccessful()) {
-                                                                Log.d(TAG, "onComplete: uid=" + user.getUid());
-                                                                Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_fail, Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        }
-                                                    });
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog lecturerAlertDialog = lecturerDialogBuilder.create();
-                            lecturerAlertDialog.show();
-                            break;
-
-                        case 2:
-
-                            View promptsView = li.inflate(R.layout.school_creation_dialog, null);
-
-                            final AlertDialog.Builder schoolDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
-
-                            schoolDialogBuilder.setView(promptsView);
-                            schoolDialogBuilder.setTitle("CREATE A SCHOOL INFO");
-
-                            final EditText schoolName = (EditText) promptsView.findViewById(R.id.school_dialog_name);
-
-                            schoolName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
-
-                            schoolDialogBuilder
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,int id) {
-                                                    final String inputSchoolName = schoolName.getText().toString();
-
-                                                    if (!(inputSchoolName.contains("school")) && !(inputSchoolName.contains("School")) && !(inputSchoolName.contains("SCHOOL")) && !(inputSchoolName.contains("of")) && !(inputSchoolName.contains("OF")) && !(inputSchoolName.contains("Of"))){
-                                                        Toast.makeText(getApplicationContext(), "Enter a proper format of school name!", Toast.LENGTH_SHORT).show();
-                                                        return;
-                                                    }
-
-                                                    if (TextUtils.isEmpty(inputSchoolName)) {
-                                                        Toast.makeText(getApplicationContext(), "Enter school name!", Toast.LENGTH_SHORT).show();
-                                                        return;
-                                                    }
-
-                                                    final String schoolName = "";
-                                                    final String schoolNameShort = "";
-
-                                                    School school = new School();
-                                                    school.createSchool(inputSchoolName);
-
-                                                    Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                            AlertDialog schoolAlertDialog = schoolDialogBuilder.create();
-                            schoolAlertDialog.show();
-                            break;
-                        default:
-                            break;
-                    }
+                    dataCreation(tabIdentifier);
                 } else {
                     Toast.makeText(AdminToolbarDrawer.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                 }
@@ -429,20 +282,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                         switch (drawerIdentifier){
                             case 2:
-                                adapterIdentifier = 2;
-                                Intent intentLecturer = new Intent(AdminToolbarDrawer.this, RecyclerView.class);
+                                Intent intentLecturer = new Intent(AdminToolbarDrawer.this, RecyclerViewLecturer.class);
                                 startActivity(intentLecturer);
                                 finish();
                                 break;
                             case 5:
-                                adapterIdentifier = 5;
-                                Intent intentSchool = new Intent(AdminToolbarDrawer.this, RecyclerView.class);
+                                Intent intentSchool = new Intent(AdminToolbarDrawer.this, RecyclerViewSchool.class);
                                 startActivity(intentSchool);
                                 finish();
                                 break;
                             default:
-                                adapterIdentifier = 2;
-                                Intent intent = new Intent(AdminToolbarDrawer.this, RecyclerView.class);
+                                Intent intent = new Intent(AdminToolbarDrawer.this, RecyclerViewLecturer.class);
                                 startActivity(intent);
                                 finish();
                                 break;
@@ -453,10 +303,184 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 .build();
     }
 
+    public static void getSchool(String schoolNameGet, String schoolNameShortGet){
+        AdminToolbarDrawer.schoolName = schoolNameGet;
+        AdminToolbarDrawer.schoolNameShort = schoolNameShortGet;
+    }
+
+    public void dataCreation(int tabIdentifier){
+
+        LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
+
+        switch(tabIdentifier){
+            case 1:
+
+                View lecturerPromptsView = li.inflate(R.layout.lecturer_creation_dialog, null);
+
+                final AlertDialog.Builder lecturerDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
+
+                lecturerDialogBuilder.setView(lecturerPromptsView);
+                lecturerDialogBuilder.setTitle("CREATE A LECTURER INFO");
+
+                final EditText email = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_email);
+                final EditText password = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_password);
+                final EditText fullname = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_fullname);
+                final EditText username = (EditText) lecturerPromptsView.findViewById(R.id.lecturer_dialog_username);
+
+                email.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                password.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                fullname.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                username.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+
+                final ImageButton showpass = (ImageButton) lecturerPromptsView.findViewById(R.id.lecturer_dialog_show_password);
+                showpass.setOnTouchListener(new View.OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        switch ( event.getAction() ) {
+                            case MotionEvent.ACTION_DOWN:
+                                password.setInputType(InputType.TYPE_CLASS_TEXT);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+                lecturerDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        final String inputEmail = email.getText().toString();
+                                        final String inputPassword = password.getText().toString();
+                                        final String inputFullName = fullname.getText().toString();
+                                        final String inputUsername = username.getText().toString();
+
+                                        if (!(inputEmail.contains("@")) || !(inputEmail.contains(".com"))) {
+                                            Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        if (TextUtils.isEmpty(inputEmail)) {
+                                            Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (TextUtils.isEmpty(inputPassword)) {
+                                            Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (inputPassword.length() < 6) {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.minimum_password), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                                        Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                                        startActivity(intent);
+
+                                        mAuth = FirebaseAuth.getInstance();
+
+                                        mAuth.createUserWithEmailAndPassword(inputEmail, inputPassword)
+                                                .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                                                        FirebaseUser user = task.getResult().getUser();
+                                                        String uid = user.getUid();
+
+                                                        Lecturer lecturer = new Lecturer();
+                                                        lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername, uid, schoolName, schoolNameShort);
+
+                                                        Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
+
+                                                        if (!task.isSuccessful()) {
+                                                            Log.d(TAG, "onComplete: uid=" + user.getUid());
+                                                            Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_fail, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog lecturerAlertDialog = lecturerDialogBuilder.create();
+                lecturerAlertDialog.show();
+                break;
+
+            case 2:
+
+                View promptsView = li.inflate(R.layout.school_creation_dialog, null);
+
+                final AlertDialog.Builder schoolDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
+
+                schoolDialogBuilder.setView(promptsView);
+                schoolDialogBuilder.setTitle("CREATE A SCHOOL INFO");
+
+                final EditText schoolName = (EditText) promptsView.findViewById(R.id.school_dialog_name);
+
+                schoolName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+
+                schoolDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        final String inputSchoolName = schoolName.getText().toString();
+
+                                        if (!(inputSchoolName.contains("school")) && !(inputSchoolName.contains("School")) && !(inputSchoolName.contains("SCHOOL")) && !(inputSchoolName.contains("of")) && !(inputSchoolName.contains("OF")) && !(inputSchoolName.contains("Of"))){
+                                            Toast.makeText(getApplicationContext(), "Enter a proper format of school name!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        if (TextUtils.isEmpty(inputSchoolName)) {
+                                            Toast.makeText(getApplicationContext(), "Enter school name!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        School school = new School();
+                                        school.createSchool(inputSchoolName);
+
+                                        Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
+
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog schoolAlertDialog = schoolDialogBuilder.create();
+                schoolAlertDialog.show();
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG, "onResume() called");
     }
 
     @Override
@@ -466,4 +490,24 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (resultCode != Activity.RESULT_OK){
+            return;
+        }
+    }
+
 }

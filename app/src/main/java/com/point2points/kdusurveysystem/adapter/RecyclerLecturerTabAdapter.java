@@ -26,18 +26,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.StringTokenizer;
-
-import static com.point2points.kdusurveysystem.admin.AdminToolbarDrawer.tabIdentifier;
 
 public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLecturerTabAdapter.SimpleViewHolder> {
 
@@ -70,7 +68,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "onItemSelected: " + textViewFullName.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -206,14 +204,14 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             default:
                 break;
         }
-        RecyclerView.notifyDataChanges();
+        RecyclerViewLecturer.notifyDataChanges();
     }
 
     public static void LecturerArrayListUpdate(ArrayList updatedLecturers) {
 
         lecturers = updatedLecturers;
 
-        RecyclerView.notifyDataChanges();
+        RecyclerViewLecturer.notifyDataChanges();
     }
 
     @Override
@@ -328,18 +326,19 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         }
         else
         {
-            for (Lecturer lecturer : lecturers)
-            {
+            for (Lecturer lecturer : lecturers) {
                 if (lecturer.getFullName().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getEmailAddress().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getLecturer_ID().toLowerCase(Locale.getDefault()).contains(charText)
-                        || lecturer.getUsername().toLowerCase(Locale.getDefault()).contains(charText))
+                        || lecturer.getUsername().toLowerCase(Locale.getDefault()).contains(charText)
+                        || lecturer.getSchoolName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || lecturer.getSchoolNameShort().toLowerCase(Locale.getDefault()).contains(charText))
                 {
                     LecturerDataset.add(lecturer);
                 }
             }
         }
-        RecyclerView.notifyDataChanges();
+        RecyclerViewLecturer.notifyDataChanges();
     }
 
     public static void FirebaseLecturerDataRetrieval(){
@@ -350,7 +349,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                RecyclerView.onProgressBar();
+                RecyclerViewLecturer.onProgressBar();
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
@@ -364,8 +363,8 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                         Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
                     }}
                 if (lecturers.size() == snapshot.getChildrenCount()){
-                    RecyclerView.offProgressBar();
-                    RecyclerView.notifyDataChanges();
+                    RecyclerViewLecturer.offProgressBar();
+                    RecyclerViewLecturer.notifyDataChanges();
                 }
             }
             @Override

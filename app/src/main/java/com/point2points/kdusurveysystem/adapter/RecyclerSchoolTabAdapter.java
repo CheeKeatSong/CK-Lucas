@@ -27,24 +27,32 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.SchoolFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerView;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
+import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.School;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.StringTokenizer;
-
-import static com.point2points.kdusurveysystem.admin.AdminToolbarDrawer.tabIdentifier;
 
 public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoolTabAdapter.SimpleViewHolder> {
 
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
-    public static class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
+    private int selectedPos;
+
+    public static boolean schoolRetrieval = false;
+
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, RecyclerViewSchool.class);
+        schoolRetrieval = true;
+        return intent;
+    }
+
+    public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
         TextView textViewSchoolName;
         TextView textViewSchoolNameShort;
@@ -66,86 +74,19 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "onItemSelected: " + textViewSchoolName.getText().toString(), Toast.LENGTH_SHORT).show();
+                    //notifyItemChanged(selectedPos);
+                    //selectedPos = getLayoutPosition();
+                    //notifyItemChanged(selectedPos);
+                    if (!schoolRetrieval) {
+                        Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (schoolRetrieval){
+                        Toast.makeText(view.getContext(), "Double Tap to select the data", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
     }
-
-    //SortedList
-   /* private final SortedList<ExampleModel> mSortedList = new SortedList<>(ExampleModel.class, new SortedList.Callback<ExampleModel>() {
-        @Override
-        public int compare(ExampleModel a, ExampleModel b) {
-            return mComparator.compare(a, b);
-        }
-
-        @Override
-        public void onInserted(int position, int count) {
-            notifyItemRangeInserted(position, count);
-        }
-
-        @Override
-        public void onRemoved(int position, int count) {
-            notifyItemRangeRemoved(position, count);
-        }
-
-        @Override
-        public void onMoved(int fromPosition, int toPosition) {
-            notifyItemMoved(fromPosition, toPosition);
-        }
-
-        @Override
-        public void onChanged(int position, int count) {
-            notifyItemRangeChanged(position, count);
-        }
-
-        @Override
-        public boolean areContentsTheSame(ExampleModel oldItem, ExampleModel newItem) {
-            return oldItem.equals(newItem);
-        }
-
-        @Override
-        public boolean areItemsTheSame(ExampleModel item1, ExampleModel item2) {
-            return item1.getId() == item2.getId();
-        }
-    });
-
-    //we first need a way to add or remove items to the Adapter. For this purpose we can add methods to the Adapter which allow us to add and remove items to the SortedList
-    public void add(ExampleModel model) {
-        mSortedList.add(model);
-    }
-
-    public void remove(ExampleModel model) {
-        mSortedList.remove(model);
-    }
-
-    public void add(List<ExampleModel> models) {
-        mSortedList.addAll(models);
-    }
-
-    public void remove(List<ExampleModel> models) {
-        mSortedList.beginBatchedUpdates();
-        for (ExampleModel model : models) {
-            mSortedList.remove(model);
-        }
-        mSortedList.endBatchedUpdates();
-    }
-
-    public void replaceAll(List<ExampleModel> models) {
-        mSortedList.beginBatchedUpdates();
-        for (int i = mSortedList.size() - 1; i >= 0; i--) {
-            final ExampleModel model = mSortedList.get(i);
-            if (!models.contains(model)) {
-                mSortedList.remove(model);
-            }
-        }
-        mSortedList.addAll(models);
-        mSortedList.endBatchedUpdates();
-    }
-    //add or remove end
-
-    private final LayoutInflater mInflater;
-    private final Comparator<ExampleModel> mComparator;*/
 
     private Context mContext;
     private static ArrayList<School> schools = new ArrayList<>();
@@ -202,12 +143,12 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             default:
                 break;
         }
-        RecyclerView.notifyDataChanges();
+        RecyclerViewSchool.notifyDataChanges();
     }
 
     public static void SchoolArrayListUpdate(ArrayList updatedSchools) {
         schools = updatedSchools;
-        RecyclerView.notifyDataChanges();
+        RecyclerViewSchool.notifyDataChanges();
     }
 
     @Override
@@ -218,6 +159,8 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
 
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
+
+        //viewHolder.itemView.setSelected(selectedPos == position);
 
         final School item = SchoolDataset.get(position);
         final String schoolName = (item.schoolName).substring(0, 1).toUpperCase() + (item.schoolName).substring(1);
@@ -235,9 +178,18 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSchoolName.getText().toString());
-                Intent intent = SchoolFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSchoolUid.getText().toString());
-                viewHolder.swipeLayout.getContext().startActivity(intent);
+                if(!schoolRetrieval) {
+                    Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSchoolName.getText().toString());
+                    Intent intent = SchoolFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSchoolUid.getText().toString());
+                    viewHolder.swipeLayout.getContext().startActivity(intent);
+                }
+                else if(schoolRetrieval) {
+                    String schoolName = viewHolder.textViewSchoolName.getText().toString();
+                    String schoolNameShort = viewHolder.textViewSchoolNameShort.getText().toString();
+                    AdminToolbarDrawer.getSchool(schoolName, schoolNameShort);
+                    schoolRetrieval = false;
+                    RecyclerViewSchool.closeRecyclerViewSchool();
+                }
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -327,7 +279,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                 }
             }
         }
-        RecyclerView.notifyDataChanges();
+        RecyclerViewSchool.notifyDataChanges();
     }
 
     public static void FirebaseSchoolDataRetrieval(){
@@ -352,8 +304,8 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                         Log.e("Get Data", (postSnapshot.getValue(School.class).getSchoolName()));
                     }}
                 if (schools.size() == snapshot.getChildrenCount()){
-                    RecyclerView.offProgressBar();
-                    RecyclerView.notifyDataChanges();
+                    RecyclerViewSchool.offProgressBar();
+                    RecyclerViewSchool.notifyDataChanges();
                 }
             }
             @Override

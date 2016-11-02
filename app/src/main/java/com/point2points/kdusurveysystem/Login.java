@@ -23,7 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerView;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.admin.AdminMainActivity;
 
 import static android.content.ContentValues.TAG;
@@ -137,7 +137,7 @@ public class Login extends Activity{
                                         Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(Login.this, RecyclerView.class);
+                                    Intent intent = new Intent(Login.this, RecyclerViewLecturer.class);
                                     startActivity(intent);
                                     finish();
                                 }

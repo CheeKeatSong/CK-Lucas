@@ -37,8 +37,8 @@ public class LecturerFragment extends Fragment{
     private static final String ARG_LECTURER_ID = "lecturer_id";
 
     private Lecturer mLecturer;
-    private TextView lecturerIdTextView, lecturerEmailTextView, lecturerDateTextView, lecturerFullNameTextView, lecturerUsernameTextView, lecturerPointTextView, lecturerPasswordTextView;
-    private EditText lecturerPasswordEditText, lecturerFullNameEditText, lecturerUsernameEditText, lecturerPointEditText;
+    private TextView lecturerIdTextView, lecturerEmailTextView, lecturerDateTextView, lecturerFullNameTextView, lecturerUsernameTextView, lecturerPointTextView, lecturerPasswordTextView, lecturerSchoolTextView;
+    private EditText lecturerPasswordEditText, schoolNameEditText, lecturerUsernameEditText, lecturerPointEditText;
     private Button lecturerDataEditButton, lecturerCancelButton;
 
     private static ArrayList<Lecturer> lecturerData = new ArrayList<>();
@@ -72,10 +72,10 @@ public class LecturerFragment extends Fragment{
         lecturerFullNameTextView = (TextView) v.findViewById(R.id.fragment_lecturer_full_name_text_view);
         lecturerFullNameTextView.setText("Name: ");
 
-        lecturerFullNameEditText = (EditText) v.findViewById(R.id.fragment_lecturer_full_name_edit_text);
-        lecturerFullNameEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
-        lecturerFullNameEditText.setText(mLecturer.getFullName());
-        lecturerFullNameEditText.addTextChangedListener(new TextWatcher() {
+        schoolNameEditText = (EditText) v.findViewById(R.id.fragment_lecturer_full_name_edit_text);
+        schoolNameEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
+        schoolNameEditText.setText(mLecturer.getFullName());
+        schoolNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -164,6 +164,9 @@ public class LecturerFragment extends Fragment{
             }
         });
 
+        lecturerSchoolTextView = (TextView) v.findViewById(R.id.fragment_lecturer_school_text_view);
+        lecturerSchoolTextView.setText(mLecturer.getSchoolName() + " (" +  mLecturer.getSchoolNameShort() + ")");
+
         lecturerDateTextView = (TextView) v.findViewById(R.id.fragment_lecturer_date_text_view);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
         long lecturerEpoch = Long.parseLong(mLecturer.getDate());
@@ -176,7 +179,6 @@ public class LecturerFragment extends Fragment{
             public void onClick(View v){
 
                 //Log.d("Check 1", lecturers.toString());
-
                 final Context context = lecturerDataEditButton.getContext();
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -258,6 +260,6 @@ public class LecturerFragment extends Fragment{
         RecyclerLecturerTabAdapter.LecturerArrayListUpdate(lecturerData);
 
         //Log.d("Check 2", lecturers.toString());
-        //RecyclerView.notifyDataChanges();
+        //RecyclerViewLecturer.notifyDataChanges();
     }
 }
