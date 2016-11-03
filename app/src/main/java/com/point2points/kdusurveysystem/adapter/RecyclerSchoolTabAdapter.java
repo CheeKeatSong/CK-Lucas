@@ -1,9 +1,11 @@
 package com.point2points.kdusurveysystem.adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,10 +41,19 @@ import java.util.Locale;
 
 public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoolTabAdapter.SimpleViewHolder> {
 
+    private static final String EXTRA_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
+    private static final String EXTRA_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
+
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
-    private int selectedPos;
+    private static Context mContext;
+    private static ArrayList<School> schools = new ArrayList<>();
+    public static ArrayList<School> SchoolDataset = new ArrayList<>();
+
+    private static Activity mActivity;
+
+    //private int selectedPos;
 
     public static boolean schoolRetrieval = false;
 
@@ -50,6 +61,24 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         Intent intent = new Intent(packageContext, RecyclerViewSchool.class);
         schoolRetrieval = true;
         return intent;
+    }
+
+    public static String schoolNameRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_SCHOOL_NAME);
+    }
+
+    public static String schoolNameShortRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_SCHOOL_NAME_SHORT);
+    }
+
+    private void setSchoolNameAndShort(String schoolName, String schoolNameShort){
+        AdminToolbarDrawer.tabIdentifier = 2;
+        Intent data = new Intent();
+        data.putExtra(EXTRA_SCHOOL_NAME, schoolName);
+        data.putExtra(EXTRA_SCHOOL_NAME_SHORT, schoolNameShort);
+        mActivity.setResult(Activity.RESULT_OK, data);
+        mActivity.finish();
+        Log.e("set " ,"school name");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -77,25 +106,16 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                     //notifyItemChanged(selectedPos);
                     //selectedPos = getLayoutPosition();
                     //notifyItemChanged(selectedPos);
-                    if (!schoolRetrieval) {
-                        Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (schoolRetrieval){
-                        Toast.makeText(view.getContext(), "Double Tap to select the data", Toast.LENGTH_SHORT).show();
-                    }
+                   schoolItemOnClickListener(view);
                 }
             });
         }
     }
 
-    private Context mContext;
-    private static ArrayList<School> schools = new ArrayList<>();
-    public static ArrayList<School> SchoolDataset = new ArrayList<>();
-
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
     public RecyclerSchoolTabAdapter(Context context) {
         this.mContext = context;
-
+        mActivity = (Activity) mContext;
         FirebaseSchoolDataRetrieval();
     }
 
@@ -184,11 +204,22 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                     viewHolder.swipeLayout.getContext().startActivity(intent);
                 }
                 else if(schoolRetrieval) {
+
+                    final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewSchoolName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
+                    toastOnDoubleClick.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toastOnDoubleClick.cancel();
+                        }
+                    }, 1500);
+
                     String schoolName = viewHolder.textViewSchoolName.getText().toString();
                     String schoolNameShort = viewHolder.textViewSchoolNameShort.getText().toString();
-                    AdminToolbarDrawer.getSchool(schoolName, schoolNameShort);
                     schoolRetrieval = false;
-                    RecyclerViewSchool.closeRecyclerViewSchool();
+                    setSchoolNameAndShort(schoolName, schoolNameShort);
                 }
             }
         });
@@ -314,6 +345,36 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             }
         });
         SchoolDataset = schools;
+    }
+
+    public void schoolItemOnClickListener(View view){
+
+        final Toast toastItemOnClick;
+
+        if (!schoolRetrieval) {
+            toastItemOnClick = Toast.makeText(mContext, "Double Tap to Edit the data", Toast.LENGTH_SHORT);
+            toastItemOnClick.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toastItemOnClick.cancel();
+                }
+            }, 500);
+        }
+        else if (schoolRetrieval){
+            toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
+            toastItemOnClick.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toastItemOnClick.cancel();
+                }
+            }, 500);
+        }
     }
 
 }

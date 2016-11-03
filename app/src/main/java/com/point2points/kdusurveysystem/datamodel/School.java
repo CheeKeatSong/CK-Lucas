@@ -55,9 +55,29 @@ public class School {
 
     public void createSchool(final String schoolName) {
 
+        String schoolNameReformatted = schoolName.toLowerCase();
+        StringBuffer res = new StringBuffer();
+
+        String[] strArr = schoolNameReformatted.split(" ");
+        for (String str : strArr) {
+            if (str.equals("&")){
+                str = new String("and");
+            }
+            if (str.equals("of") || str.equals("and")){
+                res.append(str).append(" ");
+            }
+            else{
+                char[] stringArray = str.trim().toCharArray();
+                stringArray[0] = Character.toUpperCase(stringArray[0]);
+                str = new String(stringArray);
+                res.append(str).append(" ");
+            }
+        }
+        schoolNameReformatted = res.toString().trim();
+
         StringBuilder schoolNameBuilder = new StringBuilder();
-        for (String s : schoolName.split(" ")) {
-            if (s != "Of" && s != "of" && s != "And" && s != "and" && s != "&") {
+        for (String s : schoolNameReformatted.split(" ")) {
+            if (!s.equals("of") && !s.equals("and")){
                 schoolNameBuilder.append(s.charAt(0));
             }
         }
@@ -67,7 +87,7 @@ public class School {
         ref = FirebaseDatabase.getInstance().getReference().child("school");
         DatabaseReference keyref = ref.push();
 
-        School school = new School(schoolName, schoolNameShort, keyref.getKey(), System.currentTimeMillis());
+        School school = new School(schoolNameReformatted, schoolNameShort, keyref.getKey(), System.currentTimeMillis());
         keyref.setValue(school);
     }
 }

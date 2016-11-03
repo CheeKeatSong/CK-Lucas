@@ -51,10 +51,14 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         activity = this;
         context = getApplicationContext();
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_view);
-        super.onCreateDrawer();
-        super.onCreateToolbar();
+
+        //No drawer if execute retrieve mode
+        if(!RecyclerSchoolTabAdapter.schoolRetrieval) {
+            super.onCreateDrawer();
+        }
+
+        super.onCreateToolbar(savedInstanceState);
 
         RecyclerViewSchool.context = getApplicationContext();
 
@@ -102,7 +106,7 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
         //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
         //LecturerDataset = new ArrayList<String>(Arrays.asList(adapterData));
 
-        tabIdentifier = 2;
+        tabIdentifier = 5;
         mAdapter = new RecyclerSchoolTabAdapter(this);
         ((RecyclerSchoolTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
 

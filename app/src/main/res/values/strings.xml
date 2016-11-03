@@ -25,6 +25,8 @@
     <string name="lecturer_data_creation_success">LECTURER DATA SUCCESSFULLY CREATED</string>
     <string name="lecturer_data_creation_fail">LECTURER DATA CREATION FAILED</string>
     <string name="school_name">School Name\nEg: School of Computing and Creative Media</string>
+    <string name="school_data_creation_success">SCHOOL DATA SUCCESSFULLY CREATED</string>
+    <string name="school_data_creation_fail">SCHOOL DATA CREATION FAILED</string>
 
     //drawer
     <string name="drawer_open">OPEN</string>

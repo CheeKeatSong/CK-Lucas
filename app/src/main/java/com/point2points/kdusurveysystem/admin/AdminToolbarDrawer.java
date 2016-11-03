@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,17 +57,32 @@ import java.util.Locale;
 
 public class AdminToolbarDrawer extends AppCompatActivity {
 
+    private static final String TAG = "AdminToolbarDrawer";
+    private static final int REQUEST_SCHOOL_RETRIEVE = 0;
+    private static final String INPUT_LECTURER_EMAIL = "com.point2points.kdusurveysystem.lecturer_email";
+    private static final String INPUT_LECTURER_PASSWORD = "com.point2points.kdusurveysystem.lecturer_password";
+    private static final String INPUT_LECTURER_FULLNAME = "com.point2points.kdusurveysystem.lecturer_fullname";
+    private static final String INPUT_LECTURER_USERNAME = "com.point2points.kdusurveysystem.lecturer_username";
+    private static final String INPUT_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
+    private static final String INPUT_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
+
+    String schoolName;
+    String schoolNameShort;
+
+    String inputLecturerEmail;
+    String inputLecturerPassword;
+    String inputLecturerFullName;
+    String inputLecturerUsername;
+
     private ImageButton optionButton, addButton, searchButton, backButton;
     private Spinner sortButton;
     private EditText searchEditText;
     private Toolbar mToolBar, mToolBar2;
 
+    public boolean lecturerDataCreationBoolean;
     public int sortoption = 0;
     public static int tabIdentifier;
     static Context mContext;
-
-    static String schoolName = null;
-    static String schoolNameShort = null;
 
     private Drawer adminDrawer;
 
@@ -73,16 +90,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
-    private static final String TAG = "AdminToolbarDrawer";
-
-    protected void onCreateToolbar() {
-
+    protected void onCreateToolbar(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //get context
         mContext = this;
 
+        //prevent keypad auto pop-up
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        //check user auth status
         mAuth = FirebaseAuth.getInstance();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -98,6 +115,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             }
         };
 
+        //toolbar setup
         mToolBar = (Toolbar) findViewById(R.id.tToolbar);
         setSupportActionBar(mToolBar);
         mToolBar2 = (Toolbar) findViewById(R.id.t2Toolbar);
@@ -107,7 +125,21 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         optionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!RecyclerSchoolTabAdapter.schoolRetrieval){
                 adminDrawer.openDrawer();
+            }
+            else{
+                    final Toast toastOnDoubleClick = Toast.makeText(mContext, "Please select data from the list", Toast.LENGTH_SHORT);
+                    toastOnDoubleClick.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toastOnDoubleClick.cancel();
+                        }
+                    }, 1000);
+                }
             }
         });
 
@@ -155,15 +187,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
+                ((TextView)selectedItemView).setText(null);
+
                 String sortType = String.valueOf(sortButton.getSelectedItem());
 
                 if (sortType.equals("A-Z")){
                     sortoption = 1;
                     switch (tabIdentifier){
-                        case 1:
+                        case 2:
                     RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
-                        case 2:
+                        case 5:
                     RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -171,10 +205,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 else if(sortType.equals("Z-A")){
                     sortoption = 2;
                     switch (tabIdentifier){
-                        case 1:
+                        case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
-                        case 2:
+                        case 5:
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -182,10 +216,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 else if(sortType.equals("Latest")){
                     sortoption = 3;
                     switch (tabIdentifier){
-                        case 1:
+                        case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
-                        case 2:
+                        case 5:
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -193,10 +227,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 else if(sortType.equals("Earliest")){
                     sortoption = 4;
                     switch (tabIdentifier){
-                        case 1:
+                        case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
-                        case 2:
+                        case 5:
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -225,6 +259,15 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 }
             }
         });
+
+        if (savedInstanceState != null) {
+            inputLecturerEmail = savedInstanceState.getString(INPUT_LECTURER_EMAIL);
+            inputLecturerPassword = savedInstanceState.getString(INPUT_LECTURER_PASSWORD);
+            inputLecturerFullName = savedInstanceState.getString(INPUT_LECTURER_FULLNAME);
+            inputLecturerUsername = savedInstanceState.getString(INPUT_LECTURER_USERNAME);
+            schoolName = savedInstanceState.getString(INPUT_SCHOOL_NAME);
+            schoolNameShort = savedInstanceState.getString(INPUT_SCHOOL_NAME_SHORT);
+        }
 
     }
 
@@ -302,18 +345,13 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 })
                 .build();
     }
-
-    public static void getSchool(String schoolNameGet, String schoolNameShortGet){
-        AdminToolbarDrawer.schoolName = schoolNameGet;
-        AdminToolbarDrawer.schoolNameShort = schoolNameShortGet;
-    }
-
+    
     public void dataCreation(int tabIdentifier){
 
         LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
 
         switch(tabIdentifier){
-            case 1:
+            case 2:
 
                 View lecturerPromptsView = li.inflate(R.layout.lecturer_creation_dialog, null);
 
@@ -353,55 +391,33 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
-                                        final String inputEmail = email.getText().toString();
-                                        final String inputPassword = password.getText().toString();
-                                        final String inputFullName = fullname.getText().toString();
-                                        final String inputUsername = username.getText().toString();
+                                        inputLecturerEmail = email.getText().toString();
+                                        inputLecturerPassword = password.getText().toString();
+                                        inputLecturerFullName = fullname.getText().toString();
+                                        inputLecturerUsername = username.getText().toString();
 
-                                        if (!(inputEmail.contains("@")) || !(inputEmail.contains(".com"))) {
+                                        if (!(inputLecturerEmail.contains("@")) || !(inputLecturerEmail.contains(".com"))) {
                                             Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
 
-                                        if (TextUtils.isEmpty(inputEmail)) {
+                                        if (TextUtils.isEmpty(inputLecturerEmail)) {
                                             Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
-                                        if (TextUtils.isEmpty(inputPassword)) {
+                                        if (TextUtils.isEmpty(inputLecturerPassword)) {
                                             Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
-                                        if (inputPassword.length() < 6) {
+                                        if (inputLecturerPassword.length() < 6) {
                                             Toast.makeText(getApplicationContext(), getString(R.string.minimum_password), Toast.LENGTH_SHORT).show();
                                             return;
                                         }
 
                                         Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
                                         Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
-                                        startActivity(intent);
+                                        startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
 
-                                        mAuth = FirebaseAuth.getInstance();
-
-                                        mAuth.createUserWithEmailAndPassword(inputEmail, inputPassword)
-                                                .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                                                        FirebaseUser user = task.getResult().getUser();
-                                                        String uid = user.getUid();
-
-                                                        Lecturer lecturer = new Lecturer();
-                                                        lecturer.createLecturer(inputEmail,inputPassword,inputFullName,inputUsername, uid, schoolName, schoolNameShort);
-
-                                                        Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
-
-                                                        if (!task.isSuccessful()) {
-                                                            Log.d(TAG, "onComplete: uid=" + user.getUid());
-                                                            Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_fail, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                });
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -414,7 +430,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 lecturerAlertDialog.show();
                 break;
 
-            case 2:
+            case 5:
 
                 View promptsView = li.inflate(R.layout.school_creation_dialog, null);
 
@@ -447,8 +463,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                         School school = new School();
                                         school.createSchool(inputSchoolName);
 
-                                        Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
-
+                                        Toast.makeText(AdminToolbarDrawer.this, R.string.school_data_creation_success, Toast.LENGTH_SHORT).show();
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -464,6 +479,59 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 break;
         }
     }
+    
+    public void lecturerDataCreation(){
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth.createUserWithEmailAndPassword(inputLecturerEmail, inputLecturerPassword)
+                .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                        FirebaseUser user = task.getResult().getUser();
+                        String uid = user.getUid();
+
+                        Lecturer lecturer = new Lecturer();
+                        lecturer.createLecturer(inputLecturerEmail,inputLecturerPassword,inputLecturerFullName,inputLecturerUsername, uid, schoolName, schoolNameShort);
+
+                        Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
+
+                        inputLecturerEmail = null;
+                        inputLecturerPassword = null;
+                        inputLecturerFullName = null;
+                        inputLecturerUsername = null;
+                        schoolNameShort = null;
+                        schoolName = null;
+
+                        if (!task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: uid=" + user.getUid());
+                            Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+    }
+
+    public void dataCreationInitiator(){
+        if (lecturerDataCreationBoolean){
+            Log.e("set " ,"school name");
+            lecturerDataCreation();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putString(INPUT_LECTURER_EMAIL, inputLecturerEmail);
+        savedInstanceState.putString(INPUT_LECTURER_PASSWORD, inputLecturerPassword);
+        savedInstanceState.putString(INPUT_LECTURER_FULLNAME, inputLecturerFullName);
+        savedInstanceState.putString(INPUT_LECTURER_USERNAME, inputLecturerUsername);
+        savedInstanceState.putString(INPUT_SCHOOL_NAME, schoolName);
+        savedInstanceState.putString(INPUT_SCHOOL_NAME_SHORT, schoolNameShort);
+    }
 
     @Override
     public void onStart() {
@@ -474,13 +542,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     @Override
     public void onPause(){
         super.onPause();
-        Log.d(TAG, "onPause() called");
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(TAG, "onResume() called");
     }
 
     @Override
@@ -494,19 +560,22 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.d(TAG, "onDestroy() called");
     }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        super.onSaveInstanceState(savedInstanceState);
-        Log.i(TAG, "onSaveInstanceState");
-    }
-
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode != Activity.RESULT_OK){
             return;
+        }
+        if (requestCode == REQUEST_SCHOOL_RETRIEVE){
+            if (data == null){
+                return;
+            }
+            schoolName = RecyclerSchoolTabAdapter.schoolNameRetrieval(data);
+            schoolNameShort = RecyclerSchoolTabAdapter.schoolNameShortRetrieval(data);
+            Log.e(TAG, "data1:" + schoolName);
+            Log.e(TAG, "data2:" + schoolNameShort);
+            lecturerDataCreation();
         }
     }
 

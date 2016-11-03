@@ -25,6 +25,7 @@
             android:id="@+id/menu_item_back"/>
 
         <EditText
+            android:textColorHint="@color/white"
             android:layout_marginRight="16dp"
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
