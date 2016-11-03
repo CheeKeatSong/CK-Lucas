@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fragment_subject_name_text_view"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text=""
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <EditText
+        android:id="@+id/fragment_subject_name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/fragment_subject_category_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="18dp"
+            android:text=""
+            android:layout_weight="0"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:id="@+id/fragment_subject_category_radio_group">
+
+            <RadioButton
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:textSize="16dp"
+                android:id="@+id/fragment_subject_category_radio_diploma"/>
+
+            <RadioButton
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:textSize="16dp"
+                android:id="@+id/fragment_subject_category_radio_degree"/>
+        </RadioGroup>
+
+    <!--<TextView
+        android:id="@+id/fragment_subject_department_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text=""
+        android:layout_weight="0"/>
+
+    <EditText
+        android:id="@+id/fragment_subject_department_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18dp"
+        android:layout_weight="1"/>-->
+
+        <TextView
+            android:id="@+id/fragment_subject_school_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text=""
+            android:layout_weight="0"/>
+
+        <EditText
+            android:id="@+id/fragment_subject_school_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/fragment_subject_date_text_view"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text=""
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp">
+
+        <Button
+            android:id="@+id/fragment_subject_data_edit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:background="@color/dark_kdu_blue"
+            android:layout_weight="1"
+            android:text="@string/okay"/>
+
+        <Button
+            android:text="@string/cancel"
+            android:layout_weight="1"
+            android:id="@+id/fragment_subject_data_cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:background="@color/dark_kdu_blue"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

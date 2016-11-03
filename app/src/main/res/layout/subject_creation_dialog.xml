@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/kdu_blue"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <EditText
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:id="@+id/subject_dialog_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/subject_name"/>
+
+    <TextView
+        android:text="Subject Category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:id="@+id/subject_category_text_view" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/subject_dialog_category">
+
+        <RadioButton
+            android:text="Diploma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/subject_dialog_category_diploma"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+
+        <RadioButton
+            android:text="Degree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:id="@+id/subject_dialog_category_degree"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+    </RadioGroup>
+
+    <!--<EditText
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:id="@+id/subject_dialog_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/subject_category"/>-->
+
+    <!--<EditText
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:id="@+id/subject_dialog_department"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/subject_department"/>-->
+
+    <EditText
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:id="@+id/subject_dialog_school"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/subject_school"/>
+
+</LinearLayout>

@@ -23,6 +23,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,11 +49,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.datamodel.School;
+import com.point2points.kdusurveysystem.datamodel.Subject;
 
 import java.util.Locale;
 
@@ -194,11 +199,22 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 if (sortType.equals("A-Z")){
                     sortoption = 1;
                     switch (tabIdentifier){
+<<<<<<< HEAD
                         case 2:
                     RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
                         case 5:
                     RecyclerSchoolTabAdapter.sortingData(sortoption);
+=======
+                        case 1:
+                            RecyclerLecturerTabAdapter.sortingData(sortoption);
+                            break;
+                        case 3:
+                            RecyclerSubjectTabAdapter.sortingData(sortoption);
+                            break;
+                        case 2:
+                            RecyclerSchoolTabAdapter.sortingData(sortoption);
+>>>>>>> origin/master
                             break;
                     }
                 }
@@ -208,7 +224,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
+<<<<<<< HEAD
                         case 5:
+=======
+                        case 3:
+                            RecyclerSubjectTabAdapter.sortingData(sortoption);
+                            break;
+                        case 2:
+>>>>>>> origin/master
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -219,7 +242,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
+<<<<<<< HEAD
                         case 5:
+=======
+                        case 3:
+                            RecyclerSubjectTabAdapter.sortingData(sortoption);
+                            break;
+                        case 2:
+>>>>>>> origin/master
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -230,7 +260,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
+<<<<<<< HEAD
                         case 5:
+=======
+                        case 3:
+                            RecyclerSubjectTabAdapter.sortingData(sortoption);
+                            break;
+                        case 2:
+>>>>>>> origin/master
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
@@ -284,7 +321,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         SecondaryDrawerItem item8 = new SecondaryDrawerItem().withIdentifier(8).withName(R.string.drawer_item_settings);
         SecondaryDrawerItem item9 = new SecondaryDrawerItem().withIdentifier(9).withName(R.string.sign_out);
 
-
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.kdu_glenmarie_view)
@@ -329,6 +365,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 startActivity(intentLecturer);
                                 finish();
                                 break;
+                            case 4:
+                                Intent intentSubject = new Intent(AdminToolbarDrawer.this, RecyclerViewSubject.class);
+                                startActivity(intentSubject);
+                                finish();
+                                break;
                             case 5:
                                 Intent intentSchool = new Intent(AdminToolbarDrawer.this, RecyclerViewSchool.class);
                                 startActivity(intentSchool);
@@ -345,7 +386,18 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 })
                 .build();
     }
+<<<<<<< HEAD
     
+=======
+
+    public static void getSchool(String schoolNameGet, String schoolNameShortGet){
+        AdminToolbarDrawer.schoolName = schoolNameGet;
+        AdminToolbarDrawer.schoolNameShort = schoolNameShortGet;
+    }
+
+    // Get department? Get lecturer?
+
+>>>>>>> origin/master
     public void dataCreation(int tabIdentifier){
 
         LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
@@ -430,7 +482,116 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 lecturerAlertDialog.show();
                 break;
 
+<<<<<<< HEAD
             case 5:
+=======
+            case 3:
+
+                View subjectPromptsView = li.inflate(R.layout.subject_creation_dialog, null);
+
+                final AlertDialog.Builder subjectDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
+
+                subjectDialogBuilder.setView(subjectPromptsView);
+                subjectDialogBuilder.setTitle("CREATE A SUBJECT INFO");
+
+                final EditText subjectName = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_name);
+                //final EditText subjectCategory = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_category);
+                final RadioGroup subjectCategory = (RadioGroup) subjectPromptsView.findViewById(R.id.subject_dialog_category);
+                //final EditText subjectDepartment = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_department);
+                final EditText subjectSchool = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_school);
+
+                final RadioButton subjectCategory1 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_diploma);
+                final RadioButton subjectCategory2 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_degree);
+
+                final int CAT1_ID = 101; //first radio button id
+                final int CAT2_ID = 102; //second radio button id
+
+                subjectCategory1.setId(CAT1_ID);
+                subjectCategory2.setId(CAT2_ID);
+
+                subjectName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                //subjectCategory.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                //subjectDepartment.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                subjectSchool.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+
+                subjectDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        final String inputName = subjectName.getText().toString();
+                                        //final String inputCategory = subjectCategory.getText().toString();
+                                        final int inputCategorySelection = subjectCategory.getCheckedRadioButtonId();
+                                        final String inputCategory;
+                                        //final String inputDepartment = subjectDepartment.getText().toString();
+                                        final String inputSchool = subjectSchool.getText().toString();
+
+                                        /*if (!(inputEmail.contains("@")) || !(inputEmail.contains(".com"))) {
+                                            Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }*/
+
+                                        //Log.d("Selection 1", String.valueOf(inputCategorySelection));
+
+                                        if (TextUtils.isEmpty(inputName)) {
+                                            Toast.makeText(getApplicationContext(), "Enter name!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        /*if (TextUtils.isEmpty(inputCategory)) {
+                                            Toast.makeText(getApplicationContext(), "Enter category!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }*/
+                                        if (inputCategorySelection == -1) {
+                                            Toast.makeText(getApplicationContext(), "Select category!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        /*if (TextUtils.isEmpty(inputDepartment)) {
+                                            Toast.makeText(getApplicationContext(), "Enter department!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }*/
+                                        if (TextUtils.isEmpty(inputSchool)) {
+                                            Toast.makeText(getApplicationContext(), "Enter school!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        //Log.d("Selection 2", String.valueOf(inputCategorySelection));
+
+                                        switch(inputCategorySelection) {
+                                            case CAT1_ID:
+                                                inputCategory = "Diploma";
+                                                break;
+
+                                            case CAT2_ID:
+                                                inputCategory = "Degree";
+                                                break;
+
+                                            default:
+                                                inputCategory = "Other";
+                                        }
+
+                                        /*Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                                        Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                                        startActivity(intent);*/
+
+                                        Subject subject = new Subject();
+                                        //subject.createSubject(inputName, inputCategory, inputDepartment, inputSchool);
+                                        subject.createSubject(inputName, inputCategory, inputSchool);
+
+                                        Toast.makeText(AdminToolbarDrawer.this, R.string.subject_data_creation_success, Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog subjectAlertDialog = subjectDialogBuilder.create();
+                subjectAlertDialog.show();
+                break;
+
+            case 2:
+>>>>>>> origin/master
 
                 View promptsView = li.inflate(R.layout.school_creation_dialog, null);
 
@@ -464,6 +625,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                         school.createSchool(inputSchoolName);
 
                                         Toast.makeText(AdminToolbarDrawer.this, R.string.school_data_creation_success, Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -474,8 +639,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 });
                 AlertDialog schoolAlertDialog = schoolDialogBuilder.create();
                 schoolAlertDialog.show();
-                break;
-            default:
                 break;
         }
     }
