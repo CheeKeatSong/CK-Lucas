@@ -25,6 +25,14 @@
     <string name="lecturer_data_creation_success">LECTURER DATA SUCCESSFULLY CREATED</string>
     <string name="lecturer_data_creation_fail">LECTURER DATA CREATION FAILED</string>
     <string name="school_name">School Name\nEg: School of Computing and Creative Media</string>
+    <string name="school_data_creation_success">SCHOOL DATA SUCCESSFULLY CREATED</string>
+    <string name="school_data_creation_fail">SCHOOL DATA CREATION FAILED</string>
+    <string name="subject_name">Subject Name\nEg: Fundamentals of Programming</string>
+    <string name="subject_category">Subject Category</string>
+    <string name="subject_department">Subject Department</string>
+    <string name="subject_school">Subject School</string>
+    <string name="subject_data_creation_success">SUBJECT DATA SUCCESSFULLY CREATED</string>
+    <string name="subject_data_creation_fail">SUBJECT DATA CREATION FAILED</string>
 
     //drawer
     <string name="drawer_open">OPEN</string>
@@ -48,3 +56,4 @@
     </string-array>
 
 </resources>
+
