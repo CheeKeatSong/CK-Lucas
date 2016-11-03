@@ -39,8 +39,8 @@ public class SubjectFragment extends Fragment{
         private static final String ARG_SUBJECT_ID = "Subject_id";
 
         private Subject mSubject;
-        private TextView subjectDateTextView, subjectNameTextView, subjectCategoryTextView, subjectDepartmentTextView, subjectSchoolTextView;
-        private EditText subjectNameEditText, subjectSchoolEditText; // subjectDepartmentEditText
+        private TextView subjectDateTextView, subjectNameTextView, subjectCategoryTextView, subjectDepartmentTextView, subjectSchoolTextView, subjectCodeTextView;
+        private EditText subjectNameEditText, subjectCodeEditText; // subjectDepartmentEditText
         private RadioGroup subjectCategoryRadioGroup;
         private RadioButton subjectCategoryRadioDiploma, subjectCategoryRadioDegree;
         private Button subjectDataEditButton, subjectCancelButton;
@@ -180,12 +180,15 @@ public class SubjectFragment extends Fragment{
             });*/
 
             subjectSchoolTextView = (TextView) v.findViewById(R.id.fragment_subject_school_text_view);
-            subjectSchoolTextView.setText("Subject School: ");
+            subjectSchoolTextView.setText(mSubject.getSubjectSchool() + " (" + mSubject.getSubjectSchoolShort() + ")");
 
-            subjectSchoolEditText = (EditText) v.findViewById(R.id.fragment_subject_school_edit_text);
-            subjectSchoolEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
-            subjectSchoolEditText.setText(mSubject.getSubjectSchool());
-            subjectSchoolEditText.addTextChangedListener(new TextWatcher() {
+            subjectCodeTextView = (TextView) v.findViewById(R.id.fragment_subject_code_text_view);
+            subjectCodeTextView.setText("Subject Code: ");
+
+            subjectCodeEditText = (EditText) v.findViewById(R.id.fragment_subject_code_edit_text) ;
+            subjectCodeEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
+            subjectCodeEditText.setText(mSubject.getSubjectCode());
+            subjectCodeEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -232,7 +235,7 @@ public class SubjectFragment extends Fragment{
                                     updateSubject.put("subjectName", mSubject.getSubjectName());
                                     updateSubject.put("subjectCategory", mSubject.getSubjectCategory());
                                     //updateSubject.put("subjectDepartment", mSubject.getSubjectDepartment());
-                                    updateSubject.put("subjectSchool", mSubject.getSubjectSchool());
+                                    updateSubject.put("subjectCode", mSubject.getSubjectCode());
 
                                     mDatabase.updateChildren(updateSubject);
 

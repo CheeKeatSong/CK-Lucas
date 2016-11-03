@@ -60,14 +60,24 @@ import com.point2points.kdusurveysystem.datamodel.Subject;
 
 import java.util.Locale;
 
+import static android.view.View.GONE;
+
 public class AdminToolbarDrawer extends AppCompatActivity {
 
     private static final String TAG = "AdminToolbarDrawer";
     private static final int REQUEST_SCHOOL_RETRIEVE = 0;
+
+    //Lecturer Data Creation
     private static final String INPUT_LECTURER_EMAIL = "com.point2points.kdusurveysystem.lecturer_email";
     private static final String INPUT_LECTURER_PASSWORD = "com.point2points.kdusurveysystem.lecturer_password";
     private static final String INPUT_LECTURER_FULLNAME = "com.point2points.kdusurveysystem.lecturer_fullname";
     private static final String INPUT_LECTURER_USERNAME = "com.point2points.kdusurveysystem.lecturer_username";
+
+    //Subject Data Creation
+    private static final String INPUT_SUBJECT_NAME = "com.point2points.kdusurveysystem.subject_name";
+    private static final String INPUT_SUBJECT_CATEGORY = "com.point2points.kdusurveysystem.subject_category";
+    private static final String INPUT_SUBJECT_CODE = "com.point2points.kdusurveysystem.subject_code";
+
     private static final String INPUT_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
     private static final String INPUT_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
 
@@ -79,13 +89,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     String inputLecturerFullName;
     String inputLecturerUsername;
 
+    String inputSubjectName;
+    String inputSubjectCategory;
+    String inputSubjectCode;
+
     private ImageButton optionButton, addButton, searchButton, backButton;
     private Spinner sortButton;
     private EditText searchEditText;
     private Toolbar mToolBar, mToolBar2;
 
-    public boolean lecturerDataCreationBoolean;
     public int sortoption = 0;
+    public static int tabIdentifierMutex;
     public static int tabIdentifier;
     static Context mContext;
 
@@ -134,14 +148,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 adminDrawer.openDrawer();
             }
             else{
-                    final Toast toastOnDoubleClick = Toast.makeText(mContext, "Please select data from the list", Toast.LENGTH_SHORT);
-                    toastOnDoubleClick.show();
+                    final Toast toast = Toast.makeText(mContext, "Please select data from the list", Toast.LENGTH_SHORT);
+                    toast.show();
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            toastOnDoubleClick.cancel();
+                            toast.cancel();
                         }
                     }, 1000);
                 }
@@ -156,7 +170,19 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
                 // TODO Auto-generated method stub
                 String text = searchEditText.getText().toString().toLowerCase(Locale.getDefault());
-                RecyclerLecturerTabAdapter.filter(text);
+                switch (tabIdentifier) {
+                    case 2:
+                    RecyclerLecturerTabAdapter.filter(text);
+                        break;
+                    case 4:
+                    RecyclerSubjectTabAdapter.filter(text);
+                        break;
+                    case 5:
+                    RecyclerSchoolTabAdapter.filter(text);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -175,7 +201,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mToolBar.setVisibility(View.GONE);
+                mToolBar.setVisibility(GONE);
                 mToolBar2.setVisibility(View.VISIBLE);
             }
         });
@@ -183,7 +209,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mToolBar.setVisibility(View.VISIBLE);
-                mToolBar2.setVisibility(View.GONE);
+                mToolBar2.setVisibility(GONE);
             }
         });
 
@@ -192,86 +218,33 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                ((TextView)selectedItemView).setText(null);
+                ((TextView)selectedItemView).setVisibility(GONE);
 
                 String sortType = String.valueOf(sortButton.getSelectedItem());
 
-                if (sortType.equals("A-Z")){
+                if (sortType.equals("A-Z")) {
                     sortoption = 1;
-                    switch (tabIdentifier){
-<<<<<<< HEAD
-                        case 2:
-                    RecyclerLecturerTabAdapter.sortingData(sortoption);
-                            break;
-                        case 5:
-                    RecyclerSchoolTabAdapter.sortingData(sortoption);
-=======
-                        case 1:
-                            RecyclerLecturerTabAdapter.sortingData(sortoption);
-                            break;
-                        case 3:
-                            RecyclerSubjectTabAdapter.sortingData(sortoption);
-                            break;
-                        case 2:
-                            RecyclerSchoolTabAdapter.sortingData(sortoption);
->>>>>>> origin/master
-                            break;
-                    }
                 }
-                else if(sortType.equals("Z-A")){
+                else if(sortType.equals("Z-A")) {
                     sortoption = 2;
-                    switch (tabIdentifier){
-                        case 2:
-                            RecyclerLecturerTabAdapter.sortingData(sortoption);
-                            break;
-<<<<<<< HEAD
-                        case 5:
-=======
-                        case 3:
-                            RecyclerSubjectTabAdapter.sortingData(sortoption);
-                            break;
-                        case 2:
->>>>>>> origin/master
-                            RecyclerSchoolTabAdapter.sortingData(sortoption);
-                            break;
-                    }
                 }
-                else if(sortType.equals("Latest")){
+                else if(sortType.equals("Latest")) {
                     sortoption = 3;
-                    switch (tabIdentifier){
-                        case 2:
-                            RecyclerLecturerTabAdapter.sortingData(sortoption);
-                            break;
-<<<<<<< HEAD
-                        case 5:
-=======
-                        case 3:
-                            RecyclerSubjectTabAdapter.sortingData(sortoption);
-                            break;
-                        case 2:
->>>>>>> origin/master
-                            RecyclerSchoolTabAdapter.sortingData(sortoption);
-                            break;
-                    }
                 }
-                else if(sortType.equals("Earliest")){
+                else if(sortType.equals("Earliest")) {
                     sortoption = 4;
-                    switch (tabIdentifier){
+                }
+                switch (tabIdentifier){
                         case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
-<<<<<<< HEAD
-                        case 5:
-=======
-                        case 3:
+                        case 4:
                             RecyclerSubjectTabAdapter.sortingData(sortoption);
                             break;
-                        case 2:
->>>>>>> origin/master
+                        case 5:
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
                     }
-                }
             }
 
             @Override
@@ -304,6 +277,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             inputLecturerUsername = savedInstanceState.getString(INPUT_LECTURER_USERNAME);
             schoolName = savedInstanceState.getString(INPUT_SCHOOL_NAME);
             schoolNameShort = savedInstanceState.getString(INPUT_SCHOOL_NAME_SHORT);
+            inputSubjectName = savedInstanceState.getString(INPUT_SUBJECT_NAME);
+            inputSubjectCategory = savedInstanceState.getString(INPUT_SUBJECT_CATEGORY);
+            inputSubjectCode = savedInstanceState.getString(INPUT_SUBJECT_CODE);
         }
 
     }
@@ -386,25 +362,13 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 })
                 .build();
     }
-<<<<<<< HEAD
-    
-=======
 
-    public static void getSchool(String schoolNameGet, String schoolNameShortGet){
-        AdminToolbarDrawer.schoolName = schoolNameGet;
-        AdminToolbarDrawer.schoolNameShort = schoolNameShortGet;
-    }
-
-    // Get department? Get lecturer?
-
->>>>>>> origin/master
-    public void dataCreation(int tabIdentifier){
+    public void dataCreation(final int tabIdentifier){
 
         LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
 
         switch(tabIdentifier){
             case 2:
-
                 View lecturerPromptsView = li.inflate(R.layout.lecturer_creation_dialog, null);
 
                 final AlertDialog.Builder lecturerDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
@@ -466,6 +430,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             return;
                                         }
 
+                                        tabIdentifierMutex = tabIdentifier;
                                         Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
                                         Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
                                         startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
@@ -482,11 +447,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 lecturerAlertDialog.show();
                 break;
 
-<<<<<<< HEAD
-            case 5:
-=======
-            case 3:
-
+            case 4:
                 View subjectPromptsView = li.inflate(R.layout.subject_creation_dialog, null);
 
                 final AlertDialog.Builder subjectDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
@@ -498,7 +459,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 //final EditText subjectCategory = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_category);
                 final RadioGroup subjectCategory = (RadioGroup) subjectPromptsView.findViewById(R.id.subject_dialog_category);
                 //final EditText subjectDepartment = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_department);
-                final EditText subjectSchool = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_school);
+                final EditText subjectCode = (EditText) subjectPromptsView.findViewById(R.id.subject_dialog_code);
 
                 final RadioButton subjectCategory1 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_diploma);
                 final RadioButton subjectCategory2 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_degree);
@@ -512,19 +473,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 subjectName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 //subjectCategory.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 //subjectDepartment.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
-                subjectSchool.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                subjectCode.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
 
                 subjectDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
-                                        final String inputName = subjectName.getText().toString();
-                                        //final String inputCategory = subjectCategory.getText().toString();
+                                        inputSubjectName = subjectName.getText().toString();
                                         final int inputCategorySelection = subjectCategory.getCheckedRadioButtonId();
-                                        final String inputCategory;
-                                        //final String inputDepartment = subjectDepartment.getText().toString();
-                                        final String inputSchool = subjectSchool.getText().toString();
+                                        inputSubjectCode = subjectCode.getText().toString();
 
                                         /*if (!(inputEmail.contains("@")) || !(inputEmail.contains(".com"))) {
                                             Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
@@ -533,7 +491,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                                         //Log.d("Selection 1", String.valueOf(inputCategorySelection));
 
-                                        if (TextUtils.isEmpty(inputName)) {
+                                        if (TextUtils.isEmpty(inputSubjectName)) {
                                             Toast.makeText(getApplicationContext(), "Enter name!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
@@ -549,8 +507,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(), "Enter department!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }*/
-                                        if (TextUtils.isEmpty(inputSchool)) {
-                                            Toast.makeText(getApplicationContext(), "Enter school!", Toast.LENGTH_SHORT).show();
+                                        if (TextUtils.isEmpty(inputSubjectCode)) {
+                                            Toast.makeText(getApplicationContext(), "Enter subject code!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
 
@@ -558,26 +516,25 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                                         switch(inputCategorySelection) {
                                             case CAT1_ID:
-                                                inputCategory = "Diploma";
+                                                inputSubjectCategory = "Diploma";
                                                 break;
 
                                             case CAT2_ID:
-                                                inputCategory = "Degree";
+                                                inputSubjectCategory = "Degree";
                                                 break;
 
                                             default:
-                                                inputCategory = "Other";
+                                                inputSubjectCategory = "Other";
                                         }
 
                                         /*Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
                                         Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
                                         startActivity(intent);*/
 
-                                        Subject subject = new Subject();
-                                        //subject.createSubject(inputName, inputCategory, inputDepartment, inputSchool);
-                                        subject.createSubject(inputName, inputCategory, inputSchool);
-
-                                        Toast.makeText(AdminToolbarDrawer.this, R.string.subject_data_creation_success, Toast.LENGTH_SHORT).show();
+                                        tabIdentifierMutex = tabIdentifier;
+                                        Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                                        Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                                        startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -590,9 +547,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 subjectAlertDialog.show();
                 break;
 
-            case 2:
->>>>>>> origin/master
-
+            case 5:
                 View promptsView = li.inflate(R.layout.school_creation_dialog, null);
 
                 final AlertDialog.Builder schoolDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
@@ -625,10 +580,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                         school.createSchool(inputSchoolName);
 
                                         Toast.makeText(AdminToolbarDrawer.this, R.string.school_data_creation_success, Toast.LENGTH_SHORT).show();
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -640,9 +592,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 AlertDialog schoolAlertDialog = schoolDialogBuilder.create();
                 schoolAlertDialog.show();
                 break;
+            default:
+                break;
         }
     }
-    
+
     public void lecturerDataCreation(){
 
         mAuth = FirebaseAuth.getInstance();
@@ -674,14 +628,19 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
-    public void dataCreationInitiator(){
-        if (lecturerDataCreationBoolean){
-            Log.e("set " ,"school name");
-            lecturerDataCreation();
-        }
+    public void subjectDataCreation(){
+        Subject subject = new Subject();
+        //subject.createSubject(inputName, inputCategory, inputDepartment, inputSchool);
+        subject.createSubject(inputSubjectName, inputSubjectCategory, schoolName, schoolNameShort, inputSubjectCode);
+        Toast.makeText(AdminToolbarDrawer.this, R.string.subject_data_creation_success, Toast.LENGTH_SHORT).show();
+
+        inputSubjectName = null;
+        inputSubjectCategory = null;
+        inputSubjectCode = null;
+        schoolNameShort = null;
+        schoolName = null;
     }
 
     @Override
@@ -694,6 +653,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         savedInstanceState.putString(INPUT_LECTURER_USERNAME, inputLecturerUsername);
         savedInstanceState.putString(INPUT_SCHOOL_NAME, schoolName);
         savedInstanceState.putString(INPUT_SCHOOL_NAME_SHORT, schoolNameShort);
+        savedInstanceState.putString(INPUT_SUBJECT_NAME, inputSubjectName);
+        savedInstanceState.putString(INPUT_SUBJECT_CATEGORY, inputSubjectCategory);
+        savedInstanceState.putString(INPUT_SUBJECT_CODE, inputSubjectCode);
     }
 
     @Override
@@ -736,10 +698,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             }
             schoolName = RecyclerSchoolTabAdapter.schoolNameRetrieval(data);
             schoolNameShort = RecyclerSchoolTabAdapter.schoolNameShortRetrieval(data);
-            Log.e(TAG, "data1:" + schoolName);
-            Log.e(TAG, "data2:" + schoolNameShort);
-            lecturerDataCreation();
+            switch (tabIdentifier){
+                case 2:
+                    lecturerDataCreation();
+                    break;
+                case 4:
+                    subjectDataCreation();
+                    break;
+                default:
+                    break;
+            }
         }
     }
-
 }

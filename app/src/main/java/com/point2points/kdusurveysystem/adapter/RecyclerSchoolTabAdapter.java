@@ -72,7 +72,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
     }
 
     private void setSchoolNameAndShort(String schoolName, String schoolNameShort){
-        AdminToolbarDrawer.tabIdentifier = 2;
+        AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
         data.putExtra(EXTRA_SCHOOL_NAME, schoolName);
         data.putExtra(EXTRA_SCHOOL_NAME_SHORT, schoolNameShort);
@@ -181,7 +181,6 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
         //viewHolder.itemView.setSelected(selectedPos == position);
-
         final School item = SchoolDataset.get(position);
         final String schoolName = (item.schoolName).substring(0, 1).toUpperCase() + (item.schoolName).substring(1);
         String schoolNameShort = item.schoolNameShort;
@@ -345,6 +344,14 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             }
         });
         SchoolDataset = schools;
+
+        Collections.sort(SchoolDataset, new Comparator<School>() {
+            @Override
+            public int compare(School school1, School school2){
+                return school1.getDate().compareTo(school2.getDate());
+            }
+        });
+        Collections.reverse(SchoolDataset);
     }
 
     public void schoolItemOnClickListener(View view){

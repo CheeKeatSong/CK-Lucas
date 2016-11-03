@@ -92,7 +92,7 @@
         android:layout_gravity="center"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:id="@+id/subject_dialog_school"
+        android:id="@+id/subject_dialog_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16dp"
@@ -100,6 +100,6 @@
         android:textColorHint="@color/white"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:hint="@string/subject_school"/>
+        android:hint="@string/subject_code"/>
 
 </LinearLayout>
