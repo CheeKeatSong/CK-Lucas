@@ -373,6 +373,13 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             }
         });
         LecturerDataset = lecturers;
+        Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
+            @Override
+            public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                return lecturer1.getDate().compareTo(lecturer2.getDate());
+            }
+        });
+        Collections.reverse(LecturerDataset);
     }
 
 }

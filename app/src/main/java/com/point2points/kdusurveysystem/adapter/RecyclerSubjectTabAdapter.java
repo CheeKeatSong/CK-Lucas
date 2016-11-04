@@ -42,8 +42,6 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
-    private int selectedPos;
-
     public static boolean subjectRetrieval = false;
 
     public static Intent newIntent(Context packageContext) {
@@ -57,6 +55,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         TextView textViewSubjectName;
         TextView textViewSubjectCategory;
         //TextView textViewSubjectDepartment;
+        TextView textViewSubjectCode;
         TextView textViewSubjectSchool;
         TextView textViewSubjectUid;
         ImageButton buttonDelete;
@@ -71,6 +70,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             //textViewSubjectDepartment = (TextView) itemView.findViewById(R.id.subject_department_text_view);
             textViewSubjectSchool = (TextView) itemView.findViewById(R.id.subject_school_text_view);
             textViewSubjectUid = (TextView) itemView.findViewById(R.id.subject_uid_text_view);
+            textViewSubjectCode = (TextView)itemView.findViewById(R.id.subject_code_text_view);
             buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
             buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
@@ -99,7 +99,6 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
     public RecyclerSubjectTabAdapter(Context context) {
         this.mContext = context;
-
         FirebaseSubjectDataRetrieval();
     }
 
@@ -172,6 +171,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         //String subjectDepartment = item.subjectDepartment;
         String subjectSchool = item.subjectSchool;
         String subjectUid = item.subjectUid;
+        String subjectCode = item.subjectCode;
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -255,6 +255,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         //viewHolder.textViewSubjectDepartment.setText(subjectDepartment);
         viewHolder.textViewSubjectSchool.setText(subjectSchool);
         viewHolder.textViewSubjectUid.setText(subjectUid);
+        viewHolder.textViewSubjectCode.setText(subjectCode);
         mItemManger.bindView(viewHolder.itemView, position);
     }
 
@@ -281,9 +282,9 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             for (Subject subject : subjects)
             {
                 if (subject.getSubjectName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || subject.getSubjectName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || subject.getSubjectSchoolShort().toLowerCase(Locale.getDefault()).contains(charText)
                         || subject.getSubjectCategory().toLowerCase(Locale.getDefault()).contains(charText)
-                        //|| subject.getSubjectDepartment().toLowerCase(Locale.getDefault()).contains(charText)
+                        || subject.getSubjectCode().toLowerCase(Locale.getDefault()).contains(charText)
                         || subject.getSubjectSchool().toLowerCase(Locale.getDefault()).contains(charText))
                 {
                     SubjectDataset.add(subject);
@@ -325,6 +326,13 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             }
         });
         SubjectDataset = subjects;
+        Collections.sort(SubjectDataset, new Comparator<Subject>() {
+            @Override
+            public int compare(Subject subject1, Subject subject2){
+                return subject1.getDate().compareTo(subject2.getDate());
+            }
+        });
+        Collections.reverse(SubjectDataset);
     }
 
 }

@@ -38,10 +38,9 @@ public class RecyclerViewSubject extends AdminToolbarDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_view);
         super.onCreateDrawer();
-        super.onCreateToolbar();
+        super.onCreateToolbar(savedInstanceState);
 
         RecyclerViewSubject.context = getApplicationContext();
 
@@ -65,7 +64,7 @@ public class RecyclerViewSubject extends AdminToolbarDrawer {
         progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
         onProgressBar();
 
-        tabIdentifier = 3;
+        tabIdentifier = 4;
         mAdapter = new RecyclerSubjectTabAdapter(this);
         ((RecyclerSubjectTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
 

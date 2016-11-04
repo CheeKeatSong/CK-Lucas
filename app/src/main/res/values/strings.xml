@@ -30,7 +30,7 @@
     <string name="subject_name">Subject Name\nEg: Fundamentals of Programming</string>
     <string name="subject_category">Subject Category</string>
     <string name="subject_department">Subject Department</string>
-    <string name="subject_school">Subject School</string>
+    <string name="subject_code">Subject Code</string>
     <string name="subject_data_creation_success">SUBJECT DATA SUCCESSFULLY CREATED</string>
     <string name="subject_data_creation_fail">SUBJECT DATA CREATION FAILED</string>
 
@@ -49,10 +49,10 @@
 
     //sort list
     <string-array name="sort_array">
-        <item>A-Z</item>
-        <item>Z-A</item>
         <item>Latest</item>
         <item>Earliest</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
     </string-array>
 
 </resources>

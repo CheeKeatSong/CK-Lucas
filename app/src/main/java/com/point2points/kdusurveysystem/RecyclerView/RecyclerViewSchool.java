@@ -21,14 +21,6 @@ import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
 public class RecyclerViewSchool extends AdminToolbarDrawer {
 
-    /**
-     * RecyclerViewSchool: The new recycler view replaces the list view. Its more modular and therefore we
-     * must implement some of the functionality ourselves and attach it to our recyclerview.
-     * <p/>
-     * 1) Position items on the screen: This is done with LayoutManagers
-     * 2) Animate & Decorate views: This is done with ItemAnimators & ItemDecorators
-     * 3) Handle any touch events apart from scrolling: This is now done in our adapter's ViewHolder
-     */
     private static Context context;
     static Activity activity;
 
@@ -51,10 +43,14 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         activity = this;
         context = getApplicationContext();
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_view);
-        super.onCreateDrawer();
-        super.onCreateToolbar();
+
+        //No drawer if execute retrieve mode
+        if(!RecyclerSchoolTabAdapter.schoolRetrieval) {
+            super.onCreateDrawer();
+        }
+
+        super.onCreateToolbar(savedInstanceState);
 
         RecyclerViewSchool.context = getApplicationContext();
 
@@ -78,31 +74,7 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
         progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
         onProgressBar();
 
-        /*ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("There are " + snapshot.getChildrenCount() + " lecturer data");
-                for (DataSnapshot msgSnapshot : snapshot.getChildren()) {
-                    lecturers.add(msgSnapshot.getValue(Lecturer.class));
-                    Log.i("Lecturer", msgSnapshot.getValue(Lecturer.class).getFullName());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        ref.addValueEventListener(postListener);
-*/
-
-        // Adapter:
-        //[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
-        //LecturerDataset = new ArrayList<String>(Arrays.asList(adapterData));
-
-        tabIdentifier = 2;
+        tabIdentifier = 5;
         mAdapter = new RecyclerSchoolTabAdapter(this);
         ((RecyclerSchoolTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
 
@@ -111,9 +83,6 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
         recyclerView.setOnScrollListener(onScrollListener);
     }
 
-    /**
-     * Substitute for our onScrollListener for RecyclerViewSchool
-     */
     android.support.v7.widget.RecyclerView.OnScrollListener onScrollListener = new android.support.v7.widget.RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(android.support.v7.widget.RecyclerView recyclerView, int newState) {
