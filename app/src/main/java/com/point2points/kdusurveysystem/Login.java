@@ -30,6 +30,8 @@ import static android.content.ContentValues.TAG;
 
 public class Login extends Activity{
 
+    private static final String USER_UNIQUE_ID = "com.point2points.kdusurveysystem.user_unique_id";
+
     private EditText inputEmailAddress, inputPassword;
     private Button mLoginButton;
     private FirebaseAuth mAuth;
@@ -143,9 +145,7 @@ public class Login extends Activity{
                                 }
                             }
                         });
-
             }});
-
     }
 
     @Override

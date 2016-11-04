@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -503,9 +504,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final RadioButton studentCategory2 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_degree);
                 final RadioButton studentCategory3 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_other);
 
-                studentCategory1.setId(CAT1_ID);
-                studentCategory2.setId(CAT2_ID);
-                studentCategory3.setId(CAT3_ID);
+                studentCategory1.setId(R.id.CAT1_ID);
+                studentCategory2.setId(R.id.CAT2_ID);
+                studentCategory3.setId(R.id.CAT3_ID);
 
                 studentName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 studentID.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
@@ -609,9 +610,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final RadioButton subjectCategory2 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_degree);
                 final RadioButton subjectCategory3 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_other);
 
-                subjectCategory1.setId(CAT1_ID);
-                subjectCategory2.setId(CAT2_ID);
-                subjectCategory3.setId(CAT3_ID);
+                subjectCategory1.setId(R.id.CAT1_ID);
+                subjectCategory2.setId(R.id.CAT2_ID);
+                subjectCategory3.setId(R.id.CAT3_ID);
 
                 subjectName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 //subjectCategory.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
