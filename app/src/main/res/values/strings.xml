@@ -22,6 +22,7 @@
     <string name="cancel">CANCEL</string>
 
     //data creation dialog
+    <string name="lecturer_email_label">\@kdu.edu.my</string>
     <string name="lecturer_data_creation_success">LECTURER DATA SUCCESSFULLY CREATED</string>
     <string name="lecturer_data_creation_fail">LECTURER DATA CREATION FAILED</string>
     <string name="school_name">School Name\nEg: School of Computing and Creative Media</string>
@@ -33,6 +34,10 @@
     <string name="subject_code">Subject Code</string>
     <string name="subject_data_creation_success">SUBJECT DATA SUCCESSFULLY CREATED</string>
     <string name="subject_data_creation_fail">SUBJECT DATA CREATION FAILED</string>
+    <string name="student_name">Student Name</string>
+    <string name="student_id">Student ID\nEg: 0101234</string>
+    <string name="student_data_creation_success">STUDENT DATA SUCCESSFULLY CREATED</string>
+    <string name="student_data_creation_fail">STUDENT DATA CREATION FAILED</string>
 
     //drawer
     <string name="drawer_open">OPEN</string>
