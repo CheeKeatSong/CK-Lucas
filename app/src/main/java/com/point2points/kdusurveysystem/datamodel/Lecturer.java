@@ -121,6 +121,9 @@ public class Lecturer{
         StringTokenizer tokens = new StringTokenizer(emailEntry, "@");
         String lecturer_id = tokens.nextToken();
 
+        //String lecturer_id = emailEntry;
+        //String emailFormatted = emailEntry + "@kdu.edu.my";   // Already formatted when passed into function parameter.
+
         ref = FirebaseDatabase.getInstance().getReference();
 
         Lecturer lecturer = new Lecturer(lecturer_id, emailEntry, passwordEntry, fullNameEntry, usernameEntry, "100", System.currentTimeMillis(), UID, schoolName, schoolNameShort);

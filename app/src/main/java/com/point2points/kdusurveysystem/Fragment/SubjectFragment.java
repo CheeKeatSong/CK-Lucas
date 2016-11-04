@@ -39,10 +39,10 @@ public class SubjectFragment extends Fragment{
         private static final String ARG_SUBJECT_ID = "Subject_id";
 
         private Subject mSubject;
-        private TextView subjectDateTextView, subjectNameTextView, subjectCategoryTextView, subjectDepartmentTextView, subjectSchoolTextView, subjectCodeTextView;
+        private TextView subjectDateTextView, subjectNameTextView, subjectCategoryTextView, subjectSchoolTextView, subjectCodeTextView; // subjectDepartmentTextView
         private EditText subjectNameEditText, subjectCodeEditText; // subjectDepartmentEditText
         private RadioGroup subjectCategoryRadioGroup;
-        private RadioButton subjectCategoryRadioDiploma, subjectCategoryRadioDegree;
+        private RadioButton subjectCategoryRadioDiploma, subjectCategoryRadioDegree, subjectCategoryRadioOther;
         private Button subjectDataEditButton, subjectCancelButton;
 
         private static ArrayList<Subject> subjectData = new ArrayList<>();
@@ -122,8 +122,10 @@ public class SubjectFragment extends Fragment{
             subjectCategoryRadioGroup = (RadioGroup) v.findViewById(R.id.fragment_subject_category_radio_group);
             subjectCategoryRadioDiploma = (RadioButton) v.findViewById(R.id.fragment_subject_category_radio_diploma);
             subjectCategoryRadioDegree = (RadioButton) v.findViewById(R.id.fragment_subject_category_radio_degree);
+            subjectCategoryRadioOther = (RadioButton) v.findViewById(R.id.fragment_subject_category_radio_other);
             subjectCategoryRadioDiploma.setText("Diploma");
             subjectCategoryRadioDegree.setText("Degree");
+            subjectCategoryRadioOther.setText("Other");
 
             //int CAT1_ID = 101; //first radio button id
             //int CAT2_ID = 102; //second radio button id
@@ -135,11 +137,19 @@ public class SubjectFragment extends Fragment{
                 case "Diploma":
                     subjectCategoryRadioDiploma.setChecked(true);
                     subjectCategoryRadioDegree.setChecked(false);
+                    subjectCategoryRadioOther.setChecked(false);
                     break;
 
                 case "Degree":
                     subjectCategoryRadioDiploma.setChecked(false);
                     subjectCategoryRadioDegree.setChecked(true);
+                    subjectCategoryRadioOther.setChecked(false);
+                    break;
+
+                case "Other":
+                    subjectCategoryRadioDiploma.setChecked(false);
+                    subjectCategoryRadioDegree.setChecked(false);
+                    subjectCategoryRadioOther.setChecked(true);
                     break;
             }
 
@@ -151,8 +161,11 @@ public class SubjectFragment extends Fragment{
                     if (checkedId == subjectCategoryRadioDiploma.getId())
                         mSubject.setSubjectCategory("Diploma");
 
-                    else
+                    else if (checkedId == subjectCategoryRadioDegree.getId())
                         mSubject.setSubjectCategory("Degree");
+
+                    else
+                        mSubject.setSubjectCategory("Other");
                 }
             });
 

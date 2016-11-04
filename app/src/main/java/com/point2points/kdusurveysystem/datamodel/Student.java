@@ -7,9 +7,14 @@ public class Student {
 
     public String studentName; // eg. John Smith
     public String studentID; // eg. 0101234
+    public String studentEmail; // eg. 01012345
+    public String studentUsername;
+    public String studentPassword;
     public String studentCategory; // eg. Diploma
     //public String studentDepartment; // eg. Department of Computing
     public String studentSchool; // eg. School of Computing and Creative Media
+    public String studentSchoolShort;
+    public String studentPoint;
     public String studentUid;
     public String date;
 
@@ -18,12 +23,17 @@ public class Student {
     public Student(){}
 
     //public Student(String studentName, String studentID, String studentCategory, String studentDepartment, String studentSchool, String studentUid, long date){
-    public Student(String studentName, String studentID, String studentCategory, String studentSchool, String studentUid, long date){
+    public Student(String studentName, String studentID, String studentEmail, String studentUsername, String studentPassword, String studentCategory,
+                   String studentSchool, String studentSchoolShort, String studentPoint, String studentUid, long date) {
         this.studentName = studentName;
         this.studentID = studentID;
+        this.studentEmail = studentEmail;
+        this.studentUsername = studentUsername;
+        this.studentPassword = studentPassword;
         this.studentCategory = studentCategory;
-        //this.studentDepartment = studentDepartment;
         this.studentSchool = studentSchool;
+        this.studentSchoolShort = studentSchoolShort;
+        this.studentPoint = studentPoint;
         this.studentUid = studentUid;
         this.date = String.valueOf(date);
     }
@@ -52,6 +62,30 @@ public class Student {
         this.studentID = studentID;
     }
 
+    public String getStudentEmail() {
+        return studentEmail;
+    }
+
+    public void setStudentEmail(String studentEmail) {
+        this.studentEmail = studentEmail;
+    }
+
+    public String getStudentUsername() {
+        return studentUsername;
+    }
+
+    public void setStudentUsername(String studentUsername) {
+        this.studentUsername = studentUsername;
+    }
+
+    public String getStudentPassword() {
+        return studentPassword;
+    }
+
+    public void setStudentPassword(String studentPassword) {
+        this.studentPassword = studentPassword;
+    }
+
     public String getStudentCategory() {
         return studentCategory;
     }
@@ -60,13 +94,6 @@ public class Student {
         this.studentCategory = studentCategory;
     }
 
-    /*public String getStudentDeparment() {
-        return studentDepartment;
-    }
-
-    public void setStudentDepartment(String studentDepartment) {
-        this.studentDepartment = studentDepartment;
-    }*/
 
     public String getStudentSchool() {
         return studentSchool;
@@ -74,6 +101,22 @@ public class Student {
 
     public void setStudentSchool(String studentSchool) {
         this.studentSchool = studentSchool;
+    }
+
+    public String getStudentSchoolShort() {
+        return studentSchoolShort;
+    }
+
+    public void setStudentSchoolShort(String studentSchoolShort) {
+        this.studentSchoolShort = studentSchoolShort;
+    }
+
+    public String getStudentPoint() {
+        return studentPoint;
+    }
+
+    public void setStudentPoint(String studentPoint) {
+        this.studentPoint = studentPoint;
     }
 
     public String getDate() {
@@ -85,13 +128,19 @@ public class Student {
     }
 
     //public void createStudent(final String studentName, final String studentID, final String studentCategory, final String studentDepartment, final String studentSchool) {
-    public void createStudent(final String studentName, final String studentID, final String studentCategory, final String studentSchool) {
+    //public void createStudent(final String studentName, final String studentID, final String studentEmail, final String studentPassword, final String studentCategory, final String studentSchool) {
+    public void createStudent(final String studentName, final String studentID, final String studentPassword, final String studentCategory, final String studentSchool,
+                              final String studentSchoolShort, final String UID) {
 
-        ref = FirebaseDatabase.getInstance().getReference().child("student");
-        DatabaseReference keyref = ref.push();
+        ref = FirebaseDatabase.getInstance().getReference();
 
-        //Student student = new Student(studentName, studentID, studentCategory, studentDepartment, studentSchool, keyref.getKey(), System.currentTimeMillis());
-        Student student = new Student(studentName, studentID, studentCategory, studentSchool, keyref.getKey(), System.currentTimeMillis());
-        keyref.setValue(student);
+        String studentEmail = studentID + "@kdu-online.com";
+        String studentUsername = studentID;
+
+        Student student = new Student(studentName, studentID, studentEmail, studentUsername, studentPassword, studentCategory,
+                studentSchool, studentSchoolShort, "100", UID, System.currentTimeMillis());
+
+        ref.child("users").child("student").child(UID).setValue(student);
     }
 }
+

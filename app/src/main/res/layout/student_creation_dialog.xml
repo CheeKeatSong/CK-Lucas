@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:id="@+id/subject_dialog_name"
+        android:id="@+id/student_dialog_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16dp"
@@ -19,32 +19,83 @@
         android:textColorHint="@color/white"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:hint="@string/subject_name"/>
+        android:hint="@string/student_name"/>
+
+    <EditText
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:id="@+id/student_dialog_ID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:inputType="number"
+        android:hint="@string/student_id"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/student_dialog_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:inputType="textPassword"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="@string/password"/>
+
+        <ImageButton
+            android:contentDescription="@string/show_password"
+            android:layout_marginRight="30dp"
+            android:layout_weight="3"
+            android:src="@drawable/eye_sight"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/student_dialog_show_password"
+            android:background="?attr/actionBarItemBackground"/>
+
+    </LinearLayout>
 
     <TextView
-        android:text="Subject Category"
+        android:text="Student Category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:textSize="16dp"
         android:textColor="@color/white"
-        android:id="@+id/subject_category_text_view" />
+        android:id="@+id/student_category_text_view" />
 
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/subject_dialog_category">
+        android:id="@+id/student_dialog_category"
+        android:layout_marginBottom="20dp">
 
         <RadioButton
             android:text="Diploma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:id="@+id/subject_dialog_category_diploma"
-            android:textSize="14dp"
+            android:id="@+id/student_dialog_category_diploma"
             android:textColor="@color/white"
             android:buttonTint="@color/white"/>
 
@@ -53,8 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:id="@+id/subject_dialog_category_degree"
-            android:textSize="14dp"
+            android:id="@+id/student_dialog_category_degree"
             android:textColor="@color/white"
             android:buttonTint="@color/white"/>
 
@@ -63,8 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:id="@+id/subject_dialog_category_other"
-            android:textSize="14dp"
+            android:id="@+id/student_dialog_category_other"
             android:textColor="@color/white"
             android:buttonTint="@color/white"/>
     </RadioGroup>
@@ -74,7 +123,7 @@
         android:layout_gravity="center"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:id="@+id/subject_dialog_category"
+        android:id="@+id/student_dialog_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16dp"
@@ -82,14 +131,14 @@
         android:textColorHint="@color/white"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:hint="@string/subject_category"/>-->
+        android:hint="@string/student_category"/>-->
 
     <!--<EditText
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:id="@+id/subject_dialog_department"
+        android:id="@+id/student_dialog_department"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16dp"
@@ -97,21 +146,6 @@
         android:textColorHint="@color/white"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:hint="@string/subject_department"/>-->
-
-    <EditText
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:id="@+id/subject_dialog_code"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:hint="@string/subject_code"/>
+        android:hint="@string/student_department"/>-->
 
 </LinearLayout>

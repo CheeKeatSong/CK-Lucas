@@ -37,12 +37,17 @@
         </activity>
         <activity android:name=".RecyclerView.RecyclerViewLecturer">
         </activity>
+        <activity android:name=".RecyclerView.RecyclerViewStudent">
+        </activity>
         <activity android:name=".RecyclerView.RecyclerViewSubject">
         </activity>
         <activity android:name=".RecyclerView.RecyclerViewSchool">
         </activity>
         <activity
             android:name=".Fragment.LecturerFragmentPagerActivity">
+        </activity>
+        <activity
+            android:name=".Fragment.StudentFragmentPagerActivity">
         </activity>
         <activity
             android:name=".Fragment.SubjectFragmentPagerActivity">

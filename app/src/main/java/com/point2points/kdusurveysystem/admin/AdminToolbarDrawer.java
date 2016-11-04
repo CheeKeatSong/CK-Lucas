@@ -49,13 +49,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.datamodel.School;
+import com.point2points.kdusurveysystem.datamodel.Student;
 import com.point2points.kdusurveysystem.datamodel.Subject;
 
 import java.util.Locale;
@@ -72,26 +75,42 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String INPUT_LECTURER_PASSWORD = "com.point2points.kdusurveysystem.lecturer_password";
     private static final String INPUT_LECTURER_FULLNAME = "com.point2points.kdusurveysystem.lecturer_fullname";
     private static final String INPUT_LECTURER_USERNAME = "com.point2points.kdusurveysystem.lecturer_username";
+    //private static final String INPUT_LECTURER_ID = "com.point2points.kdusurveysystem.lecturer_id";
 
     //Subject Data Creation
     private static final String INPUT_SUBJECT_NAME = "com.point2points.kdusurveysystem.subject_name";
     private static final String INPUT_SUBJECT_CATEGORY = "com.point2points.kdusurveysystem.subject_category";
     private static final String INPUT_SUBJECT_CODE = "com.point2points.kdusurveysystem.subject_code";
 
+    //School Data Creation
     private static final String INPUT_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
     private static final String INPUT_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
+
+    //Student Data Creation
+    private static final String INPUT_STUDENT_NAME = "com.point2points.kdusurveysystem.student_name";
+    //private static final String INPUT_STUDENT_EMAIL = "com.point2points.kdusurveysystem.student_email";
+    private static final String INPUT_STUDENT_PASSWORD = "com.point2points.kdusurveysystem.student_password";
+    private static final String INPUT_STUDENT_ID = "com.point2points.kdusurveysystem.student_id";
+    private static final String INPUT_STUDENT_CATEGORY = "com.point2points.kdusurveysystem.student_category";
 
     String schoolName;
     String schoolNameShort;
 
     String inputLecturerEmail;
+    String inputLecturerEmailFormatted;
     String inputLecturerPassword;
     String inputLecturerFullName;
     String inputLecturerUsername;
+    //String inputLecturerID;
 
     String inputSubjectName;
     String inputSubjectCategory;
     String inputSubjectCode;
+
+    String inputStudentName;
+    String inputStudentID;
+    String inputStudentPassword;
+    String inputStudentCategory;
 
     private ImageButton optionButton, addButton, searchButton, backButton;
     private Spinner sortButton;
@@ -174,6 +193,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     case 2:
                     RecyclerLecturerTabAdapter.filter(text);
                         break;
+                    case 3:
+                    RecyclerStudentTabAdapter.filter(text);
+                        break;
                     case 4:
                     RecyclerSubjectTabAdapter.filter(text);
                         break;
@@ -238,6 +260,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         case 2:
                             RecyclerLecturerTabAdapter.sortingData(sortoption);
                             break;
+                        case 3:
+                            RecyclerStudentTabAdapter.sortingData(sortoption);
+                            break;
                         case 4:
                             RecyclerSubjectTabAdapter.sortingData(sortoption);
                             break;
@@ -280,6 +305,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             inputSubjectName = savedInstanceState.getString(INPUT_SUBJECT_NAME);
             inputSubjectCategory = savedInstanceState.getString(INPUT_SUBJECT_CATEGORY);
             inputSubjectCode = savedInstanceState.getString(INPUT_SUBJECT_CODE);
+            inputStudentName = savedInstanceState.getString(INPUT_STUDENT_NAME);
+            inputStudentID = savedInstanceState.getString(INPUT_STUDENT_ID);
+            inputStudentPassword = savedInstanceState.getString(INPUT_STUDENT_PASSWORD);
+            inputStudentCategory = savedInstanceState.getString(INPUT_STUDENT_CATEGORY);
         }
 
     }
@@ -341,6 +370,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 startActivity(intentLecturer);
                                 finish();
                                 break;
+                            case 3:
+                                Intent intentStudent = new Intent(AdminToolbarDrawer.this, RecyclerViewStudent.class);
+                                startActivity(intentStudent);
+                                finish();
+                                break;
                             case 4:
                                 Intent intentSubject = new Intent(AdminToolbarDrawer.this, RecyclerViewSubject.class);
                                 startActivity(intentSubject);
@@ -366,6 +400,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     public void dataCreation(final int tabIdentifier){
 
         LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
+
+        final int CAT1_ID = 101; //first radio button id
+        final int CAT2_ID = 102; //second radio button id
+        final int CAT3_ID = 103; //third radio button id
 
         switch(tabIdentifier){
             case 2:
@@ -408,11 +446,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
                                         inputLecturerEmail = email.getText().toString();
+                                        inputLecturerEmailFormatted = inputLecturerEmail + "@kdu.edu.my";
                                         inputLecturerPassword = password.getText().toString();
                                         inputLecturerFullName = fullname.getText().toString();
                                         inputLecturerUsername = username.getText().toString();
 
-                                        if (!(inputLecturerEmail.contains("@")) || !(inputLecturerEmail.contains(".com"))) {
+                                        if ((inputLecturerEmail.contains("@")) || (inputLecturerEmail.contains(".com"))) {
                                             Toast.makeText(getApplicationContext(), "Enter a proper format of email address!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
@@ -447,6 +486,111 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 lecturerAlertDialog.show();
                 break;
 
+            case 3:
+                View studentPromptsView = li.inflate(R.layout.student_creation_dialog, null);
+
+                final AlertDialog.Builder studentDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
+
+                studentDialogBuilder.setView(studentPromptsView);
+                studentDialogBuilder.setTitle("CREATE A STUDENT INFO");
+
+                final EditText studentName = (EditText) studentPromptsView.findViewById(R.id.student_dialog_name);
+                final EditText studentID = (EditText) studentPromptsView.findViewById(R.id.student_dialog_ID);
+                final EditText studentPassword = (EditText) studentPromptsView.findViewById(R.id.student_dialog_password);
+                final RadioGroup studentCategory = (RadioGroup) studentPromptsView.findViewById(R.id.student_dialog_category);
+
+                final RadioButton studentCategory1 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_diploma);
+                final RadioButton studentCategory2 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_degree);
+                final RadioButton studentCategory3 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_other);
+
+                studentCategory1.setId(CAT1_ID);
+                studentCategory2.setId(CAT2_ID);
+                studentCategory3.setId(CAT3_ID);
+
+                studentName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                studentID.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+                studentPassword.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+
+                final ImageButton showpassStudent = (ImageButton) studentPromptsView.findViewById(R.id.student_dialog_show_password);
+                showpassStudent.setOnTouchListener(new View.OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        switch ( event.getAction() ) {
+                            case MotionEvent.ACTION_DOWN:
+                                studentPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                studentPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+                studentDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        inputStudentName = studentName.getText().toString();
+                                        final int inputCategorySelection = studentCategory.getCheckedRadioButtonId();
+                                        inputStudentID = studentID.getText().toString();
+                                        inputStudentPassword = studentPassword.getText().toString();
+
+                                        if (TextUtils.isEmpty(inputStudentName)) {
+                                            Toast.makeText(getApplicationContext(), "Enter name!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (TextUtils.isEmpty(inputStudentID)) {
+                                            Toast.makeText(getApplicationContext(), "Enter ID!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (TextUtils.isEmpty(inputStudentPassword)) {
+                                            Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (inputStudentPassword.length() < 6) {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.minimum_password), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (inputCategorySelection == -1) {
+                                            Toast.makeText(getApplicationContext(), "Select category!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        switch(inputCategorySelection) {
+                                            case CAT1_ID:
+                                                inputStudentCategory = "Diploma";
+                                                break;
+
+                                            case CAT2_ID:
+                                                inputStudentCategory = "Degree";
+                                                break;
+
+                                            case CAT3_ID:
+                                                inputStudentCategory = "Other";
+                                                break;
+
+                                            default:
+                                                inputStudentCategory = "None";
+                                        }
+
+                                        tabIdentifierMutex = tabIdentifier;
+                                        Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                                        Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                                        startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog studentAlertDialog = studentDialogBuilder.create();
+                studentAlertDialog.show();
+                break;
+
             case 4:
                 View subjectPromptsView = li.inflate(R.layout.subject_creation_dialog, null);
 
@@ -463,12 +607,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 final RadioButton subjectCategory1 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_diploma);
                 final RadioButton subjectCategory2 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_degree);
-
-                final int CAT1_ID = 101; //first radio button id
-                final int CAT2_ID = 102; //second radio button id
+                final RadioButton subjectCategory3 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_other);
 
                 subjectCategory1.setId(CAT1_ID);
                 subjectCategory2.setId(CAT2_ID);
+                subjectCategory3.setId(CAT3_ID);
 
                 subjectName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 //subjectCategory.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
@@ -523,8 +666,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                                 inputSubjectCategory = "Degree";
                                                 break;
 
-                                            default:
+                                            case CAT3_ID:
                                                 inputSubjectCategory = "Other";
+                                                break;
+
+                                            default:
+                                                inputSubjectCategory = "None";
                                         }
 
                                         /*Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
@@ -601,7 +748,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mAuth.createUserWithEmailAndPassword(inputLecturerEmail, inputLecturerPassword)
+        mAuth.createUserWithEmailAndPassword(inputLecturerEmailFormatted, inputLecturerPassword)
                 .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -611,7 +758,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         String uid = user.getUid();
 
                         Lecturer lecturer = new Lecturer();
-                        lecturer.createLecturer(inputLecturerEmail,inputLecturerPassword,inputLecturerFullName,inputLecturerUsername, uid, schoolName, schoolNameShort);
+                        lecturer.createLecturer(inputLecturerEmailFormatted,inputLecturerPassword,inputLecturerFullName,inputLecturerUsername, uid, schoolName, schoolNameShort);
 
                         Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
 
@@ -625,6 +772,42 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Log.d(TAG, "onComplete: uid=" + user.getUid());
                             Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    public void studentDataCreation(){
+
+        mAuth = FirebaseAuth.getInstance();
+
+        String studentEmail = inputStudentID + "@kdu-online.com";
+
+        mAuth.createUserWithEmailAndPassword(studentEmail, inputStudentPassword)
+                .addOnCompleteListener(AdminToolbarDrawer.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                        FirebaseUser user = task.getResult().getUser();
+                        String UID = user.getUid();
+
+                        Student student = new Student();
+                        student.createStudent(inputStudentName, inputStudentID, inputStudentPassword, inputStudentCategory, schoolName,
+                        schoolNameShort, UID);
+
+                        Toast.makeText(AdminToolbarDrawer.this, R.string.student_data_creation_success, Toast.LENGTH_SHORT).show();
+
+                        inputStudentName = null;
+                        inputStudentID = null;
+                        inputStudentPassword = null;
+                        inputStudentCategory = null;
+                        schoolNameShort = null;
+                        schoolName = null;
+
+                        if (!task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: uid=" + user.getUid());
+                            Toast.makeText(AdminToolbarDrawer.this, R.string.student_data_creation_fail, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -701,6 +884,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             switch (tabIdentifier){
                 case 2:
                     lecturerDataCreation();
+                    break;
+                case 3:
+                    studentDataCreation();
                     break;
                 case 4:
                     subjectDataCreation();
