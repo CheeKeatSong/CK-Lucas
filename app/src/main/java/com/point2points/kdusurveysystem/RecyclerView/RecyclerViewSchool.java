@@ -43,7 +43,7 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         activity = this;
         context = getApplicationContext();
-        setContentView(R.layout.recycler_view);
+        setContentView(R.layout.admin_recycler_view);
 
         //No drawer if execute retrieve mode
         if(!RecyclerSchoolTabAdapter.schoolRetrieval) {
@@ -67,7 +67,7 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Item Decorator:
-        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border_grey)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);

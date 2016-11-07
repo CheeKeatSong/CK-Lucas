@@ -4,9 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="transparent_white">#b4ffffff</color>
     <color name="white">#ffffff</color>
     <color name="dark_kdu_blue">#01517d</color>
     <color name="kdu_blue">#0173b1</color>
+    <color name="light_kdu_blue">#1999df</color>
     <color name="grey">#d3d5d7</color>
     <color name="sky_blue">#78b5ef</color>
     <color name="blue">	#4FA2C0</color>

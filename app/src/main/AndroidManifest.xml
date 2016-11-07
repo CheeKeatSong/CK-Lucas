@@ -31,17 +31,23 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".student.StudentMainActivity">
+        <activity android:name=".lecturer.LecturerHome">
         </activity>
-        <activity android:name=".admin.AdminMainActivity">
+        <activity android:name=".student.StudentHome">
         </activity>
-        <activity android:name=".RecyclerView.RecyclerViewLecturer">
+        <activity android:name=".admin.AdminHome">
         </activity>
-        <activity android:name=".RecyclerView.RecyclerViewStudent">
+        <activity android:name=".RecyclerView.RecyclerViewLecturer"
+                  android:configChanges="orientation">
         </activity>
-        <activity android:name=".RecyclerView.RecyclerViewSubject">
+        <activity android:name=".RecyclerView.RecyclerViewStudent"
+                  android:configChanges="orientation">
         </activity>
-        <activity android:name=".RecyclerView.RecyclerViewSchool">
+        <activity android:name=".RecyclerView.RecyclerViewSubject"
+                  android:configChanges="orientation">
+        </activity>
+        <activity android:name=".RecyclerView.RecyclerViewSchool"
+                  android:configChanges="orientation">
         </activity>
         <activity
             android:name=".Fragment.LecturerFragmentPagerActivity">

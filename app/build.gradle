@@ -50,6 +50,8 @@ android {
         compile 'com.firebaseui:firebase-ui-storage:0.6.1'
         // Single target that includes all FirebaseUI libraries above
         compile 'com.firebaseui:firebase-ui:0.6.1'
+        compile 'com.thoughtbot:expandablerecyclerview:1.1'
+        compile 'com.thoughtbot:expandablecheckrecyclerview:1.1'
     }
 
     apply plugin: 'com.google.gms.google-services'

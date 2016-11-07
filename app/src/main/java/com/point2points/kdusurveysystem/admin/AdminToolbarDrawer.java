@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -56,6 +61,7 @@ import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
+import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.datamodel.School;
@@ -70,6 +76,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     private static final String TAG = "AdminToolbarDrawer";
     private static final int REQUEST_SCHOOL_RETRIEVE = 0;
+    private static final int REQUEST_PROGRAMME_RETRIEVE = 1;
 
     //Lecturer Data Creation
     private static final String INPUT_LECTURER_EMAIL = "com.point2points.kdusurveysystem.lecturer_email";
@@ -87,6 +94,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String INPUT_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
     private static final String INPUT_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
 
+    //Programme Data Creation
+    private static final String INPUT_PROGRAMME_NAME = "com.point2points.kdusurveysystem.programme_name";
+
     //Student Data Creation
     private static final String INPUT_STUDENT_NAME = "com.point2points.kdusurveysystem.student_name";
     //private static final String INPUT_STUDENT_EMAIL = "com.point2points.kdusurveysystem.student_email";
@@ -96,6 +106,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     String schoolName;
     String schoolNameShort;
+
+    String programmeName;
 
     String inputLecturerEmail;
     String inputLecturerEmailFormatted;
@@ -123,14 +135,45 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     public static int tabIdentifier;
     static Context mContext;
 
+    Admin mAdmin;
+
     private Drawer adminDrawer;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
+    protected void loadUserProfileInfo(final Bundle savedInstanceState){
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String UID = user.getUid();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("admin");
+        Query query = ref;
+
+        Log.e("lecturer: " ,UID);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Log.e("lecturer: " ,"hahawa");
+                    if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
+                        mAdmin = postSnapshot.getValue(Admin.class);
+                        onCreateToolbar(savedInstanceState);
+                        onCreateDrawer();
+                    }}
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });
+    }
+
     protected void onCreateToolbar(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         //get context
         mContext = this;
 
@@ -144,7 +187,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -241,7 +283,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                ((TextView)selectedItemView).setVisibility(GONE);
+                if(selectedItemView != null) {
+                    ((TextView) selectedItemView).setVisibility(GONE);
+                }
 
                 String sortType = String.valueOf(sortButton.getSelectedItem());
 
@@ -310,6 +354,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             inputStudentID = savedInstanceState.getString(INPUT_STUDENT_ID);
             inputStudentPassword = savedInstanceState.getString(INPUT_STUDENT_PASSWORD);
             inputStudentCategory = savedInstanceState.getString(INPUT_STUDENT_CATEGORY);
+            programmeName = savedInstanceState.getString(INPUT_PROGRAMME_NAME);
         }
 
     }
@@ -329,9 +374,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.drawable.kdu_glenmarie_view)
+                .withHeaderBackground(R.drawable.blue_drawer_background)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("CK Song").withEmail("0116708@kdu-online.com").withIcon(getResources().getDrawable(R.drawable.kdu_logo))
+                        new ProfileDrawerItem().withName(mAdmin.getAdminName()).withEmail(mAdmin.getAdminEmail()).withIcon(getResources().getDrawable(R.drawable.kdu_logo))
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -504,9 +549,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final RadioButton studentCategory2 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_degree);
                 final RadioButton studentCategory3 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_other);
 
-                studentCategory1.setId(R.id.CAT1_ID);
-                studentCategory2.setId(R.id.CAT2_ID);
-                studentCategory3.setId(R.id.CAT3_ID);
+                studentCategory1.setTag(CAT1_ID);
+                studentCategory2.setTag(CAT2_ID);
+                studentCategory3.setTag(CAT3_ID);
 
                 studentName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 studentID.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
@@ -610,9 +655,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final RadioButton subjectCategory2 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_degree);
                 final RadioButton subjectCategory3 = (RadioButton) subjectPromptsView.findViewById(R.id.subject_dialog_category_other);
 
-                subjectCategory1.setId(R.id.CAT1_ID);
-                subjectCategory2.setId(R.id.CAT2_ID);
-                subjectCategory3.setId(R.id.CAT3_ID);
+                subjectCategory1.setTag(CAT1_ID);
+                subjectCategory2.setTag(CAT2_ID);
+                subjectCategory3.setTag(CAT3_ID);
 
                 subjectName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 //subjectCategory.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
@@ -795,7 +840,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                         Student student = new Student();
                         student.createStudent(inputStudentName, inputStudentID, inputStudentPassword, inputStudentCategory, schoolName,
-                        schoolNameShort, UID);
+                        schoolNameShort, UID, programmeName);
 
                         Toast.makeText(AdminToolbarDrawer.this, R.string.student_data_creation_success, Toast.LENGTH_SHORT).show();
 
@@ -803,6 +848,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         inputStudentID = null;
                         inputStudentPassword = null;
                         inputStudentCategory = null;
+                        programmeName = null;
                         schoolNameShort = null;
                         schoolName = null;
 
@@ -840,12 +886,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         savedInstanceState.putString(INPUT_SUBJECT_NAME, inputSubjectName);
         savedInstanceState.putString(INPUT_SUBJECT_CATEGORY, inputSubjectCategory);
         savedInstanceState.putString(INPUT_SUBJECT_CODE, inputSubjectCode);
+        savedInstanceState.putString(INPUT_PROGRAMME_NAME, programmeName);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -861,14 +907,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
     
     @Override
@@ -887,7 +935,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     lecturerDataCreation();
                     break;
                 case 3:
-                    studentDataCreation();
+                    retrieveProgrammeInfo();
                     break;
                 case 4:
                     subjectDataCreation();
@@ -896,5 +944,29 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     break;
             }
         }
+        if (requestCode == REQUEST_PROGRAMME_RETRIEVE){
+            if (data == null){
+                return;
+            }
+            switch (tabIdentifier){
+                case 2:
+                    break;
+                case 3:
+                    studentDataCreation();
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
+
+    public void retrieveProgrammeInfo(){
+        tabIdentifierMutex = tabIdentifier;
+        Toast.makeText(AdminToolbarDrawer.this, "Select a programme to complete data creation", Toast.LENGTH_SHORT).show();
+        //Intent intent = RecyclerProgrammeTabAdapter.newIntent(mContext);
+        //startActivityForResult(intent, REQUEST_PROGRAMME_RETRIEVE);
+    }
+
 }

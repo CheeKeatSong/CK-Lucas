@@ -23,8 +23,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
-import com.point2points.kdusurveysystem.admin.AdminMainActivity;
+import com.point2points.kdusurveysystem.admin.AdminHome;
+import com.point2points.kdusurveysystem.datamodel.Admin;
+import com.point2points.kdusurveysystem.datamodel.Lecturer;
+import com.point2points.kdusurveysystem.datamodel.Student;
+import com.point2points.kdusurveysystem.lecturer.LecturerHome;
+import com.point2points.kdusurveysystem.student.StudentHome;
 
 import static android.content.ContentValues.TAG;
 
@@ -107,7 +118,7 @@ public class Login extends Activity{
                 final String password = inputPassword.getText().toString();
 
                 if("admin".equals(email) && "admin".equals(password)){
-                    Intent intent = new Intent(Login.this, AdminMainActivity.class);
+                    Intent intent = new Intent(Login.this, AdminHome.class);
                     startActivity(intent);
                     finish();
                 }
@@ -130,7 +141,6 @@ public class Login extends Activity{
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
-                                progressBar.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
                                     // there was an error
                                     if (password.length() < 6) {
@@ -139,9 +149,76 @@ public class Login extends Activity{
                                         Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(Login.this, RecyclerViewLecturer.class);
-                                    startActivity(intent);
-                                    finish();
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    final String UID = user.getUid();
+
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                    ref = ref.child("users").child("lecturer");
+                                    Query query = ref;
+
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot snapshot) {
+                                            Log.e("Count " ,""+snapshot.getChildrenCount());
+                                            for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                                                if (UID.equals(postSnapshot.getValue(Lecturer.class).getUid())) {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    Intent intent = new Intent(Login.this, LecturerHome.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }}
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError firebaseError) {
+                                            Log.e("The read failed: " ,firebaseError.getMessage());
+                                        }
+                                    });
+
+                                    ref = FirebaseDatabase.getInstance().getReference();
+                                    ref = ref.child("users").child("admin");
+                                    query = ref;
+
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot snapshot) {
+                                            Log.e("Count " ,""+snapshot.getChildrenCount());
+                                            for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                                                if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    Intent intent = new Intent(Login.this,RecyclerViewLecturer.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }}
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError firebaseError) {
+                                            Log.e("The read failed: " ,firebaseError.getMessage());
+                                        }
+                                    });
+
+                                    ref = FirebaseDatabase.getInstance().getReference();
+                                    ref = ref.child("users").child("student");
+                                    query = ref;
+
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot snapshot) {
+                                            Log.e("Count " ,""+snapshot.getChildrenCount());
+                                            for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                                                if (UID.equals(postSnapshot.getValue(Student.class).getStudentUid())) {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    Intent intent = new Intent(Login.this,StudentHome.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }}
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError firebaseError) {
+                                            progressBar.setVisibility(View.GONE);
+                                            Log.e("The read failed: " ,firebaseError.getMessage());
+                                        }
+                                    });
+
                                 }
                             }
                         });

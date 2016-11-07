@@ -11,6 +11,7 @@ public class Student {
     public String studentUsername;
     public String studentPassword;
     public String studentCategory; // eg. Diploma
+    public String studentProgramme;
     //public String studentDepartment; // eg. Department of Computing
     public String studentSchool; // eg. School of Computing and Creative Media
     public String studentSchoolShort;
@@ -24,7 +25,7 @@ public class Student {
 
     //public Student(String studentName, String studentID, String studentCategory, String studentDepartment, String studentSchool, String studentUid, long date){
     public Student(String studentName, String studentID, String studentEmail, String studentUsername, String studentPassword, String studentCategory,
-                   String studentSchool, String studentSchoolShort, String studentPoint, String studentUid, long date) {
+                   String studentSchool, String studentSchoolShort, String studentPoint, String studentUid, long date, String studentProgramme) {
         this.studentName = studentName;
         this.studentID = studentID;
         this.studentEmail = studentEmail;
@@ -36,6 +37,15 @@ public class Student {
         this.studentPoint = studentPoint;
         this.studentUid = studentUid;
         this.date = String.valueOf(date);
+        this.studentProgramme = studentProgramme;
+    }
+
+    public String getStudentProgramme() {
+        return studentProgramme;
+    }
+
+    public void setStudentProgramme(String studentProgramme) {
+        this.studentProgramme = studentProgramme;
     }
 
     public String getStudentUid() {
@@ -130,7 +140,7 @@ public class Student {
     //public void createStudent(final String studentName, final String studentID, final String studentCategory, final String studentDepartment, final String studentSchool) {
     //public void createStudent(final String studentName, final String studentID, final String studentEmail, final String studentPassword, final String studentCategory, final String studentSchool) {
     public void createStudent(final String studentName, final String studentID, final String studentPassword, final String studentCategory, final String studentSchool,
-                              final String studentSchoolShort, final String UID) {
+                              final String studentSchoolShort, final String UID, final String studentProgramme) {
 
         ref = FirebaseDatabase.getInstance().getReference();
 
@@ -138,7 +148,7 @@ public class Student {
         String studentUsername = studentID;
 
         Student student = new Student(studentName, studentID, studentEmail, studentUsername, studentPassword, studentCategory,
-                studentSchool, studentSchoolShort, "100", UID, System.currentTimeMillis());
+                studentSchool, studentSchoolShort, "100", UID, System.currentTimeMillis(), studentProgramme);
 
         ref.child("users").child("student").child(UID).setValue(student);
     }
