@@ -2,6 +2,7 @@ package com.point2points.kdusurveysystem.RecyclerView;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +14,6 @@ import com.daimajia.swipe.util.Attributes;
 
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
@@ -41,9 +41,10 @@ public class RecyclerViewLecturer extends AdminToolbarDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.recycler_view);
-        super.onCreateDrawer();
-        super.onCreateToolbar(savedInstanceState);
+        setContentView(R.layout.admin_recycler_view);
+
+        super.onCreate(savedInstanceState);
+        super.loadUserProfileInfo(savedInstanceState);
 
         RecyclerViewLecturer.context = getApplicationContext();
 
@@ -60,7 +61,7 @@ public class RecyclerViewLecturer extends AdminToolbarDrawer {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Item Decorator:
-        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border_grey)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);
@@ -129,5 +130,9 @@ public class RecyclerViewLecturer extends AdminToolbarDrawer {
         progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }
 

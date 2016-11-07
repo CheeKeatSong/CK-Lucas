@@ -38,7 +38,7 @@ public class RecyclerViewStudent extends AdminToolbarDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.recycler_view);
+        setContentView(R.layout.admin_recycler_view);
         super.onCreateDrawer();
         super.onCreateToolbar(savedInstanceState);
 
@@ -57,7 +57,7 @@ public class RecyclerViewStudent extends AdminToolbarDrawer {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Item Decorator:
-        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border)));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.border_grey)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);

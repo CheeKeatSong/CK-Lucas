@@ -1,5 +1,6 @@
 package com.point2points.kdusurveysystem.adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +35,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
+import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
@@ -46,8 +50,19 @@ import java.util.StringTokenizer;
 
 public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLecturerTabAdapter.SimpleViewHolder> {
 
+    private static final String TAG = "RecyclerLecturerAdapter";
+
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
+
+    private Activity mActivity;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    String UID;
+
+    //relogin after delete data
+    Lecturer lecturer = new Lecturer();
 
     public static class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
@@ -163,6 +178,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
     public RecyclerLecturerTabAdapter(Context context) {
         this.mContext = context;
+        mActivity = (Activity) mContext;
 
         //String key = ref.push().getKey();
         FirebaseLecturerDataRetrieval();
@@ -273,15 +289,20 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
                                 //removeUserFromAuth(item.getEmailAddress(), item.getPassword());
 
+                                RecyclerViewLecturer.onProgressBar();
+
+                                removeUserFromAuth(item.getEmailAddress(), item.getPassword());
+
                                 ref.child(viewHolder.textViewUid.getText().toString()).removeValue();
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                                 lecturers.remove(position);
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, LecturerDataset.size());
-
                                 mItemManger.closeAllItems();
                                 Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewFullName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
                                 LecturerDataset = lecturers;
+
+                                RecyclerViewLecturer.offProgressBar();
                             }
                         })
 
@@ -391,33 +412,71 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         Collections.reverse(LecturerDataset);
     }
 
-    public void removeUserFromAuth(String email, String password) {
+    public void removeUserFromAuth(final String email, final String password) {
 
-        // DO ACCOUNT DELETION FROM AUTH
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UID = user.getUid();
 
-        /*final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Get auth credentials from the user for re-authentication. The example below shows
-        // email and password credentials but there are multiple possible providers,
-        // such as GoogleAuthProvider or FacebookAuthProvider.
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(email, password);
-
-        // Prompt the user to re-provide their sign-in credentials
-        user.reauthenticate(credential)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        user.delete()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            // there was an error
+                        } else {
+                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                            AuthCredential credential = EmailAuthProvider
+                                    .getCredential(email, password);
+
+                            user.reauthenticate(credential)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            user.delete()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Log.d(TAG, "User account deleted.");
+                                                            }
+                                                        }
+                                                    });
+
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("lecturer");
+        query = ref;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    if (UID.equals(postSnapshot.getValue(Lecturer.class).getUid())) {
+                        lecturer = postSnapshot.getValue(Lecturer.class);
+                        Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
+                        mAuth.signInWithEmailAndPassword(lecturer.getEmailAddress(), lecturer.getPassword())
+                                .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("Account Deletion", "User account deleted.");
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (!task.isSuccessful()) {
+                                            // there was an error
+                                        } else {
                                         }
                                     }
                                 });
-                    }
-                });*/
+                    }}
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });
     }
 }

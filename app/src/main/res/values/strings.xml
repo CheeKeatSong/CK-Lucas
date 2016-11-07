@@ -51,13 +51,15 @@
     <string name="drawer_item_settings">SETTINGS</string>
     <string name="drawer_item_home">HOME</string>
     <string name="sign_out">SIGN OUT</string>
+    <string name="store">STORE</string>
+    <string name="history">HISTORY</string>
 
     //sort list
     <string-array name="sort_array">
-        <item>Latest</item>
-        <item>Earliest</item>
         <item>A-Z</item>
         <item>Z-A</item>
+        <item>Latest</item>
+        <item>Earliest</item>
     </string-array>
 
 </resources>

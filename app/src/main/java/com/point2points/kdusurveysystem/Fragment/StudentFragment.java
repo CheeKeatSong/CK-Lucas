@@ -23,7 +23,9 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
+import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
 import java.text.SimpleDateFormat;
@@ -37,6 +39,10 @@ import static com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter
 public class StudentFragment extends Fragment{
 
         private static final String ARG_SUBJECT_ID = "Student_id";
+        private static final int REQUEST_SCHOOL_RETRIEVE = 0;
+
+        String schoolName;
+        String schoolNameShort;
 
         private Student mStudent;
         private TextView studentDateTextView, studentNameTextView, studentEmailTextView, studentUsernameTextView, studentPointTextView, studentPasswordTextView, studentIDTextView,
@@ -45,6 +51,9 @@ public class StudentFragment extends Fragment{
         private RadioGroup studentCategoryRadioGroup;
         private RadioButton studentCategoryRadioDiploma, studentCategoryRadioDegree, studentCategoryRadioOther;
         private Button studentDataEditButton, studentCancelButton, studentSchoolButton;
+
+        private static final String INPUT_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
+        private static final String INPUT_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
 
         private static ArrayList<Student> studentData = new ArrayList<>();
 
@@ -249,7 +258,11 @@ public class StudentFragment extends Fragment{
             studentSchoolButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    // Do changing of school.
+                    Toast.makeText(getActivity(), "Double tap a school to edit the data", Toast.LENGTH_SHORT).show();
+                    Intent intent = RecyclerSchoolTabAdapter.newIntent(getActivity());
+                    startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
+
+
                 }
             });
 
@@ -290,6 +303,8 @@ public class StudentFragment extends Fragment{
                                     updateStudent.put("studentPassword", mStudent.getStudentPassword());
                                     updateStudent.put("studentPoint", mStudent.getStudentPoint());
                                     updateStudent.put("studentCategory", mStudent.getStudentCategory());
+                                    updateStudent.put("studentSchool", mStudent.getStudentSchool());
+                                    updateStudent.put("studentSchoolShort", mStudent.getStudentSchoolShort());
                                     //updateStudent.put("studentDepartment", mStudent.getStudentDepartment());
 
                                     mDatabase.updateChildren(updateStudent);
@@ -325,6 +340,18 @@ public class StudentFragment extends Fragment{
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             if (resultCode != Activity.RESULT_OK) {
                 return;
+            }
+            if (requestCode == REQUEST_SCHOOL_RETRIEVE){
+                if (data == null){
+                    return;
+                }
+                schoolName = RecyclerSchoolTabAdapter.schoolNameRetrieval(data);
+                schoolNameShort = RecyclerSchoolTabAdapter.schoolNameShortRetrieval(data);
+
+                mStudent.setStudentSchool(schoolName);
+                mStudent.setStudentSchoolShort(schoolNameShort);
+
+                studentSchoolButton.setText(mStudent.getStudentSchool() +" (" + mStudent.getStudentSchoolShort() + ")");
             }
         }
 

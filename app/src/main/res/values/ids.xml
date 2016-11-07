@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="CAT1_ID" type="id" />
+    <item name="CAT2_ID" type="id" />
+    <item name="CAT3_ID" type="id" />
+</resources>

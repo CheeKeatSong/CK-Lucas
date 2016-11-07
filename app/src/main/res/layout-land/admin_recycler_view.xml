@@ -8,7 +8,7 @@
         android:id="@+id/tToolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        layout="@layout/toolbar_custom_view" />
+        layout="@layout/toolbar_custom_view_admin" />
 
     <include
         android:id="@+id/t2Toolbar"

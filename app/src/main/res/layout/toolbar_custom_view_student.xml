@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/studentToolbar"
+    android:layout_height="60dp"
+    android:layout_width="fill_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:gravity="top|start"
+    android:background="@color/kdu_blue"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageButton android:src="@drawable/ic_option"
+                     android:background="?attr/actionBarItemBackground"
+                     android:layout_width="?attr/actionBarSize"
+                     android:layout_height="match_parent"
+                     android:scaleType="centerInside"
+                     android:id="@+id/menu_item_option_student"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/toolbar_space"/>
+
+        <ImageButton android:src="@drawable/ic_search"
+                     android:background="?attr/actionBarItemBackground"
+                     android:layout_width="?attr/actionBarSize"
+                     android:layout_height="match_parent"
+                     android:scaleType="centerInside"
+                     android:id="@+id/menu_item_search_student"
+                     android:layout_gravity="right"
+                     android:windowSoftInputMode="stateHidden"/>
+
+        <Spinner
+            android:layout_width="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_sort"
+            android:entries="@array/sort_array"
+            android:id="@+id/menu_item_sort_student"
+            android:windowSoftInputMode="stateHidden"
+            android:layout_marginRight="20dp"/>
+
+    </LinearLayout>
+</android.support.v7.widget.Toolbar>

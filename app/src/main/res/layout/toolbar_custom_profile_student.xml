@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/studentProfileToolbar"
+    android:layout_height="60dp"
+    android:layout_width="fill_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:gravity="top|start"
+    android:background="@color/kdu_blue"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/border_rounded_white">
+
+            <ImageButton
+                android:src="@drawable/ic_profile_icon"
+                android:background="?attr/actionBarItemBackground"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:id="@+id/menu_item_profile_student"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:background="@drawable/border_rounded_white"
+            android:layout_marginLeft="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_weight="0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-5dp">
+            <TextView
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/menu_item_username_student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold"
+                android:textColor="@color/transparent_white"
+                android:textSize="14dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginRight="6dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/menu_item_programme_student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/transparent_white"
+                android:textSize="12dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/border_rounded_white"
+            android:layout_marginLeft="4dp"
+            android:layout_width="96dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_marginLeft="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:textColor="@color/transparent_white"
+                    android:layout_marginTop="2dp"
+                    android:text="Points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="14dp"/>
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_point_icon"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/border_rounded_white"
+                android:layout_marginLeft="5dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_marginRight="1dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:textColor="@color/transparent_white"
+                    android:textSize="14dp"
+                    android:id="@+id/menu_item_point_student"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.Toolbar>
