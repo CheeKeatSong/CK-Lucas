@@ -38,6 +38,9 @@
     <string name="student_id">Student ID\nEg: 0101234</string>
     <string name="student_data_creation_success">STUDENT DATA SUCCESSFULLY CREATED</string>
     <string name="student_data_creation_fail">STUDENT DATA CREATION FAILED</string>
+    <string name="programme_name">Programme Name\nEg: Diploma in Computer Studies</string>
+    <string name="programme_data_creation_success">PROGRAMME DATA SUCCESSFULLY CREATED</string>
+    <string name="programme_data_creation_fail">PROGRAMME DATA CREATION FAILED</string>
 
     //drawer
     <string name="drawer_open">OPEN</string>
