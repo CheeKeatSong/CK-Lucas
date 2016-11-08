@@ -2,17 +2,18 @@
 <RelativeLayout android:layout_height="wrap_content"
               android:layout_width="match_parent"
               android:orientation="vertical"
+                android:fitsSystemWindows="true"
               xmlns:android="http://schemas.android.com/apk/res/android">
 
     <include
         android:id="@+id/tToolbar"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
         layout="@layout/toolbar_custom_view_admin" />
 
     <include
         android:id="@+id/t2Toolbar"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
         layout="@layout/toolbar_search_custom_view"
         android:visibility="gone"/>

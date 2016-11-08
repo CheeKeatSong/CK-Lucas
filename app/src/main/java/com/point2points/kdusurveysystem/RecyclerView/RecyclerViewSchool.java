@@ -45,12 +45,8 @@ public class RecyclerViewSchool extends AdminToolbarDrawer {
         context = getApplicationContext();
         setContentView(R.layout.admin_recycler_view);
 
-        //No drawer if execute retrieve mode
-        if(!RecyclerSchoolTabAdapter.schoolRetrieval) {
-            super.onCreateDrawer();
-        }
-
-        super.onCreateToolbar(savedInstanceState);
+        super.onCreate(savedInstanceState);
+        super.loadUserProfileInfo(savedInstanceState);
 
         RecyclerViewSchool.context = getApplicationContext();
 
