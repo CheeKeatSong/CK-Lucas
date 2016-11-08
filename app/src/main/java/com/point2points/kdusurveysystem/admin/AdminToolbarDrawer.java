@@ -54,16 +54,19 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewProgramme;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.datamodel.Programme;
 import com.point2points.kdusurveysystem.datamodel.School;
 import com.point2points.kdusurveysystem.datamodel.Student;
 import com.point2points.kdusurveysystem.datamodel.Subject;
@@ -96,6 +99,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     //Programme Data Creation
     private static final String INPUT_PROGRAMME_NAME = "com.point2points.kdusurveysystem.programme_name";
+    private static final String INPUT_PROGRAMME_CATEGORY = "com.point2points.kdusurveysystem.programme_category";
 
     //Student Data Creation
     private static final String INPUT_STUDENT_NAME = "com.point2points.kdusurveysystem.student_name";
@@ -116,14 +120,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     String inputLecturerUsername;
     //String inputLecturerID;
 
-    String inputSubjectName;
-    String inputSubjectCategory;
-    String inputSubjectCode;
-
     String inputStudentName;
     String inputStudentID;
     String inputStudentPassword;
     String inputStudentCategory;
+
+    String inputSubjectName;
+    String inputSubjectCategory;
+    String inputSubjectCode;
+
+    String inputProgrammeName;
+    String inputProgrammeCategory;
 
     private ImageButton optionButton, addButton, searchButton, backButton;
     private Spinner sortButton;
@@ -159,7 +166,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    Log.e("lecturer: " ,"hahawa");
+                    //Log.e("lecturer: " ,"hahawa");
+                    Log.e("Admin: ",(postSnapshot.getValue(Admin.class).getAdminName()));
                     if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                         mAdmin = postSnapshot.getValue(Admin.class);
                         onCreateToolbar(savedInstanceState);
@@ -245,6 +253,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     case 5:
                     RecyclerSchoolTabAdapter.filter(text);
                         break;
+                    case 6:
+                        RecyclerProgrammeTabAdapter.filter(text);
                     default:
                         break;
                 }
@@ -314,6 +324,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         case 5:
                             RecyclerSchoolTabAdapter.sortingData(sortoption);
                             break;
+                        case 6:
+                            RecyclerProgrammeTabAdapter.sortingData(sortoption);
+                            break;
                     }
             }
 
@@ -345,8 +358,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             inputLecturerPassword = savedInstanceState.getString(INPUT_LECTURER_PASSWORD);
             inputLecturerFullName = savedInstanceState.getString(INPUT_LECTURER_FULLNAME);
             inputLecturerUsername = savedInstanceState.getString(INPUT_LECTURER_USERNAME);
-            schoolName = savedInstanceState.getString(INPUT_SCHOOL_NAME);
-            schoolNameShort = savedInstanceState.getString(INPUT_SCHOOL_NAME_SHORT);
             inputSubjectName = savedInstanceState.getString(INPUT_SUBJECT_NAME);
             inputSubjectCategory = savedInstanceState.getString(INPUT_SUBJECT_CATEGORY);
             inputSubjectCode = savedInstanceState.getString(INPUT_SUBJECT_CODE);
@@ -354,7 +365,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             inputStudentID = savedInstanceState.getString(INPUT_STUDENT_ID);
             inputStudentPassword = savedInstanceState.getString(INPUT_STUDENT_PASSWORD);
             inputStudentCategory = savedInstanceState.getString(INPUT_STUDENT_CATEGORY);
+            inputProgrammeCategory = savedInstanceState.getString(INPUT_PROGRAMME_CATEGORY);
+            schoolName = savedInstanceState.getString(INPUT_SCHOOL_NAME);
+            schoolNameShort = savedInstanceState.getString(INPUT_SCHOOL_NAME_SHORT);
             programmeName = savedInstanceState.getString(INPUT_PROGRAMME_NAME);
+
         }
 
     }
@@ -429,6 +444,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                             case 5:
                                 Intent intentSchool = new Intent(AdminToolbarDrawer.this, RecyclerViewSchool.class);
                                 startActivity(intentSchool);
+                                finish();
+                                break;
+                            case 6:
+                                Intent intentProgramme = new Intent(AdminToolbarDrawer.this, RecyclerViewProgramme.class);
+                                startActivity(intentProgramme);
                                 finish();
                                 break;
                             default:
@@ -785,6 +805,77 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 AlertDialog schoolAlertDialog = schoolDialogBuilder.create();
                 schoolAlertDialog.show();
                 break;
+            case 6:
+                View programmePromptsView = li.inflate(R.layout.programme_creation_dialog, null);
+
+                final AlertDialog.Builder programmeDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
+
+                programmeDialogBuilder.setView(programmePromptsView);
+                programmeDialogBuilder.setTitle("CREATE A PROGRAMME INFO");
+
+                final EditText programmeName = (EditText) programmePromptsView.findViewById(R.id.programme_dialog_name);
+                final RadioGroup programmeCategory = (RadioGroup) programmePromptsView.findViewById(R.id.programme_dialog_category);
+
+                final RadioButton programmeCategory1 = (RadioButton) programmePromptsView.findViewById(R.id.programme_dialog_category_diploma);
+                final RadioButton programmeCategory2 = (RadioButton) programmePromptsView.findViewById(R.id.programme_dialog_category_degree);
+                final RadioButton programmeCategory3 = (RadioButton) programmePromptsView.findViewById(R.id.programme_dialog_category_other);
+
+                programmeCategory1.setTag(CAT1_ID);
+                programmeCategory2.setTag(CAT2_ID);
+                programmeCategory3.setTag(CAT3_ID);
+
+                programmeName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
+
+                programmeDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        inputProgrammeName = programmeName.getText().toString();
+                                        final int inputCategorySelection = programmeCategory.getCheckedRadioButtonId();
+
+                                        if (TextUtils.isEmpty(inputProgrammeName)) {
+                                            Toast.makeText(getApplicationContext(), "Enter name!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        if (inputCategorySelection == -1) {
+                                            Toast.makeText(getApplicationContext(), "Select category!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        switch(inputCategorySelection) {
+                                            case CAT1_ID:
+                                                inputProgrammeCategory = "Diploma";
+                                                break;
+
+                                            case CAT2_ID:
+                                                inputProgrammeCategory = "Degree";
+                                                break;
+
+                                            case CAT3_ID:
+                                                inputProgrammeCategory = "Other";
+                                                break;
+
+                                            default:
+                                                inputProgrammeCategory = "None";
+                                        }
+
+                                        tabIdentifierMutex = tabIdentifier;
+                                        Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                                        Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                                        startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog programmeAlertDialog = programmeDialogBuilder.create();
+                programmeAlertDialog.show();
+                break;
             default:
                 break;
         }
@@ -873,6 +964,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         schoolName = null;
     }
 
+    public void programmeDataCreation(){
+        Programme programme = new Programme();
+        programme.createProgramme(inputProgrammeName, inputProgrammeCategory, schoolName, schoolNameShort);
+        Toast.makeText(AdminToolbarDrawer.this, R.string.programme_data_creation_success, Toast.LENGTH_SHORT).show();
+
+        inputProgrammeName = null;
+        inputProgrammeCategory = null;
+        schoolNameShort = null;
+        schoolName = null;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
@@ -881,11 +983,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         savedInstanceState.putString(INPUT_LECTURER_PASSWORD, inputLecturerPassword);
         savedInstanceState.putString(INPUT_LECTURER_FULLNAME, inputLecturerFullName);
         savedInstanceState.putString(INPUT_LECTURER_USERNAME, inputLecturerUsername);
-        savedInstanceState.putString(INPUT_SCHOOL_NAME, schoolName);
-        savedInstanceState.putString(INPUT_SCHOOL_NAME_SHORT, schoolNameShort);
         savedInstanceState.putString(INPUT_SUBJECT_NAME, inputSubjectName);
         savedInstanceState.putString(INPUT_SUBJECT_CATEGORY, inputSubjectCategory);
         savedInstanceState.putString(INPUT_SUBJECT_CODE, inputSubjectCode);
+        savedInstanceState.putString(INPUT_STUDENT_NAME, inputStudentName);
+        savedInstanceState.putString(INPUT_STUDENT_PASSWORD, inputStudentPassword);
+        savedInstanceState.putString(INPUT_STUDENT_ID, inputStudentID);
+        savedInstanceState.putString(INPUT_STUDENT_CATEGORY, inputStudentCategory);
+        savedInstanceState.putString(INPUT_PROGRAMME_CATEGORY, inputProgrammeCategory);
+        savedInstanceState.putString(INPUT_SCHOOL_NAME, schoolName);
+        savedInstanceState.putString(INPUT_SCHOOL_NAME_SHORT, schoolNameShort);
         savedInstanceState.putString(INPUT_PROGRAMME_NAME, programmeName);
     }
 
@@ -935,11 +1042,13 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     lecturerDataCreation();
                     break;
                 case 3:
-                    retrieveProgrammeInfo();
+                    retrieveProgrammeInfo();    // Wrong place?
                     break;
                 case 4:
                     subjectDataCreation();
                     break;
+                case 5:
+                    programmeDataCreation();
                 default:
                     break;
             }
@@ -952,9 +1061,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 case 2:
                     break;
                 case 3:
-                    studentDataCreation();
+                    studentDataCreation();  // Wrong place?
                     break;
                 case 4:
+                    break;
+                case 5:
                     break;
                 default:
                     break;
@@ -965,8 +1076,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     public void retrieveProgrammeInfo(){
         tabIdentifierMutex = tabIdentifier;
         Toast.makeText(AdminToolbarDrawer.this, "Select a programme to complete data creation", Toast.LENGTH_SHORT).show();
-        //Intent intent = RecyclerProgrammeTabAdapter.newIntent(mContext);
-        //startActivityForResult(intent, REQUEST_PROGRAMME_RETRIEVE);
+        Intent intent = RecyclerProgrammeTabAdapter.newIntent(mContext);
+        startActivityForResult(intent, REQUEST_PROGRAMME_RETRIEVE);
     }
 
 }

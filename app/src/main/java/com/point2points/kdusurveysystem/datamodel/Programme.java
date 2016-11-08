@@ -10,6 +10,7 @@ public class Programme {
     public String programmeCategory; // eg. Diploma
     //public String programmeDepartment; // eg. Department of Computing
     public String programmeSchool; // eg. School of Computing and Creative Media
+    public String programmeSchoolShort; // eg. SCCM
     public String programmeUid;
     public String date;
 
@@ -18,11 +19,12 @@ public class Programme {
     public Programme(){}
 
     //public Programme(String programmeName, String programmeCategory, String programmeDepartment, String programmeSchool, String programmeUid, long date){
-    public Programme(String programmeName, String programmeCategory, String programmeSchool, String programmeUid, long date){
+    public Programme(String programmeName, String programmeCategory, String programmeSchool, String programmeSchoolShort, String programmeUid, long date){
         this.programmeName = programmeName;
         this.programmeCategory = programmeCategory;
         //this.programmeDepartment = programmeDepartment;
         this.programmeSchool = programmeSchool;
+        this.programmeSchoolShort = programmeSchoolShort;
         this.programmeUid = programmeUid;
         this.date = String.valueOf(date);
     }
@@ -51,6 +53,10 @@ public class Programme {
         this.programmeName = programmeName;
     }
 
+    public String getProgrammeCategory() {
+        return programmeCategory;
+    }
+
     public void setProgrammeCategory(String programmeCategory) {
         this.programmeCategory = programmeCategory;
     }
@@ -71,6 +77,14 @@ public class Programme {
         this.programmeSchool = programmeSchool;
     }
 
+    public String getProgrammeSchoolShort() {
+        return programmeSchoolShort;
+    }
+
+    public void setProgrammeSchoolShort(String programmeSchoolShort) {
+        this.programmeSchoolShort = programmeSchoolShort;
+    }
+
     public String getDate() {
         return date;
     }
@@ -79,7 +93,7 @@ public class Programme {
         this.date = date;
     }
 
-    public void createProgramme(final String programmeName, final String programmeCategory, final String programmeSchool) {
+    public void createProgramme(final String programmeName, final String programmeCategory, final String programmeSchool, final String programmeSchoolShort) {
 
         /*StringBuilder programmeNameBuilder = new StringBuilder();
         for (String s : programmeName.split(" ")) {
@@ -93,8 +107,7 @@ public class Programme {
         ref = FirebaseDatabase.getInstance().getReference().child("programme");
         DatabaseReference keyref = ref.push();
 
-        //Programme programme = new Programme(programmeName, programmeCategory, programmeDepartment, programmeSchool, keyref.getKey(), System.currentTimeMillis());
-        Programme programme = new Programme(programmeName, programmeCategory, programmeSchool, keyref.getKey(), System.currentTimeMillis());
+        Programme programme = new Programme(programmeName, programmeCategory, programmeSchool, programmeSchoolShort, keyref.getKey(), System.currentTimeMillis());
         keyref.setValue(programme);
     }
 }
