@@ -48,6 +48,8 @@ public class RecyclerViewLecturer extends AdminToolbarDrawer {
 
         RecyclerViewLecturer.context = getApplicationContext();
 
+        
+
         recyclerView = (android.support.v7.widget.RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ActionBar actionBar = getActionBar();

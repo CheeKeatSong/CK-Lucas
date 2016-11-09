@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.security.keystore.UserNotAuthenticatedException;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -53,6 +55,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewProgramme;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
@@ -144,6 +147,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     Admin mAdmin;
 
+    private Activity mActivity;
+
     private Drawer adminDrawer;
 
     private FirebaseAuth mAuth;
@@ -170,8 +175,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     Log.e("Admin: ",(postSnapshot.getValue(Admin.class).getAdminName()));
                     if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                         mAdmin = postSnapshot.getValue(Admin.class);
+
+                        //Toolbar Creation
                         onCreateToolbar(savedInstanceState);
-                        onCreateDrawer();
+
+                        //No drawer if execute retrieve mode
+                        if(!RecyclerSchoolTabAdapter.schoolRetrieval) {
+                            onCreateDrawer();
+                        }
                     }}
             }
             @Override
@@ -184,6 +195,21 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     protected void onCreateToolbar(Bundle savedInstanceState) {
         //get context
         mContext = this;
+        mActivity = (Activity)mContext;
+
+        //fix status bar
+        Window window = mActivity.getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // finally change the color
+            window.setStatusBarColor(mActivity.getResources().getColor(R.color.dark_kdu_blue));
+        }
 
         //prevent keypad auto pop-up
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -451,6 +477,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 startActivity(intentProgramme);
                                 finish();
                                 break;
+                            case 9:
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intentLogout = new Intent(AdminToolbarDrawer.this, Login.class);
+                                startActivity(intentLogout);
+                                finish();
+                                break;
                             default:
                                 Intent intent = new Intent(AdminToolbarDrawer.this, RecyclerViewLecturer.class);
                                 startActivity(intent);
@@ -569,9 +601,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final RadioButton studentCategory2 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_degree);
                 final RadioButton studentCategory3 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_other);
 
-                studentCategory1.setTag(CAT1_ID);
-                studentCategory2.setTag(CAT2_ID);
-                studentCategory3.setTag(CAT3_ID);
+                studentCategory1.setId(View.generateViewId());
+                studentCategory2.setId(View.generateViewId());
+                studentCategory3.setId(View.generateViewId());
 
                 studentName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 studentID.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
@@ -624,7 +656,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             return;
                                         }
 
-                                        switch(inputCategorySelection) {
+                                        /*switch(inputCategorySelection) {
                                             case CAT1_ID:
                                                 inputStudentCategory = "Diploma";
                                                 break;
@@ -639,7 +671,20 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                                             default:
                                                 inputStudentCategory = "None";
-                                        }
+                                        }*/
+
+                                        if (studentCategory1.isSelected())
+                                            inputStudentCategory = "Diploma";
+
+                                        else if (studentCategory2.isSelected())
+                                            inputStudentCategory = "Degree";
+
+                                        else if (studentCategory3.isSelected())
+                                            inputStudentCategory = "Degree";
+
+                                        else
+                                            inputStudentCategory = "None";
+
 
                                         tabIdentifierMutex = tabIdentifier;
                                         Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
@@ -1022,11 +1067,6 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-    
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode != Activity.RESULT_OK){
             return;
@@ -1048,6 +1088,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     subjectDataCreation();
                     break;
                 case 5:
+                    break;
+                case 6:
                     programmeDataCreation();
                 default:
                     break;

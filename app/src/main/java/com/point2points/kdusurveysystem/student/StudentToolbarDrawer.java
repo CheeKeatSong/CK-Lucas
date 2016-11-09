@@ -1,7 +1,9 @@
 package com.point2points.kdusurveysystem.student;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -35,6 +38,7 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
@@ -55,6 +59,7 @@ public class StudentToolbarDrawer extends AppCompatActivity{
     public int sortoption = 0;
     public static int tabIdentifier;
     static Context mContext;
+    private Activity mActivity;
 
     private Drawer adminDrawer;
 
@@ -96,6 +101,21 @@ public class StudentToolbarDrawer extends AppCompatActivity{
     protected void onCreateToolbar(Bundle savedInstanceState) {
         //get context
         mContext = this;
+        mActivity = (Activity)mContext;
+
+        //fix status bar
+        Window window = mActivity.getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // finally change the color
+            window.setStatusBarColor(mActivity.getResources().getColor(R.color.dark_kdu_blue));
+        }
 
         //prevent keypad auto pop-up
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -279,6 +299,12 @@ public class StudentToolbarDrawer extends AppCompatActivity{
                         int drawerIdentifier = (int)drawerItem.getIdentifier();
 
                         switch (drawerIdentifier){
+                            case 5:
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intentLogout = new Intent(StudentToolbarDrawer.this, Login.class);
+                                startActivity(intentLogout);
+                                finish();
+                                break;
                             default:
                                 Intent intent = new Intent(StudentToolbarDrawer.this, StudentHome.class);
                                 startActivity(intent);

@@ -39,8 +39,8 @@ public class RecyclerViewProgramme extends AdminToolbarDrawer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.admin_recycler_view);
-        super.onCreateDrawer();
-        super.onCreateToolbar(savedInstanceState);
+        super.onCreate(savedInstanceState);
+        super.loadUserProfileInfo(savedInstanceState);
 
         RecyclerViewProgramme.context = getApplicationContext();
 
