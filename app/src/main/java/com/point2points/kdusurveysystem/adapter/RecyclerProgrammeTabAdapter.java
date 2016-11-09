@@ -1,9 +1,11 @@
 package com.point2points.kdusurveysystem.adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.ProgrammeFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewProgramme;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
+import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.Programme;
 
 import java.util.ArrayList;
@@ -38,8 +42,16 @@ import java.util.Locale;
 
 public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerProgrammeTabAdapter.SimpleViewHolder> {
 
+    private static final String EXTRA_PROGRAMME = "com.point2points.kdusurveysystem.programme";
+
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
+
+    private static Context mContext;
+    private static Activity mActivity;
+
+    private static ArrayList<Programme> programmes = new ArrayList<>();
+    public static ArrayList<Programme> ProgrammeDataset = new ArrayList<>();
 
     public static boolean programmeRetrieval = false;
 
@@ -47,6 +59,19 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         Intent intent = new Intent(packageContext, RecyclerViewProgramme.class);
         programmeRetrieval = true;
         return intent;
+    }
+
+    public static String programmeRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_PROGRAMME);
+    }
+
+    private void setProgramme(String programme){
+        AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
+        Intent data = new Intent();
+        data.putExtra(EXTRA_PROGRAMME, programme);
+        mActivity.setResult(Activity.RESULT_OK, data);
+        mActivity.finish();
+        Log.e("set " ,"programme");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -88,13 +113,10 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         }
     }
 
-    private Context mContext;
-    private static ArrayList<Programme> programmes = new ArrayList<>();
-    public static ArrayList<Programme> ProgrammeDataset = new ArrayList<>();
-
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
     public RecyclerProgrammeTabAdapter(Context context) {
         this.mContext = context;
+        mActivity = (Activity) mContext;
         FirebaseProgrammeDataRetrieval();
     }
 
@@ -179,18 +201,27 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                //if(!programmeRetrieval) {
+                if(!programmeRetrieval) {
                     Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewProgrammeName.getText().toString());
                     Intent intent = ProgrammeFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewProgrammeUid.getText().toString());
                     viewHolder.swipeLayout.getContext().startActivity(intent);
-                //}
-                /*else if(programmeRetrieval) {
-                    String programmeName = viewHolder.textViewProgrammeName.getText().toString();
-                    String programmeNameShort = viewHolder.textViewProgrammeNameShort.getText().toString();
-                    AdminToolbarDrawer.getProgramme(programmeName, programmeNameShort);
+                }
+                else if(programmeRetrieval) {
+                    final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewProgrammeName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
+                    toastOnDoubleClick.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toastOnDoubleClick.cancel();
+                        }
+                    }, 1500);
+
+                    String programme = viewHolder.textViewProgrammeName.getText().toString();
                     programmeRetrieval = false;
-                    RecyclerViewProgramme.closeRecyclerViewProgramme();
-                }*/
+                    setProgramme(programme);
+                }
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -328,5 +359,34 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         Collections.reverse(ProgrammeDataset);
     }
 
+    public void programmeItemOnClickListener(View view){
+
+        final Toast toastItemOnClick;
+
+        if (!programmeRetrieval) {
+            toastItemOnClick = Toast.makeText(mContext, "Double Tap to Edit the data", Toast.LENGTH_SHORT);
+            toastItemOnClick.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toastItemOnClick.cancel();
+                }
+            }, 500);
+        }
+        else if (programmeRetrieval){
+            toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
+            toastItemOnClick.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toastItemOnClick.cancel();
+                }
+            }, 500);
+        }
+    }
 }
 

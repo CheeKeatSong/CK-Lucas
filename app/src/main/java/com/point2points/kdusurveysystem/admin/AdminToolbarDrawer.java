@@ -601,9 +601,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 final RadioButton studentCategory2 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_degree);
                 final RadioButton studentCategory3 = (RadioButton) studentPromptsView.findViewById(R.id.student_dialog_category_other);
 
-                studentCategory1.setTag(CAT1_ID);
-                studentCategory2.setTag(CAT2_ID);
-                studentCategory3.setTag(CAT3_ID);
+                studentCategory1.setId(View.generateViewId());
+                studentCategory2.setId(View.generateViewId());
+                studentCategory3.setId(View.generateViewId());
 
                 studentName.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
                 studentID.getBackground().setColorFilter(getResources().getColor(R.color.sky_blue), PorterDuff.Mode.SRC_IN);
@@ -656,7 +656,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                             return;
                                         }
 
-                                        switch(inputCategorySelection) {
+                                        /*switch(inputCategorySelection) {
                                             case CAT1_ID:
                                                 inputStudentCategory = "Diploma";
                                                 break;
@@ -671,7 +671,20 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                                             default:
                                                 inputStudentCategory = "None";
-                                        }
+                                        }*/
+
+                                        if (studentCategory1.isSelected())
+                                            inputStudentCategory = "Diploma";
+
+                                        else if (studentCategory2.isSelected())
+                                            inputStudentCategory = "Degree";
+
+                                        else if (studentCategory3.isSelected())
+                                            inputStudentCategory = "Degree";
+
+                                        else
+                                            inputStudentCategory = "None";
+
 
                                         tabIdentifierMutex = tabIdentifier;
                                         Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
@@ -1075,6 +1088,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     subjectDataCreation();
                     break;
                 case 5:
+                    break;
+                case 6:
                     programmeDataCreation();
                 default:
                     break;
