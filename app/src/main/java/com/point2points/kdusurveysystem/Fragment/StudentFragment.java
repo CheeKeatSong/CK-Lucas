@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +22,18 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
@@ -57,6 +69,8 @@ public class StudentFragment extends Fragment{
 
         private static ArrayList<Student> studentData = new ArrayList<>();
 
+        String currEmail, currPassword;
+
         public static StudentFragment newInstance(String uid) {
             Bundle args = new Bundle();
             args.putSerializable(ARG_SUBJECT_ID, uid);
@@ -74,6 +88,8 @@ public class StudentFragment extends Fragment{
             String uid = (String) getArguments().getSerializable(ARG_SUBJECT_ID);
 
             mStudent = getStudent(uid);
+            currEmail = mStudent.getStudentEmail();
+            currPassword = mStudent.getStudentPassword();
         }
 
         @Override
@@ -309,6 +325,21 @@ public class StudentFragment extends Fragment{
 
                                     mDatabase.updateChildren(updateStudent);
 
+                                    String newEmail = mStudent.getStudentEmail();
+                                    String newPassword = mStudent.getStudentPassword();
+
+                                    if (!(newEmail.equals(currEmail)) || !(newPassword.equals(currPassword)) ) {
+                                        Log.d("UPDATE", "I RUN");
+                                        Log.d("NEW EMAIL", newEmail);
+                                        Log.d("OLD EMAIL", currEmail);
+                                        Log.d("NEW PW", newPassword);
+                                        Log.d("OLDPW ", currPassword);
+                                        updateAuthDetails(mStudent.getStudentEmail(), mStudent.getStudentPassword());
+                                    }
+
+                                    else
+                                        Log.d("UPDATE", "I DONT RUN");
+
                                     Toast.makeText(context, "Changes applied to " + mStudent.getStudentName(), Toast.LENGTH_SHORT).show();
                                     refreshAdapter(mStudent);
                                     getActivity().onBackPressed();
@@ -334,6 +365,95 @@ public class StudentFragment extends Fragment{
                 }
             });
             return v;
+        }
+
+        public void updateAuthDetails(final String email, final String password) {
+
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            Context mContext = this.getContext();
+            Activity mActivity = (Activity) mContext;
+
+            //String UID = user.getUid();
+
+            mAuth.signInWithEmailAndPassword(currEmail, currPassword)
+                    .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                // there was an error
+                                Log.d("ERROR", "ERROR BEFORE ANYTHING");
+                            } else {
+                                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(currEmail, currPassword);
+
+                                user.reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                user.updateEmail(email)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d("Student", "User email address updated.");
+                                                                }
+
+                                                                else
+                                                                    Log.d("ERROR", "ERROR EMAIL");
+                                                            }
+                                                        });
+
+                                                user.updatePassword(password)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d("Student", "User password updated.");
+                                                                }
+
+                                                                else
+                                                                    Log.d("ERROR", "ERROR PASSWORD");
+                                                            }
+                                                        });
+                                            }
+                                        });
+                            }
+                        }
+                    });
+
+            /*ref = FirebaseDatabase.getInstance().getReference();
+            ref = ref.child("users").child("lecturer");
+            query = ref;
+
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Log.e("Count " ,""+snapshot.getChildrenCount());
+                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        if (UID.equals(postSnapshot.getValue(Student.class).getStudentUid())) {
+                            student = postSnapshot.getValue(Student.class);
+                            Log.e("Get Data", (postSnapshot.getValue(Student.class).getFullName()));
+                            mAuth.signInWithEmailAndPassword(student.getStudentEmail(), student.getStudentPassword())
+                                    .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (!task.isSuccessful()) {
+                                                // there was an error
+                                            } else {
+                                            }
+                                        }
+                                    });
+                        }}
+                }
+                @Override
+                public void onCancelled(DatabaseError firebaseError) {
+                    Log.e("The read failed: " ,firebaseError.getMessage());
+                }
+            });*/
         }
 
         @Override
