@@ -37,12 +37,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.StudentFragmentPagerActivity;
 import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
-import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
     static Query query;
 
     //relogin after delete data
-    Lecturer lecturer = new Lecturer();
+    Student student = new Student();
 
     String UID;
 
@@ -242,7 +240,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                             public void onClick(DialogInterface dialog,int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
-                                //removeUserFromAuth(item.getEmailAddress(), item.getPassword());
+
                                 RecyclerViewStudent.onProgressBar();
 
                                 removeUserFromAuth(item.getStudentEmail(), item.getStudentPassword());
@@ -406,17 +404,17 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                 });
 
         ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("lecturer");
+        ref = ref.child("users").child("student");
         query = ref;
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count of lecturers" ,""+snapshot.getChildrenCount());
+                Log.e("Count of students" ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    if (UID.equals(postSnapshot.getValue(Lecturer.class).getUid())) {
-                        lecturer = postSnapshot.getValue(Lecturer.class);
-                        mAuth.signInWithEmailAndPassword(lecturer.getEmailAddress(), lecturer.getPassword())
+                    if (UID.equals(postSnapshot.getValue(Student.class).getStudentUid())) {
+                        student = postSnapshot.getValue(Student.class);
+                        mAuth.signInWithEmailAndPassword(student.getStudentEmail(), student.getStudentPassword())
                                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -433,9 +431,6 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                 Log.e("The read failed: " ,firebaseError.getMessage());
             }
         });
-
-        ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("student");
     }
 }
 

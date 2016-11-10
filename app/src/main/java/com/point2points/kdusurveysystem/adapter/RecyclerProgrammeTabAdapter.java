@@ -271,9 +271,8 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             }
         });
 
-        //String programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") +3);
-        //TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(programmeNameReformatted);
-        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(programmeName);
+        String programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") +3);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(programmeNameReformatted);    // Fix this
 
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewProgrammeName.setText(programmeName);
