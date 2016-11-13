@@ -50,6 +50,10 @@ public class Login extends Activity{
     private ProgressBar progressBar;
     private ImageButton showpass;
 
+    // Store logged in admin's credentials for reauthentication when necessary.
+    public static String adminLoginUID;
+    public static String adminLoginEmail;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +156,10 @@ public class Login extends Activity{
                                 } else {
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     final String UID = user.getUid();
+
+                                    adminLoginUID = UID;
+                                    adminLoginEmail = user.getEmail();
+                                    //Log.e("LOGGED IN: ", user.getEmail());
 
                                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                                     ref = ref.child("users").child("lecturer");
