@@ -147,6 +147,7 @@ public class Login extends Activity{
                                         inputPassword.setError(getString(R.string.minimum_password));
                                     } else {
                                         Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                        progressBar.setVisibility(View.GONE);
                                     }
                                 } else {
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -162,8 +163,8 @@ public class Login extends Activity{
                                             Log.e("Count " ,""+snapshot.getChildrenCount());
                                             for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                                                 if (UID.equals(postSnapshot.getValue(Lecturer.class).getUid())) {
-                                                    progressBar.setVisibility(View.GONE);
                                                     Intent intent = new Intent(Login.this, LecturerHome.class);
+                                                    progressBar.setVisibility(View.GONE);
                                                     startActivity(intent);
                                                     finish();
                                                 }}

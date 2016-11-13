@@ -39,6 +39,7 @@ import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
+import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
 
@@ -62,7 +63,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
     String UID;
 
     //relogin after delete data
-    Lecturer lecturer = new Lecturer();
+    Admin admin = new Admin();
 
     public static class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
@@ -289,11 +290,10 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
                                 //removeUserFromAuth(item.getEmailAddress(), item.getPassword());
 
-                                RecyclerViewLecturer.onProgressBar();
-
                                 removeUserFromAuth(item.getEmailAddress(), item.getPassword());
 
-                                ref.child(viewHolder.textViewUid.getText().toString()).removeValue();
+                                ref = FirebaseDatabase.getInstance().getReference();
+                                ref.child("users").child("lecturer").child(viewHolder.textViewUid.getText().toString()).removeValue();
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                                 lecturers.remove(position);
                                 notifyItemRemoved(position);
@@ -414,8 +414,11 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
     public void removeUserFromAuth(final String email, final String password) {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        UID = user.getUid();
+        RecyclerViewLecturer.onProgressBar();
+
+        FirebaseUser Adminuser = FirebaseAuth.getInstance().getCurrentUser();
+        UID = Adminuser.getUid();
+        FirebaseAuth.getInstance().signOut();
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
@@ -424,16 +427,16 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                         if (!task.isSuccessful()) {
                             // there was an error
                         } else {
-                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
                             AuthCredential credential = EmailAuthProvider
                                     .getCredential(email, password);
 
-                            user.reauthenticate(credential)
+                            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                            currentUser.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            user.delete()
+                                            currentUser.delete()
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -442,7 +445,6 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                                                             }
                                                         }
                                                     });
-
                                         }
                                     });
                         }
@@ -450,7 +452,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                 });
 
         ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("lecturer");
+        ref = ref.child("users").child("admin");
         query = ref;
 
         query.addValueEventListener(new ValueEventListener() {
@@ -458,10 +460,10 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    if (UID.equals(postSnapshot.getValue(Lecturer.class).getUid())) {
-                        lecturer = postSnapshot.getValue(Lecturer.class);
-                        Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                        mAuth.signInWithEmailAndPassword(lecturer.getEmailAddress(), lecturer.getPassword())
+                    if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
+                        admin = postSnapshot.getValue(Admin.class);
+                        Log.e("Get Data", (postSnapshot.getValue(Admin.class).getAdminName()));
+                        mAuth.signInWithEmailAndPassword(admin.getAdminEmail(), admin.getAdminPassword())
                                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {

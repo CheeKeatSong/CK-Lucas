@@ -99,15 +99,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //notifyItemChanged(selectedPos);
-                    //selectedPos = getLayoutPosition();
-                    //notifyItemChanged(selectedPos);
-                    if (!programmeRetrieval) {    // What do these do?
-                        Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (programmeRetrieval) {
-                        Toast.makeText(view.getContext(), "Double Tap to select the data", Toast.LENGTH_SHORT).show();
-                    }
+                    programmeItemOnClickListener(view);
                 }
             });
         }
@@ -271,7 +263,13 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             }
         });
 
-        String programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") +3);
+        String programmeNameReformatted = "";
+        if(programmeName.contains("of")){
+        programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") -1);
+        }
+        else if (programmeName.contains("in")){
+            programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("in") +3);
+        }
         TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(programmeNameReformatted);    // Fix this
 
         viewHolder.letterimage.setImageDrawable(drawable);

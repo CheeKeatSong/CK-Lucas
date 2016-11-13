@@ -73,6 +73,7 @@ import com.point2points.kdusurveysystem.datamodel.Programme;
 import com.point2points.kdusurveysystem.datamodel.School;
 import com.point2points.kdusurveysystem.datamodel.Student;
 import com.point2points.kdusurveysystem.datamodel.Subject;
+import com.point2points.kdusurveysystem.datamodel.Survey;
 
 import java.util.Locale;
 
@@ -83,6 +84,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String TAG = "AdminToolbarDrawer";
     private static final int REQUEST_SCHOOL_RETRIEVE = 0;
     private static final int REQUEST_PROGRAMME_RETRIEVE = 1;
+    private static final int REQUEST_SUBJECT_RETRIEVE = 2;
+    private static final int REQUEST_LECTURER_RETRIEVE = 3;
 
     //Lecturer Data Creation
     private static final String INPUT_LECTURER_EMAIL = "com.point2points.kdusurveysystem.lecturer_email";
@@ -115,6 +118,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     String schoolNameShort;
 
     String programmeName;
+
+    String subjectName;
+    String subjectCode;
+
+    String lecturerName;
 
     String inputLecturerEmail;
     String inputLecturerEmailFormatted;
@@ -311,6 +319,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             public void onClick(View v) {
                 mToolBar.setVisibility(View.VISIBLE);
                 mToolBar2.setVisibility(GONE);
+                searchEditText.setText(null);
             }
         });
 
@@ -1024,6 +1033,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         schoolName = null;
     }
 
+    public void surveyDataCreation(){
+        Survey survey = new Survey();
+        survey.createSurvey(subjectName, subjectCode, lecturerName, schoolName, schoolNameShort);
+
+        subjectName = null;
+        subjectCode = null;
+        schoolName = null;
+        schoolNameShort = null;
+        lecturerName = null;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
@@ -1095,6 +1115,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     break;
                 case 6:
                     programmeDataCreation();
+                    break;
+                case 7:
+                    retrieveSubjectInfo();
+                    break;
                 default:
                     break;
             }
@@ -1103,6 +1127,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             if (data == null){
                 return;
             }
+            programmeName = RecyclerProgrammeTabAdapter.programmeRetrieval(data);
             switch (tabIdentifier){
                 case 2:
                     break;
@@ -1112,6 +1137,56 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 case 4:
                     break;
                 case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (requestCode == REQUEST_SUBJECT_RETRIEVE){
+            if (data == null){
+                return;
+            }
+            subjectName = RecyclerSubjectTabAdapter.subjectRetrieval(data);
+            switch (tabIdentifier){
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    retrieveLecturerInfo();
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (requestCode == REQUEST_LECTURER_RETRIEVE){
+            if (data == null){
+                return;
+            }
+            subjectName = RecyclerSubjectTabAdapter.subjectRetrieval(data);
+            switch (tabIdentifier){
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    surveyDataCreation();
                     break;
                 default:
                     break;
@@ -1124,6 +1199,18 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         Toast.makeText(AdminToolbarDrawer.this, "Select a programme to complete data creation", Toast.LENGTH_SHORT).show();
         Intent intent = RecyclerProgrammeTabAdapter.newIntent(mContext);
         startActivityForResult(intent, REQUEST_PROGRAMME_RETRIEVE);
+    }
+    public void retrieveSubjectInfo(){
+        tabIdentifierMutex = tabIdentifier;
+        Toast.makeText(AdminToolbarDrawer.this, "Select a subject to complete data creation", Toast.LENGTH_SHORT).show();
+        Intent intent = RecyclerSubjectTabAdapter.newIntent(mContext);
+        startActivityForResult(intent, REQUEST_SUBJECT_RETRIEVE);
+    }
+    public void retrieveLecturerInfo(){
+        tabIdentifierMutex = tabIdentifier;
+        Toast.makeText(AdminToolbarDrawer.this, "Select a lecturer to complete data creation", Toast.LENGTH_SHORT).show();
+        //Intent intent = RecyclerLecturerTabAdapter.newIntent(mContext);
+        //startActivityForResult(intent, REQUEST_LECTURER_RETRIEVE);
     }
 
 }

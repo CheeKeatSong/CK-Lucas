@@ -1,11 +1,21 @@
 package com.point2points.kdusurveysystem.datamodel;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Survey {
+
+    private DatabaseReference ref;
 
     public String SurveyUID;
     public String SurveySubject;
     public String SurveySubjectCode;
+    public String SurveySubjectCategory;
     public String SurveyLecturer;
+    public String SurveySchool;
+    public String SurveySchoolShort;
+    public boolean SurveyStatus;
+    public String Surveydate;
     public long SurveyQ1;
     public long SurveyQ2;
     public long SurveyQ3;
@@ -29,17 +39,16 @@ public class Survey {
     public long SurveyRatingScale3;
     public long SurveyRatingScale4;
     public long SurveyRatingScale5;
-    public String SubjectiveRespond;
-    public String SurveyStudentUID;
-    public String SurveyStudent;
 
     public Survey(){}
 
-    public Survey(String surveyUID, String surveySubject, String surveySubjectCode, String surveyLecturer, long surveyQ1, long surveyQ2, long surveyQ3, long surveyQ4, long surveyQ5, long surveyQ6, long surveyQ7, long surveyQ8, long surveyQ9, long surveyQ10, long surveyQ11, long surveyQ12, long surveyQ13, long surveyQ14, long surveyQ15, long surveyQ16, long surveyQ17, long surveyQ18, long surveyRatingScale1, long surveyRatingScale2, long surveyRatingScale3, long surveyRatingScale4, long surveyRatingScale5, String subjectiveRespond, String surveyStudentUID, String surveyStudent) {
+    public Survey(String surveyUID, String surveySubject, String surveySubjectCode, String SubjectCategory, String surveyLecturer, String surveySchool, String surveySchoolShort, boolean surveyStatus, long surveyDate, long surveyQ1, long surveyQ2, long surveyQ3, long surveyQ4, long surveyQ5, long surveyQ6, long surveyQ7, long surveyQ8, long surveyQ9, long surveyQ10, long surveyQ11, long surveyQ12, long surveyQ13, long surveyQ14, long surveyQ15, long surveyQ16, long surveyQ17, long surveyQ18, long surveyRatingScale1, long surveyRatingScale2, long surveyRatingScale3, long surveyRatingScale4, long surveyRatingScale5) {
         SurveyUID = surveyUID;
         SurveySubject = surveySubject;
         SurveySubjectCode = surveySubjectCode;
+        SurveySubjectCategory = SubjectCategory;
         SurveyLecturer = surveyLecturer;
+        Surveydate = String.valueOf(surveyDate);
         SurveyQ1 = surveyQ1;
         SurveyQ2 = surveyQ2;
         SurveyQ3 = surveyQ3;
@@ -63,9 +72,9 @@ public class Survey {
         SurveyRatingScale3 = surveyRatingScale3;
         SurveyRatingScale4 = surveyRatingScale4;
         SurveyRatingScale5 = surveyRatingScale5;
-        SubjectiveRespond = subjectiveRespond;
-        SurveyStudentUID = surveyStudentUID;
-        SurveyStudent = surveyStudent;
+        SurveyStatus = surveyStatus;
+        SurveySchool = surveySchool;
+        SurveySchoolShort = surveySchoolShort;
     }
 
     public String getSurveyUID() {
@@ -284,28 +293,38 @@ public class Survey {
         SurveyRatingScale5 = surveyRatingScale5;
     }
 
-    public String getSubjectiveRespond() {
-        return SubjectiveRespond;
+    public boolean isSurveyStatus() {
+        return SurveyStatus;
     }
 
-    public void setSubjectiveRespond(String subjectiveRespond) {
-        SubjectiveRespond = subjectiveRespond;
+    public void setSurveyStatus(boolean surveyStatus) {
+        SurveyStatus = surveyStatus;
     }
 
-    public String getSurveyStudentUID() {
-        return SurveyStudentUID;
+    public String getSurveySchool() {
+        return SurveySchool;
     }
 
-    public void setSurveyStudentUID(String surveyStudentUID) {
-        SurveyStudentUID = surveyStudentUID;
+    public void setSurveySchool(String surveySchool) {
+        SurveySchool = surveySchool;
     }
 
-    public String getSurveyStudent() {
-        return SurveyStudent;
+    public String getSurveySchoolShort() {
+        return SurveySchoolShort;
     }
 
-    public void setSurveyStudent(String surveyStudent) {
-        SurveyStudent = surveyStudent;
+    public void setSurveySchoolShort(String surveySchoolShort) {
+        SurveySchoolShort = surveySchoolShort;
     }
 
+    public void createSurvey(String SubjectName, String SubjectCode, String SubjectCategory, String Lecturer, String School, String SchoolShort){
+
+        ref = FirebaseDatabase.getInstance().getReference().child("subject");
+        DatabaseReference keyref = ref.push();
+
+        //Subject subject = new Subject(subjectName, subjectCategory, subjectDepartment, subjectSchool, keyref.getKey(), System.currentTimeMillis());
+        Survey survey = new Survey(keyref.getKey(), SubjectName, SubjectCode, SubjectCategory, Lecturer, School, SchoolShort, false, System.currentTimeMillis(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        keyref.setValue(survey);
+
+    }
 }

@@ -41,6 +41,7 @@ import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
+import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
     static Query query;
 
     //relogin after delete data
-    Student student = new Student();
+    Admin admin = new Admin();
 
     String UID;
 
@@ -241,11 +242,10 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
 
-                                RecyclerViewStudent.onProgressBar();
-
                                 removeUserFromAuth(item.getStudentEmail(), item.getStudentPassword());
 
-                                ref.child(viewHolder.textViewStudentUid.getText().toString()).removeValue();
+                                ref = FirebaseDatabase.getInstance().getReference();
+                                ref.child("users").child("student").child(viewHolder.textViewStudentUid.getText().toString()).removeValue();
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                                 students.remove(position);
                                 notifyItemRemoved(position);
@@ -368,8 +368,11 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
 
     public void removeUserFromAuth(final String email, final String password) {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        UID = user.getUid();
+        RecyclerViewStudent.onProgressBar();
+
+        FirebaseUser Adminuser = FirebaseAuth.getInstance().getCurrentUser();
+        UID = Adminuser.getUid();
+        FirebaseAuth.getInstance().signOut();
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
@@ -378,16 +381,16 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                         if (!task.isSuccessful()) {
                             // there was an error
                         } else {
-                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                             AuthCredential credential = EmailAuthProvider
                                     .getCredential(email, password);
 
-                            user.reauthenticate(credential)
+                            currentUser.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            user.delete()
+                                            currentUser.delete()
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -396,7 +399,6 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                                                             }
                                                         }
                                                     });
-
                                         }
                                     });
                         }
@@ -404,17 +406,18 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                 });
 
         ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("student");
+        ref = ref.child("users").child("admin");
         query = ref;
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count of students" ,""+snapshot.getChildrenCount());
+                Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    if (UID.equals(postSnapshot.getValue(Student.class).getStudentUid())) {
-                        student = postSnapshot.getValue(Student.class);
-                        mAuth.signInWithEmailAndPassword(student.getStudentEmail(), student.getStudentPassword())
+                    if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
+                        admin = postSnapshot.getValue(Admin.class);
+                        Log.e("Get Data", (postSnapshot.getValue(Admin.class).getAdminName()));
+                        mAuth.signInWithEmailAndPassword(admin.getAdminEmail(), admin.getAdminPassword())
                                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
