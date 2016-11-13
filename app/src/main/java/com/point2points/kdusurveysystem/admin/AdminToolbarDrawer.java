@@ -122,6 +122,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     String subjectName;
     String subjectCode;
 
+    String lecturerName;
+
     String inputLecturerEmail;
     String inputLecturerEmailFormatted;
     String inputLecturerPassword;
@@ -1033,7 +1035,13 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     public void surveyDataCreation(){
         Survey survey = new Survey();
-        survey.createSurvey();
+        survey.createSurvey(subjectName, subjectCode, lecturerName, schoolName, schoolNameShort);
+
+        subjectName = null;
+        subjectCode = null;
+        schoolName = null;
+        schoolNameShort = null;
+        lecturerName = null;
     }
 
     @Override
