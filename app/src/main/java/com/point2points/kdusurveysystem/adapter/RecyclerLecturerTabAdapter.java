@@ -292,6 +292,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
                                 removeUserFromAuth(item.getEmailAddress(), item.getPassword());
 
+                                ref = FirebaseDatabase.getInstance().getReference();
                                 ref.child("users").child("lecturer").child(viewHolder.textViewUid.getText().toString()).removeValue();
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                                 lecturers.remove(position);
@@ -417,6 +418,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
         FirebaseUser Adminuser = FirebaseAuth.getInstance().getCurrentUser();
         UID = Adminuser.getUid();
+        FirebaseAuth.getInstance().signOut();
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {

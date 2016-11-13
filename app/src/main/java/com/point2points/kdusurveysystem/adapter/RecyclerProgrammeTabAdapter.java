@@ -99,15 +99,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //notifyItemChanged(selectedPos);
-                    //selectedPos = getLayoutPosition();
-                    //notifyItemChanged(selectedPos);
-                    if (!programmeRetrieval) {    // What do these do?
-                        Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (programmeRetrieval) {
-                        Toast.makeText(view.getContext(), "Double Tap to select the data", Toast.LENGTH_SHORT).show();
-                    }
+                    programmeItemOnClickListener(view);
                 }
             });
         }

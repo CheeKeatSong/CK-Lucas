@@ -214,6 +214,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
             public void onClick(View v) {
                 mToolBar2.setVisibility(View.VISIBLE);
                 mToolBar3.setVisibility(GONE);
+                searchEditText.setText(null);
             }
         });
 

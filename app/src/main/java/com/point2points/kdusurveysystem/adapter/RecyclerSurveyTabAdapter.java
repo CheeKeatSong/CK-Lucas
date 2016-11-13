@@ -1,11 +1,13 @@
 package com.point2points.kdusurveysystem.adapter;
 
-import android.app.Activity;
+/**
+ * Created by Chee Keat on 11/13/2016.
+ */
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,6 @@ import com.point2points.kdusurveysystem.Fragment.SubjectFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
-import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.Subject;
 
 import java.util.ArrayList;
@@ -39,41 +40,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubjectTabAdapter.SimpleViewHolder> {
-
-    private static final String EXTRA_SUBJECT = "com.point2points.kdusurveysystem.subject";
-    private static final String EXTRA_SUBJECT_CODE = "com.point2points.kdusurveysystem.subject.code";
+public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurveyTabAdapter.SimpleViewHolder> {
 
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
-
-    private static Activity mActivity;
-
-    public static boolean subjectRetrieval = false;
-
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, RecyclerViewSubject.class);
-        subjectRetrieval = true;
-        return intent;
-    }
-
-    public static String subjectRetrieval(Intent result){
-        return result.getStringExtra(EXTRA_SUBJECT);
-    }
-
-    public static String subjectCodeRetrieval(Intent result){
-        return result.getStringExtra(EXTRA_SUBJECT_CODE);
-    }
-
-    private void setSubjectAndCode(String subject, String subjectCode){
-        AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
-        Intent data = new Intent();
-        data.putExtra(EXTRA_SUBJECT, subject);
-        data.putExtra(EXTRA_SUBJECT_CODE, subjectCode);
-        mActivity.setResult(Activity.RESULT_OK, data);
-        mActivity.finish();
-        Log.e("set " ,"subject");
-    }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
@@ -103,7 +73,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                  subjectItemOnClickListener(view);
+                        Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -114,9 +84,8 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
     public static ArrayList<Subject> SubjectDataset = new ArrayList<>();
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
-    public RecyclerSubjectTabAdapter(Context context) {
+    public RecyclerSurveyTabAdapter(Context context) {
         this.mContext = context;
-        mActivity = (Activity) mContext;
         FirebaseSubjectDataRetrieval();
     }
 
@@ -186,7 +155,6 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         final Subject item = SubjectDataset.get(position);
         final String subjectName = (item.subjectName).substring(0, 1).toUpperCase() + (item.subjectName).substring(1);
         String subjectCategory = item.subjectCategory;
-        //String subjectDepartment = item.subjectDepartment;
         String subjectSchool = item.subjectSchool;
         String subjectUid = item.subjectUid;
         String subjectCode = item.subjectCode;
@@ -202,29 +170,18 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                if(!subjectRetrieval) {
-                    Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSubjectName.getText().toString());
-                    Intent intent = SubjectFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSubjectUid.getText().toString());
-                    viewHolder.swipeLayout.getContext().startActivity(intent);
-                }
-                else if(subjectRetrieval) {
-
-                    final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewSubjectName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
-                    toastOnDoubleClick.show();
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            toastOnDoubleClick.cancel();
-                        }
-                    }, 1500);
-
-                    String subject = viewHolder.textViewSubjectName.getText().toString();
-                    String subjectCode = viewHolder.textViewSubjectCode.getText().toString();
+                //if(!subjectRetrieval) {
+                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSubjectName.getText().toString());
+                Intent intent = SubjectFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSubjectUid.getText().toString());
+                viewHolder.swipeLayout.getContext().startActivity(intent);
+                //}
+                /*else if(subjectRetrieval) {
+                    String subjectName = viewHolder.textViewSubjectName.getText().toString();
+                    String subjectNameShort = viewHolder.textViewSubjectNameShort.getText().toString();
+                    AdminToolbarDrawer.getSubject(subjectName, subjectNameShort);
                     subjectRetrieval = false;
-                    setSubjectAndCode(subject, subjectCode);
-                }
+                    RecyclerViewSubject.closeRecyclerViewSubject();
+                }*/
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -364,34 +321,5 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         Collections.reverse(SubjectDataset);
     }
 
-    public void subjectItemOnClickListener(View view){
-
-        final Toast toastItemOnClick;
-
-        if (!subjectRetrieval) {
-            toastItemOnClick = Toast.makeText(mContext, "Double Tap to Edit the data", Toast.LENGTH_SHORT);
-            toastItemOnClick.show();
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toastItemOnClick.cancel();
-                }
-            }, 500);
-        }
-        else if (subjectRetrieval){
-            toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
-            toastItemOnClick.show();
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toastItemOnClick.cancel();
-                }
-            }, 500);
-        }
-    }
 }
 
