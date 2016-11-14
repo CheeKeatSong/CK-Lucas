@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.security.keystore.UserNotAuthenticatedException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -61,11 +59,13 @@ import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewProgramme;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerSurveyTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
@@ -78,6 +78,10 @@ import com.point2points.kdusurveysystem.datamodel.Survey;
 import java.util.Locale;
 
 import static android.view.View.GONE;
+import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.lecturerRetrieval;
+import static com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter.programmeRetrieval;
+import static com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter.schoolRetrieval;
+import static com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter.subjectRetrieval;
 
 public class AdminToolbarDrawer extends AppCompatActivity {
 
@@ -121,8 +125,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     String subjectName;
     String subjectCode;
+    String subjectCategory;
 
     String lecturerName;
+    String lecturerID;
 
     String inputLecturerEmail;
     String inputLecturerEmailFormatted;
@@ -188,7 +194,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         onCreateToolbar(savedInstanceState);
 
                         //No drawer if execute retrieve mode
-                        if(!RecyclerSchoolTabAdapter.schoolRetrieval) {
+                        if(!schoolRetrieval) {
                             onCreateDrawer();
                         }
                     }}
@@ -248,7 +254,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         optionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!RecyclerSchoolTabAdapter.schoolRetrieval){
+                if (!schoolRetrieval){
                 adminDrawer.openDrawer();
             }
             else{
@@ -289,6 +295,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         break;
                     case 6:
                         RecyclerProgrammeTabAdapter.filter(text);
+                        break;
+                    case 7:
+                        RecyclerSurveyTabAdapter.filter(text);
                     default:
                         break;
                 }
@@ -362,6 +371,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         case 6:
                             RecyclerProgrammeTabAdapter.sortingData(sortoption);
                             break;
+                    case 7:
+                        RecyclerSurveyTabAdapter.sortingData(sortoption);
+                        break;
                     }
             }
 
@@ -377,13 +389,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mDatabase = FirebaseDatabase.getInstance().getReference();
+                if(!lecturerRetrieval && !programmeRetrieval && !schoolRetrieval && !subjectRetrieval){
 
+                mDatabase = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
+
                     dataCreation(tabIdentifier);
                 } else {
                     Toast.makeText(AdminToolbarDrawer.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                }
                 }
             }
         });
@@ -419,8 +434,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName(R.string.school);
         SecondaryDrawerItem item6 = new SecondaryDrawerItem().withIdentifier(6).withName(R.string.programme);
         SecondaryDrawerItem item7 = new SecondaryDrawerItem().withIdentifier(7).withName(R.string.survey_list);
-        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withIdentifier(8).withName(R.string.drawer_item_settings);
-        SecondaryDrawerItem item9 = new SecondaryDrawerItem().withIdentifier(9).withName(R.string.sign_out);
+        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withIdentifier(8).withName(R.string.manage_store);
+        SecondaryDrawerItem item9 = new SecondaryDrawerItem().withIdentifier(9).withName(R.string.drawer_item_settings);
+        SecondaryDrawerItem item10 = new SecondaryDrawerItem().withIdentifier(10).withName(R.string.sign_out);
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -450,9 +466,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         item6,
                         new DividerDrawerItem(),
                         item7,
-                        new DividerDrawerItem(),
                         item8,
-                        item9
+                        new DividerDrawerItem(),
+                        item9,
+                        item10
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -486,7 +503,17 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 startActivity(intentProgramme);
                                 finish();
                                 break;
-                            case 9:
+                            case 7:
+                                Intent intentSurvey = new Intent(AdminToolbarDrawer.this, RecyclerViewSurvey.class);
+                                startActivity(intentSurvey);
+                                finish();
+                                break;
+                            case 8:
+                                //Intent intentStore = new Intent(AdminToolbarDrawer.this, StoreManagement.class);
+                                //startActivity(intentStore);
+                                //finish();
+                                break;
+                            case 10:
                                 FirebaseAuth.getInstance().signOut();
                                 Intent intentLogout = new Intent(AdminToolbarDrawer.this, Login.class);
                                 startActivity(intentLogout);
@@ -934,6 +961,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 AlertDialog programmeAlertDialog = programmeDialogBuilder.create();
                 programmeAlertDialog.show();
                 break;
+            case 7:
+                tabIdentifierMutex = tabIdentifier;
+                Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
+                break;
             default:
                 break;
         }
@@ -1035,13 +1068,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     public void surveyDataCreation(){
         Survey survey = new Survey();
-        survey.createSurvey(subjectName, subjectCode, lecturerName, schoolName, schoolNameShort);
+        survey.createSurvey(subjectName, subjectCode, subjectCategory, lecturerName, lecturerID, schoolName, schoolNameShort);
+        Toast.makeText(AdminToolbarDrawer.this, R.string.survey_data_creation_success, Toast.LENGTH_SHORT).show();
 
+        subjectCategory = null;
         subjectName = null;
         subjectCode = null;
         schoolName = null;
         schoolNameShort = null;
         lecturerName = null;
+        lecturerID = null;
     }
 
     @Override
@@ -1092,6 +1128,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
         if (resultCode != Activity.RESULT_OK){
             return;
         }
@@ -1127,7 +1164,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             if (data == null){
                 return;
             }
-            programmeName = RecyclerProgrammeTabAdapter.programmeRetrieval(data);
+            programmeName = programmeRetrieval(data);
             switch (tabIdentifier){
                 case 2:
                     break;
@@ -1150,7 +1187,9 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             if (data == null){
                 return;
             }
-            subjectName = RecyclerSubjectTabAdapter.subjectRetrieval(data);
+            subjectName = subjectRetrieval(data);
+            subjectCode = RecyclerSubjectTabAdapter.subjectCodeRetrieval(data);
+            subjectCategory = RecyclerSubjectTabAdapter.subjectCategoryRetrieval(data);
             switch (tabIdentifier){
                 case 2:
                     break;
@@ -1173,7 +1212,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             if (data == null){
                 return;
             }
-            subjectName = RecyclerSubjectTabAdapter.subjectRetrieval(data);
+            lecturerName = RecyclerLecturerTabAdapter.lecturerNameRetrieval(data);
+            lecturerID = RecyclerLecturerTabAdapter.lecturerIDRetrieval(data);
             switch (tabIdentifier){
                 case 2:
                     break;
@@ -1209,8 +1249,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     public void retrieveLecturerInfo(){
         tabIdentifierMutex = tabIdentifier;
         Toast.makeText(AdminToolbarDrawer.this, "Select a lecturer to complete data creation", Toast.LENGTH_SHORT).show();
-        //Intent intent = RecyclerLecturerTabAdapter.newIntent(mContext);
-        //startActivityForResult(intent, REQUEST_LECTURER_RETRIEVE);
+        Intent intent = RecyclerLecturerTabAdapter.newIntent(mContext);
+        startActivityForResult(intent, REQUEST_LECTURER_RETRIEVE);
     }
 
 }

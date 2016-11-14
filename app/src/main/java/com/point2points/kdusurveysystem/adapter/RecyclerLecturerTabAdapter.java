@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
+import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
@@ -53,19 +55,48 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
     private static final String TAG = "RecyclerLecturerAdapter";
 
+    private static final String EXTRA_LECTURER_NAME = "com.point2points.kdusurveysystem.lecturer_name";
+    private static final String EXTRA_LECTURER_ID = "com.point2points.kdusurveysystem.lecturer_id";
+
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
-
-    private Activity mActivity;
-
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     String UID;
 
     //relogin after delete data
     Admin admin = new Admin();
 
-    public static class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
+    private Activity mActivity;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    public static boolean lecturerRetrieval = false;
+
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, RecyclerViewLecturer.class);
+        lecturerRetrieval = true;
+        return intent;
+    }
+
+    public static String lecturerNameRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_LECTURER_NAME);
+    }
+
+    public static String lecturerIDRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_LECTURER_ID);
+    }
+
+    private void setLecturerName(String lecturerName, String lecturerID){
+        AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
+        Intent data = new Intent();
+        data.putExtra(EXTRA_LECTURER_NAME, lecturerName);
+        data.putExtra(EXTRA_LECTURER_ID, lecturerID);
+        mActivity.setResult(Activity.RESULT_OK, data);
+        mActivity.finish();
+        Log.e("set " ,"lecturer name");
+    }
+
+    public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
         TextView textViewFullName;
         TextView textViewID;
@@ -91,7 +122,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
+                    lecturerItemOnClickListener(view);
                 }
             });
         }
@@ -232,9 +263,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
     }
 
     public static void LecturerArrayListUpdate(ArrayList updatedLecturers) {
-
         lecturers = updatedLecturers;
-
         RecyclerViewLecturer.notifyDataChanges();
     }
 
@@ -267,9 +296,28 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
+                if(!lecturerRetrieval) {
                 Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewFullName.getText().toString());
                 Intent intent = LecturerFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewUid.getText().toString());
                 viewHolder.swipeLayout.getContext().startActivity(intent);
+                }
+                else if(lecturerRetrieval) {
+                    final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewFullName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
+                    toastOnDoubleClick.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toastOnDoubleClick.cancel();
+                        }
+                    }, 1500);
+
+                    String lecturerName = viewHolder.textViewFullName.getText().toString();
+                    String lecturerID = viewHolder.textViewID.getText().toString();
+                    lecturerRetrieval = false;
+                    setLecturerName(lecturerName,lecturerID);
+                }
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -480,5 +528,35 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                 Log.e("The read failed: " ,firebaseError.getMessage());
             }
         });
+    }
+
+    public void lecturerItemOnClickListener(View view){
+
+        final Toast toastItemOnClick;
+
+        if (!lecturerRetrieval) {
+            toastItemOnClick = Toast.makeText(mContext, "Double Tap to Edit the data", Toast.LENGTH_SHORT);
+            toastItemOnClick.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toastItemOnClick.cancel();
+                }
+            }, 500);
+        }
+        else if (lecturerRetrieval){
+            toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
+            toastItemOnClick.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toastItemOnClick.cancel();
+                }
+            }, 500);
+        }
     }
 }

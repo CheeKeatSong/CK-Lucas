@@ -7,47 +7,49 @@ public class Survey {
 
     private DatabaseReference ref;
 
-    public String SurveyUID;
-    public String SurveySubject;
-    public String SurveySubjectCode;
-    public String SurveySubjectCategory;
-    public String SurveyLecturer;
-    public String SurveySchool;
-    public String SurveySchoolShort;
-    public boolean SurveyStatus;
-    public String Surveydate;
-    public long SurveyQ1;
-    public long SurveyQ2;
-    public long SurveyQ3;
-    public long SurveyQ4;
-    public long SurveyQ5;
-    public long SurveyQ6;
-    public long SurveyQ7;
-    public long SurveyQ8;
-    public long SurveyQ9;
-    public long SurveyQ10;
-    public long SurveyQ11;
-    public long SurveyQ12;
-    public long SurveyQ13;
-    public long SurveyQ14;
-    public long SurveyQ15;
-    public long SurveyQ16;
-    public long SurveyQ17;
-    public long SurveyQ18;
-    public long SurveyRatingScale1;
-    public long SurveyRatingScale2;
-    public long SurveyRatingScale3;
-    public long SurveyRatingScale4;
-    public long SurveyRatingScale5;
+    private String SurveyUID;
+    private String SurveySubject;
+    private String SurveySubjectCode;
+    private String SurveySubjectCategory;
+    private String SurveyLecturer;
+    private String SurveyLecturerId;
+    private String SurveySchool;
+    private String SurveySchoolShort;
+    private boolean SurveyStatus;
+    private String Surveydate;
+    private long SurveyQ1;
+    private long SurveyQ2;
+    private long SurveyQ3;
+    private long SurveyQ4;
+    private long SurveyQ5;
+    private long SurveyQ6;
+    private long SurveyQ7;
+    private long SurveyQ8;
+    private long SurveyQ9;
+    private long SurveyQ10;
+    private long SurveyQ11;
+    private long SurveyQ12;
+    private long SurveyQ13;
+    private long SurveyQ14;
+    private long SurveyQ15;
+    private long SurveyQ16;
+    private long SurveyQ17;
+    private long SurveyQ18;
+    private long SurveyRatingScale1;
+    private long SurveyRatingScale2;
+    private long SurveyRatingScale3;
+    private long SurveyRatingScale4;
+    private long SurveyRatingScale5;
 
     public Survey(){}
 
-    public Survey(String surveyUID, String surveySubject, String surveySubjectCode, String SubjectCategory, String surveyLecturer, String surveySchool, String surveySchoolShort, boolean surveyStatus, long surveyDate, long surveyQ1, long surveyQ2, long surveyQ3, long surveyQ4, long surveyQ5, long surveyQ6, long surveyQ7, long surveyQ8, long surveyQ9, long surveyQ10, long surveyQ11, long surveyQ12, long surveyQ13, long surveyQ14, long surveyQ15, long surveyQ16, long surveyQ17, long surveyQ18, long surveyRatingScale1, long surveyRatingScale2, long surveyRatingScale3, long surveyRatingScale4, long surveyRatingScale5) {
+    public Survey(String surveyUID, String surveySubject, String surveySubjectCode, String SubjectCategory, String surveyLecturerName, String LecturerID, String surveySchool, String surveySchoolShort, boolean surveyStatus, long surveyDate, long surveyQ1, long surveyQ2, long surveyQ3, long surveyQ4, long surveyQ5, long surveyQ6, long surveyQ7, long surveyQ8, long surveyQ9, long surveyQ10, long surveyQ11, long surveyQ12, long surveyQ13, long surveyQ14, long surveyQ15, long surveyQ16, long surveyQ17, long surveyQ18, long surveyRatingScale1, long surveyRatingScale2, long surveyRatingScale3, long surveyRatingScale4, long surveyRatingScale5) {
         SurveyUID = surveyUID;
         SurveySubject = surveySubject;
         SurveySubjectCode = surveySubjectCode;
         SurveySubjectCategory = SubjectCategory;
-        SurveyLecturer = surveyLecturer;
+        SurveyLecturer = surveyLecturerName;
+        SurveyLecturerId = LecturerID;
         Surveydate = String.valueOf(surveyDate);
         SurveyQ1 = surveyQ1;
         SurveyQ2 = surveyQ2;
@@ -75,6 +77,30 @@ public class Survey {
         SurveyStatus = surveyStatus;
         SurveySchool = surveySchool;
         SurveySchoolShort = surveySchoolShort;
+    }
+
+    public String getSurveyLecturerId() {
+        return SurveyLecturerId;
+    }
+
+    public void setSurveyLecturerId(String surveyLecturerId) {
+        SurveyLecturerId = surveyLecturerId;
+    }
+
+    public String getSurveydate() {
+        return Surveydate;
+    }
+
+    public void setSurveydate(String surveydate) {
+        Surveydate = surveydate;
+    }
+
+    public String getSurveySubjectCategory() {
+        return SurveySubjectCategory;
+    }
+
+    public void setSurveySubjectCategory(String surveySubjectCategory) {
+        SurveySubjectCategory = surveySubjectCategory;
     }
 
     public String getSurveyUID() {
@@ -105,8 +131,8 @@ public class Survey {
         return SurveyLecturer;
     }
 
-    public void setSurveyLecturer(String surveyLecturer) {
-        SurveyLecturer = surveyLecturer;
+    public void setSurveyLecturer(String surveyLecturerName) {
+        SurveyLecturer = surveyLecturerName;
     }
 
     public long getSurveyQ1() {
@@ -317,14 +343,11 @@ public class Survey {
         SurveySchoolShort = surveySchoolShort;
     }
 
-    public void createSurvey(String SubjectName, String SubjectCode, String SubjectCategory, String Lecturer, String School, String SchoolShort){
-
-        ref = FirebaseDatabase.getInstance().getReference().child("subject");
+    public void createSurvey(String SubjectName, String SubjectCode, String SubjectCategory, String Lecturer, String LecturerId, String School, String SchoolShort){
+        ref = FirebaseDatabase.getInstance().getReference().child("survey");
         DatabaseReference keyref = ref.push();
 
-        //Subject subject = new Subject(subjectName, subjectCategory, subjectDepartment, subjectSchool, keyref.getKey(), System.currentTimeMillis());
-        Survey survey = new Survey(keyref.getKey(), SubjectName, SubjectCode, SubjectCategory, Lecturer, School, SchoolShort, false, System.currentTimeMillis(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        Survey survey = new Survey(keyref.getKey(), SubjectName, SubjectCode, SubjectCategory, Lecturer, LecturerId, School, SchoolShort, false, System.currentTimeMillis(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         keyref.setValue(survey);
-
     }
 }

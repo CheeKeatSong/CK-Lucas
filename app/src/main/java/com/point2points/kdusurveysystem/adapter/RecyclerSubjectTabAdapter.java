@@ -43,6 +43,8 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
 
     private static final String EXTRA_SUBJECT = "com.point2points.kdusurveysystem.subject";
     private static final String EXTRA_SUBJECT_CODE = "com.point2points.kdusurveysystem.subject.code";
+    private static final String EXTRA_SUBJECT_CATEGORY = "com.point2points.kdusurveysystem.subject.category";
+
 
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
@@ -65,11 +67,16 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         return result.getStringExtra(EXTRA_SUBJECT_CODE);
     }
 
-    private void setSubjectAndCode(String subject, String subjectCode){
+    public static String subjectCategoryRetrieval(Intent result){
+        return  result.getStringExtra(EXTRA_SUBJECT_CATEGORY);
+    }
+
+    private void setSubjectAndCode(String subject, String subjectCode, String subjectCategory){
         AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
         data.putExtra(EXTRA_SUBJECT, subject);
         data.putExtra(EXTRA_SUBJECT_CODE, subjectCode);
+        data.putExtra(EXTRA_SUBJECT_CATEGORY, subjectCategory);
         mActivity.setResult(Activity.RESULT_OK, data);
         mActivity.finish();
         Log.e("set " ,"subject");
@@ -185,7 +192,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
 
         final Subject item = SubjectDataset.get(position);
         final String subjectName = (item.subjectName).substring(0, 1).toUpperCase() + (item.subjectName).substring(1);
-        String subjectCategory = item.subjectCategory;
+        final String subjectCategory = item.subjectCategory;
         //String subjectDepartment = item.subjectDepartment;
         String subjectSchool = item.subjectSchool;
         String subjectUid = item.subjectUid;
@@ -222,8 +229,9 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
 
                     String subject = viewHolder.textViewSubjectName.getText().toString();
                     String subjectCode = viewHolder.textViewSubjectCode.getText().toString();
+                    String subjectCategory = viewHolder.textViewSubjectCategory.getText().toString();
                     subjectRetrieval = false;
-                    setSubjectAndCode(subject, subjectCode);
+                    setSubjectAndCode(subject, subjectCode, subjectCategory);
                 }
             }
         });

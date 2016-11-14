@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
+import com.point2points.kdusurveysystem.adapter.RecyclerSurveyTabAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 
@@ -56,11 +56,10 @@ public class RecyclerViewSurvey extends AdminToolbarDrawer {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler_view);
         progressBar.getIndeterminateDrawable().setColorFilter(0xFF0173B1, android.graphics.PorterDuff.Mode.MULTIPLY);
-        onProgressBar();
 
-        tabIdentifier = 4;
-        mAdapter = new RecyclerSubjectTabAdapter(this);
-        ((RecyclerSubjectTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
+        tabIdentifier = 7;
+        mAdapter = new RecyclerSurveyTabAdapter(this);
+        ((RecyclerSurveyTabAdapter) mAdapter).setMode(Attributes.Mode.Single);
 
         recyclerView.setAdapter(mAdapter);
 

@@ -41,6 +41,8 @@
     <string name="programme_name">Programme Name\nEg: Diploma in Computer Studies</string>
     <string name="programme_data_creation_success">PROGRAMME DATA SUCCESSFULLY CREATED</string>
     <string name="programme_data_creation_fail">PROGRAMME DATA CREATION FAILED</string>
+    <string name="survey_data_creation_success">SURVEY DATA SUCCESSFULLY CREATED</string>
+    <string name="survey_data_creation_fail">SURVEY DATA CREATION FAILED</string>
 
     //drawer
     <string name="drawer_open">OPEN</string>
@@ -56,6 +58,7 @@
     <string name="sign_out">SIGN OUT</string>
     <string name="store">STORE</string>
     <string name="history">HISTORY</string>
+    <string name="manage_store">MANAGE STORE</string>
 
     //sort list
     <string-array name="sort_array">
