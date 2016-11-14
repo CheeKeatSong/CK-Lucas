@@ -445,13 +445,15 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                                                             }
                                                         }
                                                     });
+
+                                            reauthAdmin();
                                         }
                                     });
                         }
                     }
                 });
 
-        ref = FirebaseDatabase.getInstance().getReference();
+        /*ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("users").child("admin");
         query = ref;
 
@@ -463,17 +465,58 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                     if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                         admin = postSnapshot.getValue(Admin.class);
                         Log.e("Get Data", (postSnapshot.getValue(Admin.class).getAdminName()));
+
+                        Log.d(TAG, admin.getAdminEmail() + " | " + admin.getAdminPassword());
                         mAuth.signInWithEmailAndPassword(admin.getAdminEmail(), admin.getAdminPassword())
                                 .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (!task.isSuccessful()) {
-                                            // there was an error
+                                            Log.d(TAG, "Error reauthenticating!");
                                         } else {
+                                            Log.d(TAG, "Reauthenticated to " + admin.getAdminEmail() + " account");
                                         }
                                     }
                                 });
                     }}
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });*/
+    }
+
+    public void reauthAdmin() {
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("admin");
+        query = ref;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                //Log.d(TAG, "EVENT LISTENER RUN"); // Troubleshooting.
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    //Log.d(TAG, "DATA SNAPSHOT RUN"); // Troubleshooting.
+                    if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
+                        admin = postSnapshot.getValue(Admin.class);
+                        Log.e("Get Data", (postSnapshot.getValue(Admin.class).getAdminName()));
+
+                        //Log.d(TAG, admin.getAdminEmail() + " | " + admin.getAdminPassword()); // Troubleshooting.
+                        mAuth.signInWithEmailAndPassword(admin.getAdminEmail(), admin.getAdminPassword())
+                                .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (!task.isSuccessful()) {
+                                            Log.d(TAG, "Error reauthenticating!");
+                                        } else {
+                                            Log.d(TAG, "Reauthenticated to " + admin.getAdminEmail() + " admin account");
+                                        }
+                                    }
+                                });
+                    }
+                }
             }
             @Override
             public void onCancelled(DatabaseError firebaseError) {

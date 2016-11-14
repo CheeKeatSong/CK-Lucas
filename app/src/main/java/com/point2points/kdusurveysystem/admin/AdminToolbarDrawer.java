@@ -1035,10 +1035,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     public void surveyDataCreation(){
         Survey survey = new Survey();
-        survey.createSurvey(subjectName, subjectCode, lecturerName, schoolName, schoolNameShort);
+        //survey.createSurvey(subjectName, subjectCode, lecturerName, schoolName, schoolNameShort); // Missing one arguement 'subjectCategory'
+        //survey.createSurvey(subjectName, subjectCode, subjectCategory, lecturerName, schoolName, schoolNameShort);
 
         subjectName = null;
         subjectCode = null;
+        //subjectCategory = null;
         schoolName = null;
         schoolNameShort = null;
         lecturerName = null;
