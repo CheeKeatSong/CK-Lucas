@@ -33,11 +33,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
+import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
 import java.text.SimpleDateFormat;
@@ -68,6 +71,17 @@ public class StudentFragment extends Fragment{
         private static final String INPUT_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
 
         private static ArrayList<Student> studentData = new ArrayList<>();
+
+        //relogin after delete data
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        //Context mContext;
+        //Activity mActivity;
+
+        Admin admin = new Admin();
+
+        String UID;
+        String adminEmail;
 
         String currEmail, currPassword;
 
@@ -368,8 +382,62 @@ public class StudentFragment extends Fragment{
         }
 
         public void updateAuthDetails(final String email, final String password) {
+            //Context context = studentDataEditButton.getContext();
+            //Activity mActivity = (Activity) context;
 
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            UID = Login.adminLoginUID;  // Get logged in admin's credential from Login class
+            adminEmail = Login.adminLoginEmail;
+
+            FirebaseAuth.getInstance().signOut();
+
+            Log.e("SIGN IN", currEmail + " | " + currPassword);
+            mAuth.signInWithEmailAndPassword(currEmail, currPassword)
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                // there was an error
+                                Log.e("SIGN IN ERROR", "DID NOT MANAGE TO LOGIN"); // Troubleshooting
+                            } else {
+                                Log.e("SIGN IN SUCCESSFUL", "MANAGED TO LOGIN"); // Troubleshooting
+
+                                final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(currEmail, currPassword);
+
+                                currentUser.reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                currentUser.updateEmail(email)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d(email, "User email address updated.");;
+                                                                }
+                                                            }
+                                                        });
+
+                                                currentUser.updatePassword(password)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d(password, "User password updated.");
+                                                                }
+                                                            }
+                                                        });
+
+                                                reauthAdmin();
+                                            }
+                                        });
+                            }
+                        }
+                    });
+
+            /*FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             Context mContext = this.getContext();
@@ -423,7 +491,7 @@ public class StudentFragment extends Fragment{
                                         });
                             }
                         }
-                    });
+                    });*/
 
             /*ref = FirebaseDatabase.getInstance().getReference();
             ref = ref.child("users").child("lecturer");
@@ -455,6 +523,53 @@ public class StudentFragment extends Fragment{
                 }
             });*/
         }
+
+
+
+    public void reauthAdmin() {
+        //Context context = studentDataEditButton.getContext();
+        //final Activity mActivity = (Activity) context;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        Query query;
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child("users").child("admin");
+        query = ref;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+
+                    if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
+                        admin = postSnapshot.getValue(Admin.class);
+                        Log.e("Get Data", (postSnapshot.getValue(Admin.class).getAdminName()));
+
+                        mAuth.signInWithEmailAndPassword(admin.getAdminEmail(), admin.getAdminPassword())
+                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (!task.isSuccessful()) {
+                                            Log.d("Student", "Error reauthenticating!");
+                                        } else {
+                                            Log.d("Student", "Reauthenticated to " + admin.getAdminEmail() + " admin account");
+                                        }
+                                    }
+                                });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: " ,firebaseError.getMessage());
+            }
+        });
+    }
+
+
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {

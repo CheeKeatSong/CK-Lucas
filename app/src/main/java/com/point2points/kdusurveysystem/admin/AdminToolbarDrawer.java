@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -60,6 +61,7 @@ import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
+import com.point2points.kdusurveysystem.adapter.NothingSelectedSpinnerAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter;
 import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
@@ -75,6 +77,9 @@ import com.point2points.kdusurveysystem.datamodel.Student;
 import com.point2points.kdusurveysystem.datamodel.Subject;
 import com.point2points.kdusurveysystem.datamodel.Survey;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import static android.view.View.GONE;
@@ -118,6 +123,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private static final String INPUT_STUDENT_ID = "com.point2points.kdusurveysystem.student_id";
     private static final String INPUT_STUDENT_CATEGORY = "com.point2points.kdusurveysystem.student_category";
 
+    String yearSelected, monthSelected;
+
     String schoolName;
     String schoolNameShort;
 
@@ -129,6 +136,8 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     String lecturerName;
     String lecturerID;
+
+    String inputSurveyCreationDate;
 
     String inputLecturerEmail;
     String inputLecturerEmailFormatted;
@@ -962,10 +971,119 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 programmeAlertDialog.show();
                 break;
             case 7:
-                tabIdentifierMutex = tabIdentifier;
-                Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
-                Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
-                startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
+                View surveypromptsView = li.inflate(R.layout.survey_creation_dialog, null);
+
+                final Spinner spinnerMonth = (Spinner) surveypromptsView.findViewById(R.id.survey_fragment_month_spinner);
+                final Spinner spinnerYear = (Spinner) surveypromptsView.findViewById(R.id.survey_fragment_year_spinner);
+
+                final AlertDialog.Builder surveyDialogBuilder = new AlertDialog.Builder(AdminToolbarDrawer.this, R.style.MyDialogTheme);
+
+                surveyDialogBuilder.setView(surveypromptsView);
+                surveyDialogBuilder.setTitle("CREATE A SURVEY INFO");
+
+                List<String> spinnerYearArray = new ArrayList<String>();
+                List<String> spinnerMonthArray = new ArrayList<String>();
+
+                spinnerMonthArray.add("January");
+                spinnerMonthArray.add("May");
+                spinnerMonthArray.add("September");
+
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+
+                spinnerYearArray.add(String.valueOf(year));
+                spinnerYearArray.add(String.valueOf(year + 1));
+                spinnerYearArray.add(String.valueOf(year + 2));
+                spinnerYearArray.add(String.valueOf(year + 3));
+                spinnerYearArray.add(String.valueOf(year + 4));
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, spinnerYearArray);
+                spinnerYear.setAdapter(adapter);
+                ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item, spinnerMonthArray);
+                spinnerMonth.setAdapter(adapter2);
+
+                String myValue;
+
+                switch (month){
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        myValue = "January";
+                        break;
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                        myValue = "May";
+                        break;
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        myValue = "September";
+                        break;
+                    default:
+                        myValue = "January";
+                        break;
+                }
+
+                spinnerMonth.setSelection(getIndex(spinnerMonth, myValue));
+                spinnerYear.setSelection(getIndex(spinnerYear, String.valueOf(year)));
+
+                spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                    yearSelected = String.valueOf(spinnerYear.getSelectedItem());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // your code here
+                }
+
+            });
+
+                spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                        monthSelected = String.valueOf(spinnerMonth.getSelectedItem());
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+                        // your code here
+                    }
+
+                });
+
+                surveyDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+
+                                        inputSurveyCreationDate = String.valueOf(monthSelected + " " + yearSelected);;
+                                        tabIdentifierMutex = tabIdentifier;
+                                        Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
+                                        Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
+                                        startActivityForResult(intent, REQUEST_SCHOOL_RETRIEVE);
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog surveyAlertDialog = surveyDialogBuilder.create();
+                surveyAlertDialog.show();
+
                 break;
             default:
                 break;
@@ -1068,9 +1186,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
     public void surveyDataCreation(){
         Survey survey = new Survey();
-        survey.createSurvey(subjectName, subjectCode, subjectCategory, lecturerName, lecturerID, schoolName, schoolNameShort);
+
+        survey.createSurvey(subjectName, subjectCode, subjectCategory, lecturerName, lecturerID, schoolName, schoolNameShort, inputSurveyCreationDate);
         Toast.makeText(AdminToolbarDrawer.this, R.string.survey_data_creation_success, Toast.LENGTH_SHORT).show();
 
+        inputSurveyCreationDate = null;
         subjectCategory = null;
         subjectName = null;
         subjectCode = null;
@@ -1251,6 +1371,20 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         Toast.makeText(AdminToolbarDrawer.this, "Select a lecturer to complete data creation", Toast.LENGTH_SHORT).show();
         Intent intent = RecyclerLecturerTabAdapter.newIntent(mContext);
         startActivityForResult(intent, REQUEST_LECTURER_RETRIEVE);
+    }
+
+    //private method of your class
+    private int getIndex(Spinner spinner, String myString)
+    {
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
 }

@@ -30,10 +30,12 @@ import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.datamodel.Survey;
+import com.point2points.kdusurveysystem.datamodel.SurveyStudent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurveyTabAdapter.SimpleViewHolder> {
@@ -78,6 +80,9 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
     private Context mContext;
     private static ArrayList<Survey> surveys = new ArrayList<>();
     public static ArrayList<Survey> SurveyDataset = new ArrayList<>();
+    private static ArrayList<SurveyStudent> surveyStudent = new ArrayList<>();
+    static List<Integer> totalStudents = new ArrayList<Integer>();
+    static List<Integer> studentsAttendance = new ArrayList<Integer>();
 
     public RecyclerSurveyTabAdapter(Context context) {
         this.mContext = context;
@@ -112,7 +117,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                 Collections.sort(SurveyDataset, new Comparator<Survey>() {
                     @Override
                     public int compare(Survey survey1, Survey survey2){
-                        return survey1.getSurveydate().compareTo(survey2.getSurveydate());
+                        return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
                     }
                 });
                 Collections.reverse(SurveyDataset);
@@ -121,7 +126,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                 Collections.sort(SurveyDataset, new Comparator<Survey>() {
                     @Override
                     public int compare(Survey survey1, Survey survey2){
-                        return survey1.getSurveydate().compareTo(survey2.getSurveydate());
+                        return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
                     }
                 });
                 break;
@@ -152,7 +157,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         String surveySubjectCode = item.getSurveySubjectCode();
         String surveySubjectCategory = item.getSurveySubjectCategory();
         String surveyLecturer = item.getSurveyLecturer();
-        String surveySchool = item.getSurveySchool();
+        String surveySchoolShort = item.getSurveySchoolShort();
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -220,8 +225,8 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
 
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewSurveySubjectName.setText(surveySubjectName);
-        viewHolder.textViewSurveyStatus.setText("Add Students");
-        viewHolder.textViewSurveySubjectSchool.setText(surveySchool);
+        viewHolder.textViewSurveyStatus.setText("Attendance: " + studentsAttendance.get(position) + "/" + totalStudents.get(position));
+        viewHolder.textViewSurveySubjectSchool.setText(surveySchoolShort);
         viewHolder.textViewSurveyLecturer.setText(surveyLecturer);
         viewHolder.textViewSurveySubjectCode.setText(surveySubjectCode + "\t(" + surveySubjectCategory + ")");
         mItemManger.bindView(viewHolder.itemView, position);
@@ -261,12 +266,16 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                     SurveyDataset.add(survey);
                 }
             }
-        }
         RecyclerViewSurvey.notifyDataChanges();
+    }
     }
 
     public static void FirebaseSurveyDataRetrieval(){
         RecyclerViewSurvey.onProgressBar();
+
+        totalStudents.add(0);
+        studentsAttendance.add(0);
+
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("survey");
         query = ref;
@@ -275,7 +284,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                for (final DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
                     for (Survey survey : surveys) {
                         if (survey.getSurveyUID() == postSnapshot.getValue(Survey.class).getSurveyUID()) {
@@ -283,7 +292,28 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                         }
                     }
                     if (!found){
+                        Log.e("DO I RUN", "YES");
                         surveys.add(postSnapshot.getValue(Survey.class));
+                        query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.e("DO I RUN 2", "YES 2");
+                                int completion = 0;
+                                int total = (int)dataSnapshot.getChildrenCount();
+
+                                totalStudents.add(total);
+                                for (SurveyStudent surveyStudents : surveyStudent) {
+                                    if (surveyStudents.isSurveyStudentStatus()){
+                                    completion ++;
+                                }}
+                                studentsAttendance.add(completion);
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e("The read failed: " ,databaseError.getMessage());
+                            }
+                        });
                         Log.e("Get Data", (postSnapshot.getValue(Survey.class).getSurveySubject()));
                     }}
                 if (surveys.size() == snapshot.getChildrenCount()){
@@ -300,7 +330,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         Collections.sort(SurveyDataset, new Comparator<Survey>() {
             @Override
             public int compare(Survey survey1, Survey survey2){
-                return survey1.getSurveydate().compareTo(survey2.getSurveydate());
+                return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
             }
         });
         Collections.reverse(SurveyDataset);

@@ -9,6 +9,14 @@
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
     <string name="auth_failed">Authentication failed</string>
     <string name="show_password">Show Password</string>
+    <string name="survey_details">SURVEY DETAILS</string>
+    <string name="fragment_survey_subject">Subject: </string>
+    <string name="fragment_survey_lecturer">Lecturer: </string>
+    <string name="fragment_survey_school">School: </string>
+    <string name="fragment_survey_date">Creation Date: </string>
+    <string name="fragment_survey_student_list">Listed Student</string>
+    <string name="fragment_survey_sem">Semester: </string>
+    <string name="fragment_survey_select_semester_period">Please select the semester period</string>
 
     //toolbar
     <string name="add">Add a data</string>
@@ -66,6 +74,22 @@
         <item>Z-A</item>
         <item>Latest</item>
         <item>Earliest</item>
+    </string-array>
+
+    //survey creation dialog month
+    <string-array name="survey_creation_month_array">
+        <item>Jan</item>
+        <item>May</item>
+        <item>September</item>
+    </string-array>
+
+    //survey creation dialog year
+    <string-array name="survey_creation_year_array">
+        <item>2016</item>
+        <item>2017</item>
+        <item>2018</item>
+        <item>2019</item>
+        <item>2020</item>
     </string-array>
 
 </resources>

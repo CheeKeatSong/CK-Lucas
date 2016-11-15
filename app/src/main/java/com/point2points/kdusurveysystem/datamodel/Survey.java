@@ -16,7 +16,8 @@ public class Survey {
     private String SurveySchool;
     private String SurveySchoolShort;
     private boolean SurveyStatus;
-    private String Surveydate;
+    private String SurveyDate;
+    private String SurveySem;
     private long SurveyQ1;
     private long SurveyQ2;
     private long SurveyQ3;
@@ -43,14 +44,15 @@ public class Survey {
 
     public Survey(){}
 
-    public Survey(String surveyUID, String surveySubject, String surveySubjectCode, String SubjectCategory, String surveyLecturerName, String LecturerID, String surveySchool, String surveySchoolShort, boolean surveyStatus, long surveyDate, long surveyQ1, long surveyQ2, long surveyQ3, long surveyQ4, long surveyQ5, long surveyQ6, long surveyQ7, long surveyQ8, long surveyQ9, long surveyQ10, long surveyQ11, long surveyQ12, long surveyQ13, long surveyQ14, long surveyQ15, long surveyQ16, long surveyQ17, long surveyQ18, long surveyRatingScale1, long surveyRatingScale2, long surveyRatingScale3, long surveyRatingScale4, long surveyRatingScale5) {
+    public Survey(String surveyUID, String surveySubject, String surveySubjectCode, String SubjectCategory, String surveyLecturerName, String LecturerID, String surveySchool, String surveySchoolShort, boolean surveyStatus, String surveySem, long surveyDate, long surveyQ1, long surveyQ2, long surveyQ3, long surveyQ4, long surveyQ5, long surveyQ6, long surveyQ7, long surveyQ8, long surveyQ9, long surveyQ10, long surveyQ11, long surveyQ12, long surveyQ13, long surveyQ14, long surveyQ15, long surveyQ16, long surveyQ17, long surveyQ18, long surveyRatingScale1, long surveyRatingScale2, long surveyRatingScale3, long surveyRatingScale4, long surveyRatingScale5) {
         SurveyUID = surveyUID;
         SurveySubject = surveySubject;
         SurveySubjectCode = surveySubjectCode;
         SurveySubjectCategory = SubjectCategory;
         SurveyLecturer = surveyLecturerName;
         SurveyLecturerId = LecturerID;
-        Surveydate = String.valueOf(surveyDate);
+        SurveyDate = String.valueOf(surveyDate);
+        SurveySem = surveySem;
         SurveyQ1 = surveyQ1;
         SurveyQ2 = surveyQ2;
         SurveyQ3 = surveyQ3;
@@ -87,12 +89,12 @@ public class Survey {
         SurveyLecturerId = surveyLecturerId;
     }
 
-    public String getSurveydate() {
-        return Surveydate;
+    public String getSurveyDate() {
+        return SurveyDate;
     }
 
-    public void setSurveydate(String surveydate) {
-        Surveydate = surveydate;
+    public void setSurveyDate(String SurveyDate) {
+        SurveyDate = SurveyDate;
     }
 
     public String getSurveySubjectCategory() {
@@ -343,11 +345,20 @@ public class Survey {
         SurveySchoolShort = surveySchoolShort;
     }
 
-    public void createSurvey(String SubjectName, String SubjectCode, String SubjectCategory, String Lecturer, String LecturerId, String School, String SchoolShort){
+    public String getSurveySem() {
+        return SurveySem;
+    }
+
+    public void setSurveySem(String surveySem) {
+        SurveySem = surveySem;
+    }
+
+
+    public void createSurvey(String SubjectName, String SubjectCode, String SubjectCategory, String Lecturer, String LecturerId, String School, String SchoolShort, String sem){
         ref = FirebaseDatabase.getInstance().getReference().child("survey");
         DatabaseReference keyref = ref.push();
 
-        Survey survey = new Survey(keyref.getKey(), SubjectName, SubjectCode, SubjectCategory, Lecturer, LecturerId, School, SchoolShort, false, System.currentTimeMillis(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        Survey survey = new Survey(keyref.getKey(), SubjectName, SubjectCode, SubjectCategory, Lecturer, LecturerId, School, SchoolShort, false, sem, System.currentTimeMillis(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         keyref.setValue(survey);
     }
 }
