@@ -84,17 +84,19 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="4dp"
                         android:layout_gravity="start"
                         android:textColor="@color/black"
                         android:layout_marginLeft="10dp"
                         android:id="@+id/survey_subject_code_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12dp"/>
+                        android:textSize="12dp"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:layout_gravity="end"
@@ -102,23 +104,26 @@
                         android:id="@+id/survey_lecturer_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12dp"/>
+                        android:textSize="12dp"
+                        android:layout_weight="0"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginTop="4dp"
                     android:layout_gravity="start"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:id="@+id/survey_subject_school_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"/>
+                    android:textSize="12dp"
+                    android:layout_weight="1"/>
 
                 <TextView
                     android:layout_gravity="end"
@@ -126,7 +131,8 @@
                     android:id="@+id/survey_status_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"/>
+                    android:textSize="12dp"
+                    android:layout_weight="0"/>
 
                 </LinearLayout>
 

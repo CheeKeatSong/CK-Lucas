@@ -52,6 +52,9 @@
         <activity android:name=".RecyclerView.RecyclerViewProgramme"
             android:configChanges="orientation">
         </activity>
+        <activity android:name=".RecyclerView.RecyclerViewSurvey"
+                  android:configChanges="orientation">
+        </activity>
         <activity
             android:name=".Fragment.LecturerFragmentPagerActivity">
         </activity>
@@ -66,6 +69,9 @@
         </activity>
         <activity
             android:name=".Fragment.ProgrammeFragmentPagerActivity">
+        </activity>
+        <activity
+            android:name=".Fragment.SurveyFragmentPagerActivity">
         </activity>
 
     </application>

@@ -1,9 +1,5 @@
 package com.point2points.kdusurveysystem.adapter;
 
-/**
- * Created by Chee Keat on 11/13/2016.
- */
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,15 +25,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.point2points.kdusurveysystem.Fragment.SubjectFragmentPagerActivity;
+import com.point2points.kdusurveysystem.Fragment.SurveyFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
-import com.point2points.kdusurveysystem.datamodel.Subject;
+import com.point2points.kdusurveysystem.datamodel.Survey;
+import com.point2points.kdusurveysystem.datamodel.SurveyStudent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurveyTabAdapter.SimpleViewHolder> {
@@ -47,12 +45,12 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
-        TextView textViewSubjectName;
-        TextView textViewSubjectCategory;
-        //TextView textViewSubjectDepartment;
-        TextView textViewSubjectCode;
-        TextView textViewSubjectSchool;
-        TextView textViewSubjectUid;
+        TextView textViewSurveySubjectName;
+        TextView textViewSurveyStatus;
+        TextView textViewSurveySubjectCode;
+        TextView textViewSurveySubjectSchool;
+        TextView textViewSurveyLecturer;
+        TextView textViewSurveyUid;
         ImageButton buttonDelete;
         ImageButton  buttonEdit;
         ImageView letterimage;
@@ -60,12 +58,12 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         public SimpleViewHolder(final View itemView) {
             super(itemView);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
-            textViewSubjectName = (TextView) itemView.findViewById(R.id.subject_name_text_view);
-            textViewSubjectCategory = (TextView) itemView.findViewById(R.id.subject_category_text_view);
-            //textViewSubjectDepartment = (TextView) itemView.findViewById(R.id.subject_department_text_view);
-            textViewSubjectSchool = (TextView) itemView.findViewById(R.id.subject_school_text_view);
-            textViewSubjectUid = (TextView) itemView.findViewById(R.id.subject_uid_text_view);
-            textViewSubjectCode = (TextView)itemView.findViewById(R.id.subject_code_text_view);
+            textViewSurveySubjectName = (TextView) itemView.findViewById(R.id.survey_name_text_view);
+            textViewSurveyStatus = (TextView) itemView.findViewById(R.id.survey_status_text_view);
+            textViewSurveySubjectSchool = (TextView) itemView.findViewById(R.id.survey_subject_school_text_view);
+            textViewSurveyLecturer = (TextView) itemView.findViewById(R.id.survey_lecturer_text_view);
+            textViewSurveySubjectCode = (TextView)itemView.findViewById(R.id.survey_subject_code_text_view);
+            textViewSurveyUid = (TextView)itemView.findViewById(R.id.survey_uid_text_view); 
             buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
             buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
@@ -80,70 +78,72 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
     }
 
     private Context mContext;
-    private static ArrayList<Subject> subjects = new ArrayList<>();
-    public static ArrayList<Subject> SubjectDataset = new ArrayList<>();
+    private static ArrayList<Survey> surveys = new ArrayList<>();
+    public static ArrayList<Survey> SurveyDataset = new ArrayList<>();
+    private static ArrayList<SurveyStudent> surveyStudent = new ArrayList<>();
+    static List<Integer> totalStudents = new ArrayList<Integer>();
+    static List<Integer> studentsAttendance = new ArrayList<Integer>();
 
-    //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
     public RecyclerSurveyTabAdapter(Context context) {
         this.mContext = context;
-        FirebaseSubjectDataRetrieval();
+        FirebaseSurveyDataRetrieval();
     }
 
     public static void sortingData(int sortoption){
 
-        FirebaseSubjectDataRetrieval();
+        FirebaseSurveyDataRetrieval();
 
         switch (sortoption) {
             case 1:
-                Collections.sort(SubjectDataset, new Comparator<Subject>() {
+                Collections.sort(SurveyDataset, new Comparator<Survey>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
-                        return (subject1.getSubjectName().substring(0, 1).toUpperCase() + subject1.getSubjectName().substring(1)).compareTo(subject2.getSubjectName().substring(0, 1).toUpperCase() + subject2.getSubjectName().substring(1));
+                    public int compare(Survey survey1, Survey survey2){
+                        return (survey1.getSurveySubject().substring(0, 1).toUpperCase() + survey1.getSurveySubject().substring(1)).compareTo(survey2.getSurveySubject().substring(0, 1).toUpperCase() + survey2.getSurveySubject().substring(1));
                     }
                 });
 
                 break;
             case 2:
-                Collections.sort(SubjectDataset, new Comparator<Subject>() {
+                Collections.sort(SurveyDataset, new Comparator<Survey>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
-                        return (subject1.getSubjectName().substring(0, 1).toUpperCase() + subject1.getSubjectName().substring(1)).compareTo(subject2.getSubjectName().substring(0, 1).toUpperCase() + subject2.getSubjectName().substring(1));
+                    public int compare(Survey survey1, Survey survey2){
+                        return (survey1.getSurveySubject().substring(0, 1).toUpperCase() + survey1.getSurveySubject().substring(1)).compareTo(survey2.getSurveySubject().substring(0, 1).toUpperCase() + survey2.getSurveySubject().substring(1));
                     }
                 });
-                Collections.reverse(SubjectDataset);
+                Collections.reverse(SurveyDataset);
                 break;
 
             case 3:
-                Collections.sort(SubjectDataset, new Comparator<Subject>() {
+                Collections.sort(SurveyDataset, new Comparator<Survey>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
-                        return subject1.getDate().compareTo(subject2.getDate());
+                    public int compare(Survey survey1, Survey survey2){
+                        return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
                     }
                 });
-                Collections.reverse(SubjectDataset);
+                Collections.reverse(SurveyDataset);
                 break;
             case 4:
-                Collections.sort(SubjectDataset, new Comparator<Subject>() {
+                Collections.sort(SurveyDataset, new Comparator<Survey>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
-                        return subject1.getDate().compareTo(subject2.getDate());
+                    public int compare(Survey survey1, Survey survey2){
+                        return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
                     }
                 });
                 break;
             default:
                 break;
         }
-        RecyclerViewSubject.notifyDataChanges();
+        RecyclerViewSurvey.notifyDataChanges();
     }
 
-    public static void SubjectArrayListUpdate(ArrayList updatedSubjects) {
-        subjects = updatedSubjects;
-        RecyclerViewSubject.notifyDataChanges();
+    public static void SurveyArrayListUpdate(ArrayList updatedSurveys) {
+        surveys = updatedSurveys;
+        RecyclerViewSurvey.notifyDataChanges();
     }
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.subject_recycler_view_items, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.survey_recycler_view_items, parent, false);
         return new SimpleViewHolder(view);
     }
 
@@ -152,12 +152,12 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
 
         //viewHolder.itemView.setSelected(selectedPos == position);
 
-        final Subject item = SubjectDataset.get(position);
-        final String subjectName = (item.subjectName).substring(0, 1).toUpperCase() + (item.subjectName).substring(1);
-        String subjectCategory = item.subjectCategory;
-        String subjectSchool = item.subjectSchool;
-        String subjectUid = item.subjectUid;
-        String subjectCode = item.subjectCode;
+        final Survey item = SurveyDataset.get(position);
+        String surveySubjectName = item.getSurveySubject();
+        String surveySubjectCode = item.getSurveySubjectCode();
+        String surveySubjectCategory = item.getSurveySubjectCategory();
+        String surveyLecturer = item.getSurveyLecturer();
+        String surveySchoolShort = item.getSurveySchoolShort();
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -170,18 +170,9 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                //if(!subjectRetrieval) {
-                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSubjectName.getText().toString());
-                Intent intent = SubjectFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSubjectUid.getText().toString());
+                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSurveySubjectName.getText().toString());
+                Intent intent = SurveyFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSurveyUid.getText().toString());
                 viewHolder.swipeLayout.getContext().startActivity(intent);
-                //}
-                /*else if(subjectRetrieval) {
-                    String subjectName = viewHolder.textViewSubjectName.getText().toString();
-                    String subjectNameShort = viewHolder.textViewSubjectNameShort.getText().toString();
-                    AdminToolbarDrawer.getSubject(subjectName, subjectNameShort);
-                    subjectRetrieval = false;
-                    RecyclerViewSubject.closeRecyclerViewSubject();
-                }*/
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -192,23 +183,22 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-                alertDialogBuilder.setMessage("Confirm deleting " + item.getSubjectName() + "?");
+                alertDialogBuilder.setMessage("Confirm deleting " + item.getSurveySubject() + "?");
 
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
 
-                                //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
-                                ref.child(viewHolder.textViewSubjectUid.getText().toString()).removeValue();
+                                ref.child(viewHolder.textViewSurveyUid.getText().toString()).removeValue();
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                                subjects.remove(position);
+                                surveys.remove(position);
                                 notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, SubjectDataset.size());
+                                notifyItemRangeChanged(position, SurveyDataset.size());
                                 mItemManger.closeAllItems();
-                                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewSubjectName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewSurveySubjectName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
 
-                                SubjectDataset = subjects;
+                                SurveyDataset = surveys;
                             }
                         })
 
@@ -226,28 +216,25 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = SubjectFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSubjectUid.getText().toString());
+                Intent intent = SurveyFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSurveyLecturer.getText().toString());
                 viewHolder.swipeLayout.getContext().startActivity(intent);
             }
         });
 
-        //String subjectNameReformatted = subjectName.substring(subjectName.lastIndexOf("of") +3);
-        //TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(subjectNameReformatted);
-        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(subjectName);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(surveySubjectName);
 
         viewHolder.letterimage.setImageDrawable(drawable);
-        viewHolder.textViewSubjectName.setText(subjectName);
-        viewHolder.textViewSubjectCategory.setText(subjectCategory);
-        //viewHolder.textViewSubjectDepartment.setText(subjectDepartment);
-        viewHolder.textViewSubjectSchool.setText(subjectSchool);
-        viewHolder.textViewSubjectUid.setText(subjectUid);
-        viewHolder.textViewSubjectCode.setText(subjectCode);
+        viewHolder.textViewSurveySubjectName.setText(surveySubjectName);
+        viewHolder.textViewSurveyStatus.setText("Attendance: " + studentsAttendance.get(position) + "/" + totalStudents.get(position));
+        viewHolder.textViewSurveySubjectSchool.setText(surveySchoolShort);
+        viewHolder.textViewSurveyLecturer.setText(surveyLecturer);
+        viewHolder.textViewSurveySubjectCode.setText(surveySubjectCode + "\t(" + surveySubjectCategory + ")");
         mItemManger.bindView(viewHolder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return SubjectDataset.size();
+        return SurveyDataset.size();
     }
 
     @Override
@@ -258,52 +245,80 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
     public static void filter(String charText) {
 
         charText = charText.toLowerCase(Locale.getDefault());
-        SubjectDataset = new ArrayList<Subject>();
+        SurveyDataset = new ArrayList<Survey>();
 
         if (charText.length() == 0) {
-            SubjectDataset = subjects;
+            SurveyDataset = surveys;
         }
         else
         {
-            for (Subject subject : subjects)
+            for (Survey survey : surveys)
             {
-                if (subject.getSubjectName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || subject.getSubjectSchoolShort().toLowerCase(Locale.getDefault()).contains(charText)
-                        || subject.getSubjectCategory().toLowerCase(Locale.getDefault()).contains(charText)
-                        || subject.getSubjectCode().toLowerCase(Locale.getDefault()).contains(charText)
-                        || subject.getSubjectSchool().toLowerCase(Locale.getDefault()).contains(charText))
+                if (survey.getSurveySubject().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveySubjectCode().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveySubjectCategory().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveySchool().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveySchoolShort().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveySubject().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveyLecturer().toLowerCase(Locale.getDefault()).contains(charText)
+                        || survey.getSurveyLecturerId().toLowerCase(Locale.getDefault()).contains(charText))
                 {
-                    SubjectDataset.add(subject);
+                    SurveyDataset.add(survey);
                 }
             }
-        }
-        RecyclerViewSubject.notifyDataChanges();
+        RecyclerViewSurvey.notifyDataChanges();
+    }
     }
 
-    public static void FirebaseSubjectDataRetrieval(){
-        //String key = ref.push().getKey();
+    public static void FirebaseSurveyDataRetrieval(){
+        RecyclerViewSurvey.onProgressBar();
+
+        totalStudents.add(0);
+        studentsAttendance.add(0);
+
         ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("subject");
+        ref = ref.child("survey");
         query = ref;
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                for (final DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
-                    for (Subject subject : subjects) {
-                        if (subject.getSubjectUid() == postSnapshot.getValue(Subject.class).getSubjectUid()) {
+                    for (Survey survey : surveys) {
+                        if (survey.getSurveyUID() == postSnapshot.getValue(Survey.class).getSurveyUID()) {
                             found = true;
                         }
                     }
                     if (!found){
-                        subjects.add(postSnapshot.getValue(Subject.class));
-                        Log.e("Get Data", (postSnapshot.getValue(Subject.class).getSubjectName()));
+                        Log.e("DO I RUN", "YES");
+                        surveys.add(postSnapshot.getValue(Survey.class));
+                        query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.e("DO I RUN 2", "YES 2");
+                                int completion = 0;
+                                int total = (int)dataSnapshot.getChildrenCount();
+
+                                totalStudents.add(total);
+                                for (SurveyStudent surveyStudents : surveyStudent) {
+                                    if (surveyStudents.isSurveyStudentStatus()){
+                                    completion ++;
+                                }}
+                                studentsAttendance.add(completion);
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e("The read failed: " ,databaseError.getMessage());
+                            }
+                        });
+                        Log.e("Get Data", (postSnapshot.getValue(Survey.class).getSurveySubject()));
                     }}
-                if (subjects.size() == snapshot.getChildrenCount()){
-                    RecyclerViewSubject.offProgressBar();
-                    RecyclerViewSubject.notifyDataChanges();
+                if (surveys.size() == snapshot.getChildrenCount()){
+                    RecyclerViewSurvey.offProgressBar();
+                    RecyclerViewSurvey.notifyDataChanges();
                 }
             }
             @Override
@@ -311,14 +326,14 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                 Log.e("The read failed: " ,firebaseError.getMessage());
             }
         });
-        SubjectDataset = subjects;
-        Collections.sort(SubjectDataset, new Comparator<Subject>() {
+        SurveyDataset = surveys;
+        Collections.sort(SurveyDataset, new Comparator<Survey>() {
             @Override
-            public int compare(Subject subject1, Subject subject2){
-                return subject1.getDate().compareTo(subject2.getDate());
+            public int compare(Survey survey1, Survey survey2){
+                return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
             }
         });
-        Collections.reverse(SubjectDataset);
+        Collections.reverse(SurveyDataset);
     }
 
 }
