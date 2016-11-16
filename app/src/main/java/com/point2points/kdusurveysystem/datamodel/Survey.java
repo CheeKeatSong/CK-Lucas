@@ -86,7 +86,7 @@ public class Survey {
     }
 
     public void setSurveyLecturerId(String surveyLecturerId) {
-        SurveyLecturerId = surveyLecturerId;
+        this.SurveyLecturerId = surveyLecturerId;
     }
 
     public String getSurveyDate() {
@@ -94,7 +94,7 @@ public class Survey {
     }
 
     public void setSurveyDate(String SurveyDate) {
-        SurveyDate = SurveyDate;
+        this.SurveyDate = SurveyDate;
     }
 
     public String getSurveySubjectCategory() {
@@ -102,7 +102,7 @@ public class Survey {
     }
 
     public void setSurveySubjectCategory(String surveySubjectCategory) {
-        SurveySubjectCategory = surveySubjectCategory;
+        this.SurveySubjectCategory = surveySubjectCategory;
     }
 
     public String getSurveyUID() {
@@ -110,7 +110,7 @@ public class Survey {
     }
 
     public void setSurveyUID(String surveyUID) {
-        SurveyUID = surveyUID;
+        this.SurveyUID = surveyUID;
     }
 
     public String getSurveySubject() {
@@ -118,7 +118,7 @@ public class Survey {
     }
 
     public void setSurveySubject(String surveySubject) {
-        SurveySubject = surveySubject;
+        this.SurveySubject = surveySubject;
     }
 
     public String getSurveySubjectCode() {
@@ -126,7 +126,7 @@ public class Survey {
     }
 
     public void setSurveySubjectCode(String surveySubjectCode) {
-        SurveySubjectCode = surveySubjectCode;
+        this.SurveySubjectCode = surveySubjectCode;
     }
 
     public String getSurveyLecturer() {
@@ -134,7 +134,7 @@ public class Survey {
     }
 
     public void setSurveyLecturer(String surveyLecturerName) {
-        SurveyLecturer = surveyLecturerName;
+        this.SurveyLecturer = surveyLecturerName;
     }
 
     public long getSurveyQ1() {
@@ -286,7 +286,7 @@ public class Survey {
     }
 
     public void setSurveyRatingScale1(long surveyRatingScale1) {
-        SurveyRatingScale1 = surveyRatingScale1;
+        this.SurveyRatingScale1 = surveyRatingScale1;
     }
 
     public long getSurveyRatingScale2() {
@@ -294,7 +294,7 @@ public class Survey {
     }
 
     public void setSurveyRatingScale2(long surveyRatingScale2) {
-        SurveyRatingScale2 = surveyRatingScale2;
+        this.SurveyRatingScale2 = surveyRatingScale2;
     }
 
     public long getSurveyRatingScale3() {
@@ -302,7 +302,7 @@ public class Survey {
     }
 
     public void setSurveyRatingScale3(long surveyRatingScale3) {
-        SurveyRatingScale3 = surveyRatingScale3;
+        this.SurveyRatingScale3 = surveyRatingScale3;
     }
 
     public long getSurveyRatingScale4() {
@@ -310,7 +310,7 @@ public class Survey {
     }
 
     public void setSurveyRatingScale4(long surveyRatingScale4) {
-        SurveyRatingScale4 = surveyRatingScale4;
+        this.SurveyRatingScale4 = surveyRatingScale4;
     }
 
     public long getSurveyRatingScale5() {
@@ -318,7 +318,7 @@ public class Survey {
     }
 
     public void setSurveyRatingScale5(long surveyRatingScale5) {
-        SurveyRatingScale5 = surveyRatingScale5;
+        this.SurveyRatingScale5 = surveyRatingScale5;
     }
 
     public boolean isSurveyStatus() {
@@ -326,7 +326,7 @@ public class Survey {
     }
 
     public void setSurveyStatus(boolean surveyStatus) {
-        SurveyStatus = surveyStatus;
+        this.SurveyStatus = surveyStatus;
     }
 
     public String getSurveySchool() {
@@ -334,7 +334,7 @@ public class Survey {
     }
 
     public void setSurveySchool(String surveySchool) {
-        SurveySchool = surveySchool;
+        this.SurveySchool = surveySchool;
     }
 
     public String getSurveySchoolShort() {
@@ -342,7 +342,7 @@ public class Survey {
     }
 
     public void setSurveySchoolShort(String surveySchoolShort) {
-        SurveySchoolShort = surveySchoolShort;
+        this.SurveySchoolShort = surveySchoolShort;
     }
 
     public String getSurveySem() {
@@ -350,9 +350,8 @@ public class Survey {
     }
 
     public void setSurveySem(String surveySem) {
-        SurveySem = surveySem;
+        this.SurveySem = surveySem;
     }
-
 
     public void createSurvey(String SubjectName, String SubjectCode, String SubjectCategory, String Lecturer, String LecturerId, String School, String SchoolShort, String sem){
         ref = FirebaseDatabase.getInstance().getReference().child("survey");
