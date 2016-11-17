@@ -226,11 +226,30 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewSurveySubjectName.setText(surveySubjectName);
         viewHolder.textViewSurveyStatus.setText("Attendance: " + studentsAttendance.get(position) + "/" + totalStudents.get(position));
+        //viewHolder.textViewSurveyStatus.setText("Attendance: " + getAttendance(studentsAttendance, position) + "/" + getTotalStudents(totalStudents, position));
         viewHolder.textViewSurveySubjectSchool.setText(surveySchoolShort);
         viewHolder.textViewSurveyLecturer.setText(surveyLecturer);
         viewHolder.textViewSurveySubjectCode.setText(surveySubjectCode + "\t(" + surveySubjectCategory + ")");
         mItemManger.bindView(viewHolder.itemView, position);
     }
+
+    /*public int getAttendance(List array, int position) {
+
+        if (array.size() !=  0)
+            return (int)array.get(position);
+
+        else
+            return 0;
+    }
+
+    public int getTotalStudents(List array, int position) {
+
+        if (array.size() != 0)
+            return (int)array.get(position);
+
+        else
+            return 0;
+    }*/
 
     @Override
     public int getItemCount() {
@@ -273,8 +292,10 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
     public static void FirebaseSurveyDataRetrieval(){
         RecyclerViewSurvey.onProgressBar();
 
-        totalStudents.add(0);
-        studentsAttendance.add(0);
+        //totalStudents.add(0);
+        //totalStudents = null;
+        //studentsAttendance.add(0);
+        //studentsAttendance = null;
 
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("survey");
@@ -284,6 +305,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
+                final long totalCount = snapshot.getChildrenCount();
                 for (final DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
                     for (Survey survey : surveys) {
@@ -291,7 +313,8 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                             found = true;
                         }
                     }
-                    if (!found){
+
+                    if (!found) {
                         Log.e("DO I RUN", "YES");
                         surveys.add(postSnapshot.getValue(Survey.class));
                         query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
@@ -300,23 +323,36 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Log.e("DO I RUN 2", "YES 2");
                                 int completion = 0;
-                                int total = (int)dataSnapshot.getChildrenCount();
+                                int total = (int) dataSnapshot.getChildrenCount();
 
                                 totalStudents.add(total);
                                 for (SurveyStudent surveyStudents : surveyStudent) {
-                                    if (surveyStudents.isSurveyStudentStatus()){
-                                    completion ++;
-                                }}
+                                    if (surveyStudents.isSurveyStudentStatus()) {
+                                        completion++;
+                                    }
+                                }
                                 studentsAttendance.add(completion);
+
+                                Log.e("Get Data", "Completion: " + completion + " | Total: " + total);
+
+                                if (studentsAttendance.size() == totalCount){
+                                    RecyclerViewSurvey.offProgressBar();
+                                    RecyclerViewSurvey.notifyDataChanges();
+                                }
                             }
+
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                Log.e("The read failed: " ,databaseError.getMessage());
+                                Log.e("The read failed: ", databaseError.getMessage());
                             }
                         });
                         Log.e("Get Data", (postSnapshot.getValue(Survey.class).getSurveySubject()));
                     }}
-                if (surveys.size() == snapshot.getChildrenCount()){
+                /*if (surveys.size() == snapshot.getChildrenCount()){
+                    RecyclerViewSurvey.offProgressBar();
+                    RecyclerViewSurvey.notifyDataChanges();
+                }*/
+                if (surveys.size() == 0 || studentsAttendance.size() == totalCount) {
                     RecyclerViewSurvey.offProgressBar();
                     RecyclerViewSurvey.notifyDataChanges();
                 }
