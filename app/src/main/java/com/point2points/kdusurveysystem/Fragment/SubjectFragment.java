@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerSubjectTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Subject;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter.SubjectDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerSubjectTabAdapter.SubjectDataset;
 
 public class SubjectFragment extends Fragment{
 
@@ -93,29 +93,6 @@ public class SubjectFragment extends Fragment{
                 }
             });
 
-            /*subjectNameShortTextView = (TextView) v.findViewById(R.id.fragment_subject_name_short_text_view);
-            subjectNameShortTextView.setText("Subject Name: ");
-
-            subjectNameShortEditText = (EditText) v.findViewById(R.id.fragment_subject_name_short_edit_text);
-            subjectNameShortEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
-            subjectNameShortEditText.setText(mSubject.getSubjectNameShort());
-            subjectNameShortEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mSubject.setSubjectNameShort(s.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });*/
-
             subjectCategoryTextView = (TextView) v.findViewById(R.id.fragment_subject_category_text_view);
             subjectCategoryTextView.setText("Subject Category: ");
 
@@ -126,11 +103,6 @@ public class SubjectFragment extends Fragment{
             subjectCategoryRadioDiploma.setText("Diploma");
             subjectCategoryRadioDegree.setText("Degree");
             subjectCategoryRadioOther.setText("Other");
-
-            //int CAT1_ID = 101; //first radio button id
-            //int CAT2_ID = 102; //second radio button id
-            //subjectCategoryRadioDiploma.setId(CAT1_ID);
-            //subjectCategoryRadioDegree.setId(CAT2_ID);
 
             final String currentCategory = mSubject.getSubjectCategory();
             switch (currentCategory) {
@@ -168,29 +140,6 @@ public class SubjectFragment extends Fragment{
                         mSubject.setSubjectCategory("Other");
                 }
             });
-
-            /*subjectDepartmentTextView = (TextView) v.findViewById(R.id.fragment_subject_department_text_view);
-            subjectDepartmentTextView.setText("Subject Department: ");
-
-            subjectDepartmentEditText = (EditText) v.findViewById(R.id.fragment_subject_department_edit_text);
-            subjectDepartmentEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
-            subjectDepartmentEditText.setText(mSubject.getSubjectDepartment());
-            subjectDepartmentEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mSubject.setSubjectDepartment(s.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });*/
 
             subjectSchoolTextView = (TextView) v.findViewById(R.id.fragment_subject_school_text_view);
             subjectSchoolTextView.setText(mSubject.getSubjectSchool() + " (" + mSubject.getSubjectSchoolShort() + ")");

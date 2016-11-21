@@ -16,7 +16,11 @@
     <string name="fragment_survey_date">Creation Date: </string>
     <string name="fragment_survey_student_list">Listed Student</string>
     <string name="fragment_survey_sem">Semester: </string>
-    <string name="fragment_survey_select_semester_period">Please select the semester period</string>
+    <string name="fragment_survey_select_semester_period">Please select a semester period</string>
+    <string name="fragment_survey_respond_overview">Respond Overview</string>
+    <string name="fragment_survey_total_score_of_each_question">Total score of each question</string>
+    <string name="fragment_survey_total_score_of_each_rating">Total score of each rating</string>
+    <string name="fragment_survey_subjective_response">Subjective Respond</string>
 
     //toolbar
     <string name="add">Add a data</string>
@@ -26,6 +30,8 @@
     <string name="search_hint">Search...</string>
 
     //button
+    <string name="confirm">CONFIRM</string>
+    <string name="update_database">Update Database</string>
     <string name="okay">OKAY</string>
     <string name="cancel">CANCEL</string>
 

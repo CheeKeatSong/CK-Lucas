@@ -14,7 +14,7 @@ import com.point2points.kdusurveysystem.datamodel.Student;
 
 import java.util.ArrayList;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter.StudentDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerStudentTabAdapter.StudentDataset;
 
 public class StudentFragmentPagerActivity extends AppCompatActivity{
 

@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerSchoolTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.School;
 
 import java.text.SimpleDateFormat;
@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter.SchoolDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerSchoolTabAdapter.SchoolDataset;
 
 public class SchoolFragment extends Fragment{
 

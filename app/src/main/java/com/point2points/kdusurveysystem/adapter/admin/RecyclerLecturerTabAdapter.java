@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem.adapter;
+package com.point2points.kdusurveysystem.adapter.admin;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,9 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
-import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.Admin;
@@ -127,81 +125,6 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             });
         }
     }
-
-    //SortedList
-   /* private final SortedList<ExampleModel> mSortedList = new SortedList<>(ExampleModel.class, new SortedList.Callback<ExampleModel>() {
-        @Override
-        public int compare(ExampleModel a, ExampleModel b) {
-            return mComparator.compare(a, b);
-        }
-
-        @Override
-        public void onInserted(int position, int count) {
-            notifyItemRangeInserted(position, count);
-        }
-
-        @Override
-        public void onRemoved(int position, int count) {
-            notifyItemRangeRemoved(position, count);
-        }
-
-        @Override
-        public void onMoved(int fromPosition, int toPosition) {
-            notifyItemMoved(fromPosition, toPosition);
-        }
-
-        @Override
-        public void onChanged(int position, int count) {
-            notifyItemRangeChanged(position, count);
-        }
-
-        @Override
-        public boolean areContentsTheSame(ExampleModel oldItem, ExampleModel newItem) {
-            return oldItem.equals(newItem);
-        }
-
-        @Override
-        public boolean areItemsTheSame(ExampleModel item1, ExampleModel item2) {
-            return item1.getId() == item2.getId();
-        }
-    });
-
-    //we first need a way to add or remove items to the Adapter. For this purpose we can add methods to the Adapter which allow us to add and remove items to the SortedList
-    public void add(ExampleModel model) {
-        mSortedList.add(model);
-    }
-
-    public void remove(ExampleModel model) {
-        mSortedList.remove(model);
-    }
-
-    public void add(List<ExampleModel> models) {
-        mSortedList.addAll(models);
-    }
-
-    public void remove(List<ExampleModel> models) {
-        mSortedList.beginBatchedUpdates();
-        for (ExampleModel model : models) {
-            mSortedList.remove(model);
-        }
-        mSortedList.endBatchedUpdates();
-    }
-
-    public void replaceAll(List<ExampleModel> models) {
-        mSortedList.beginBatchedUpdates();
-        for (int i = mSortedList.size() - 1; i >= 0; i--) {
-            final ExampleModel model = mSortedList.get(i);
-            if (!models.contains(model)) {
-                mSortedList.remove(model);
-            }
-        }
-        mSortedList.addAll(models);
-        mSortedList.endBatchedUpdates();
-    }
-    //add or remove end
-
-    private final LayoutInflater mInflater;
-    private final Comparator<ExampleModel> mComparator;*/
 
     private Context mContext;
     private static ArrayList<Lecturer> lecturers = new ArrayList<>();
@@ -373,7 +296,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             }
         });
 
-        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(fullname);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(fullname, 64);
 
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewFullName.setText(fullname);
@@ -500,39 +423,6 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                         }
                     }
                 });
-
-        /*ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("users").child("admin");
-        query = ref;
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
-                        admin = postSnapshot.getValue(Admin.class);
-                        Log.e("Get Data", (postSnapshot.getValue(Admin.class).getAdminName()));
-
-                        Log.d(TAG, admin.getAdminEmail() + " | " + admin.getAdminPassword());
-                        mAuth.signInWithEmailAndPassword(admin.getAdminEmail(), admin.getAdminPassword())
-                                .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (!task.isSuccessful()) {
-                                            Log.d(TAG, "Error reauthenticating!");
-                                        } else {
-                                            Log.d(TAG, "Reauthenticated to " + admin.getAdminEmail() + " account");
-                                        }
-                                    }
-                                });
-                    }}
-            }
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
-            }
-        });*/
     }
 
     public void reauthAdmin() {

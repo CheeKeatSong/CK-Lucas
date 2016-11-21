@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem.adapter;
+package com.point2points.kdusurveysystem.adapter.admin;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,10 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.StudentFragmentPagerActivity;
 import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
-import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
@@ -67,12 +65,6 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
     public static boolean studentRetrieval = false;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, RecyclerViewStudent.class);
-        studentRetrieval = true;
-        return intent;
-    }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
@@ -278,13 +270,12 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             }
         });
 
-        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(studentName);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(studentName, 64);
 
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewStudentName.setText(studentName);
         viewHolder.textViewStudentID.setText(studentID);
         viewHolder.textViewStudentCategory.setText(studentCategory);
-        //viewHolder.textViewStudentDepartment.setText(studentDepartment);
         viewHolder.textViewStudentSchool.setText(studentSchool);
         viewHolder.textViewStudentPoint.setText("Point: " + studentPoint);
         viewHolder.textViewStudentUid.setText(studentUid);

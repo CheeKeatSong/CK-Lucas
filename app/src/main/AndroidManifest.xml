@@ -13,7 +13,7 @@
 
         <receiver android:name=".network.NetworkStateReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 
@@ -31,29 +31,45 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".lecturer.LecturerHome">
-        </activity>
-        <activity android:name=".student.StudentHome">
-        </activity>
-        <activity android:name=".admin.AdminHome">
-        </activity>
-        <activity android:name=".RecyclerView.RecyclerViewLecturer"
-                  android:configChanges="orientation">
-        </activity>
-        <activity android:name=".RecyclerView.RecyclerViewStudent"
-                  android:configChanges="orientation">
-        </activity>
-        <activity android:name=".RecyclerView.RecyclerViewSubject"
-                  android:configChanges="orientation">
-        </activity>
-        <activity android:name=".RecyclerView.RecyclerViewSchool"
-                  android:configChanges="orientation">
-        </activity>
-        <activity android:name=".RecyclerView.RecyclerViewProgramme"
+        <activity
+            android:name=".lecturer.LecturerHome"
             android:configChanges="orientation">
         </activity>
-        <activity android:name=".RecyclerView.RecyclerViewSurvey"
-                  android:configChanges="orientation">
+        <activity
+            android:name=".student.StudentHome"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".admin.AdminHome"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewLecturer"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewStudent"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewSubject"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewSchool"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewProgramme"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewSurvey"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".RecyclerView.RecyclerViewStudentPickList"
+            android:configChanges="orientation">
         </activity>
         <activity
             android:name=".Fragment.LecturerFragmentPagerActivity">
@@ -73,7 +89,12 @@
         <activity
             android:name=".Fragment.SurveyFragmentPagerActivity">
         </activity>
-
+        <activity
+            android:name=".Fragment.SurveyFragmentActivity">
+        </activity>
+        <activity
+            android:name=".Fragment.SurveyQuestionPagerActivity">
+        </activity>
     </application>
 
 </manifest>

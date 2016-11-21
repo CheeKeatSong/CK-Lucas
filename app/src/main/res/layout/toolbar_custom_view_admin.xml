@@ -58,5 +58,17 @@
                      android:windowSoftInputMode="stateHidden"
             android:paddingRight="1dp"
             android:layout_marginRight="1dp"/>
+
+        <ImageButton android:src="@drawable/ic_action_forward"
+                     android:background="?attr/actionBarItemBackground"
+                     android:layout_width="?attr/actionBarSize"
+                     android:layout_height="match_parent"
+                     android:scaleType="centerInside"
+                     android:id="@+id/menu_item_forward"
+                     android:layout_gravity="right"
+                     android:windowSoftInputMode="stateHidden"
+                     android:paddingRight="1dp"
+                     android:layout_marginRight="1dp"
+            android:visibility="gone"/>
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

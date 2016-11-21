@@ -14,7 +14,7 @@ import com.point2points.kdusurveysystem.R;
 
 import java.util.ArrayList;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.LecturerDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerLecturerTabAdapter.LecturerDataset;
 
 public class LecturerFragmentPagerActivity extends AppCompatActivity {
 

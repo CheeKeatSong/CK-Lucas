@@ -14,12 +14,11 @@ import com.point2points.kdusurveysystem.datamodel.Survey;
 
 import java.util.ArrayList;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerSurveyTabAdapter.SurveyDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerSurveyTabAdapter.SurveyDataset;
 
 public class SurveyFragmentPagerActivity extends AppCompatActivity {
 
-    private static final String EXTRA_SURVEY_ID =
-            "com.point2points.kdusurveysystem.survey_uid";
+    private static final String EXTRA_SURVEY_ID = "com.point2points.kdusurveysystem.survey_uid";
 
     private static ArrayList<Survey> surveyData = new ArrayList<>();
 

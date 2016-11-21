@@ -65,8 +65,8 @@ public class Login extends Activity{
         // Fill text into login for faster testing
         EditText loginField = (EditText)findViewById(R.id.email_edit_Text);
         EditText passwordField = (EditText)findViewById(R.id.password_edit_text);
-        loginField.setText("0106759@kdu-online.com");
-        passwordField.setText("0106759");
+        loginField.setText("0118888@kdu-online.com");
+        passwordField.setText("iamatroll");
 
         final Firebase myFirebaseRef = new Firebase("https://kdu-survey-system.firebaseio.com");
 
@@ -194,7 +194,7 @@ public class Login extends Activity{
                                             for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                                                 if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                                                     progressBar.setVisibility(View.GONE);
-                                                    Intent intent = new Intent(Login.this,RecyclerViewLecturer.class);
+                                                    Intent intent = new Intent(Login.this, AdminHome.class);
                                                     startActivity(intent);
                                                     finish();
                                                 }}

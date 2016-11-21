@@ -27,16 +27,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.LecturerDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerLecturerTabAdapter.LecturerDataset;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

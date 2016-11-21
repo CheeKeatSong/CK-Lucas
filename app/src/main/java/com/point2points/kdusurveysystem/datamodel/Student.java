@@ -1,9 +1,13 @@
 package com.point2points.kdusurveysystem.datamodel;
 
+import android.os.Parcelable;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable{
 
     public String studentName; // eg. John Smith
     public String studentID; // eg. 0101234

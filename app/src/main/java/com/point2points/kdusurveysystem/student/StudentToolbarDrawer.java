@@ -40,13 +40,14 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.adapter.student.StudentHomeRecyclerViewAdapter;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
 import java.util.Locale;
 
 import static android.view.View.GONE;
 
-public class StudentToolbarDrawer extends AppCompatActivity{
+public class StudentToolbarDrawer extends AppCompatActivity {
 
     private static final String TAG = "StudentToolbarDrawer";
 
@@ -69,8 +70,7 @@ public class StudentToolbarDrawer extends AppCompatActivity{
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
-
-    public void loadUserProfileInfo(final Bundle savedInstanceState){
+    public void loadUserProfileInfo(final Bundle savedInstanceState) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final String UID = user.getUid();
@@ -82,18 +82,20 @@ public class StudentToolbarDrawer extends AppCompatActivity{
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    Log.e("Student: " ,postSnapshot.getValue(Student.class).getStudentName());
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Log.e("Student: ", postSnapshot.getValue(Student.class).getStudentName());
                     if (UID.equals(postSnapshot.getValue(Student.class).getStudentUid())) {
                         mStudent = postSnapshot.getValue(Student.class);
                         onCreateToolbar(savedInstanceState);
                         onCreateDrawer();
-                    }}
+                    }
+                }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
     }
@@ -101,7 +103,7 @@ public class StudentToolbarDrawer extends AppCompatActivity{
     protected void onCreateToolbar(Bundle savedInstanceState) {
         //get context
         mContext = this;
-        mActivity = (Activity)mContext;
+        mActivity = (Activity) mContext;
 
         //fix status bar
         Window window = mActivity.getWindow();
@@ -112,7 +114,7 @@ public class StudentToolbarDrawer extends AppCompatActivity{
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // finally change the color
             window.setStatusBarColor(mActivity.getResources().getColor(R.color.dark_kdu_blue));
         }
@@ -145,9 +147,9 @@ public class StudentToolbarDrawer extends AppCompatActivity{
 
         //UserProfileToolBar
         userProfileButton = (ImageButton) findViewById(R.id.menu_item_profile_student);
-        userProfileButton.setOnClickListener(new View.OnClickListener(){
+        userProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
             }
         });
 
@@ -160,17 +162,16 @@ public class StudentToolbarDrawer extends AppCompatActivity{
         userStudentPoints = (TextView) findViewById(R.id.menu_item_point_student);
         userStudentPoints.setText(mStudent.getStudentPoint());
 
-
         //UserToolBar
         optionButton = (ImageButton) findViewById(R.id.menu_item_option_student);
         optionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    adminDrawer.openDrawer();
+                adminDrawer.openDrawer();
             }
         });
 
-        backButton = (ImageButton)findViewById(R.id.menu_item_back);
+        backButton = (ImageButton) findViewById(R.id.menu_item_back);
         searchEditText = (EditText) findViewById(R.id.search_edit_text);
         searchEditText.addTextChangedListener(new TextWatcher() {
 
@@ -180,7 +181,7 @@ public class StudentToolbarDrawer extends AppCompatActivity{
                 String text = searchEditText.getText().toString().toLowerCase(Locale.getDefault());
                 switch (tabIdentifier) {
                     case 2:
-                        //RecyclerLecturerTabAdapter.filter(text);
+                        StudentHomeRecyclerViewAdapter.filter(text);
                         break;
                     default:
                         break;
@@ -221,7 +222,7 @@ public class StudentToolbarDrawer extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                if(selectedItemView != null) {
+                if (selectedItemView != null) {
                     ((TextView) selectedItemView).setVisibility(GONE);
                 }
 
@@ -229,20 +230,17 @@ public class StudentToolbarDrawer extends AppCompatActivity{
 
                 if (sortType.equals("A-Z")) {
                     sortoption = 1;
-                }
-                else if(sortType.equals("Z-A")) {
+                } else if (sortType.equals("Z-A")) {
                     sortoption = 2;
-                }
-                else if(sortType.equals("Latest")) {
+                } else if (sortType.equals("Latest")) {
                     sortoption = 3;
-                }
-                else if(sortType.equals("Earliest")) {
+                } else if (sortType.equals("Earliest")) {
                     sortoption = 4;
                 }
-                switch (tabIdentifier){
-
-                        //RecyclerLecturerTabAdapter.sortingData(sortoption);
-
+                switch (tabIdentifier) {
+                    case 1:
+                        StudentHomeRecyclerViewAdapter.sortingData(sortoption);
+                        break;
                 }
             }
 
@@ -297,9 +295,9 @@ public class StudentToolbarDrawer extends AppCompatActivity{
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                        int drawerIdentifier = (int)drawerItem.getIdentifier();
+                        int drawerIdentifier = (int) drawerItem.getIdentifier();
 
-                        switch (drawerIdentifier){
+                        switch (drawerIdentifier) {
                             case 5:
                                 FirebaseAuth.getInstance().signOut();
                                 Intent intentLogout = new Intent(StudentToolbarDrawer.this, Login.class);
