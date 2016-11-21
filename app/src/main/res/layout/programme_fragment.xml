@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/fragment_programme_name_text_view"
@@ -121,7 +124,7 @@
             android:layout_marginRight="8dp"
             android:textSize="16dp"
             android:textColor="@color/white"
-            android:background="@color/dark_kdu_blue"
+            android:background="@color/kdu_blue"
             android:layout_weight="1"
             android:text="@string/okay"/>
 
@@ -134,9 +137,9 @@
             android:layout_marginLeft="8dp"
             android:textSize="16dp"
             android:textColor="@color/white"
-            android:background="@color/dark_kdu_blue"/>
+            android:background="@color/kdu_blue"/>
 
     </LinearLayout>
-
-
 </LinearLayout>
+
+   </ScrollView>

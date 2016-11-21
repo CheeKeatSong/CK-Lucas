@@ -9,7 +9,7 @@ import org.w3c.dom.Text;
 
 public class RecyclerLetterIcon {
 
-    public static TextDrawable GenerateRecyclerLetterIcon(String SentenceInput){
+    public static TextDrawable GenerateRecyclerLetterIcon(String SentenceInput, int fontSize){
 
         String firstletter = SentenceInput.substring(0,1);
 
@@ -49,7 +49,7 @@ public class RecyclerLetterIcon {
         TextDrawable drawable = TextDrawable.builder()
                 .beginConfig()
                 .useFont(Typeface.DEFAULT)
-                .fontSize(64)
+                .fontSize(fontSize)
                 .bold()
                 .toUpperCase()
                 .endConfig()

@@ -21,13 +21,13 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/md_cyan_400">
+                android:background="@color/light_kdu_blue">
 
                 <ImageButton
                     android:id="@+id/edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/md_cyan_400"
+                    android:background="@color/light_kdu_blue"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
 

@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 
 import com.daimajia.swipe.util.Attributes;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerProgrammeTabAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
 

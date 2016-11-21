@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerProgrammeTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Programme;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter.ProgrammeDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerProgrammeTabAdapter.ProgrammeDataset;
 
 public class ProgrammeFragment extends Fragment{
 

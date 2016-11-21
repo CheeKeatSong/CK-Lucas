@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem.adapter;
+package com.point2points.kdusurveysystem.adapter.admin;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,7 +44,6 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
     private static final String EXTRA_SUBJECT = "com.point2points.kdusurveysystem.subject";
     private static final String EXTRA_SUBJECT_CODE = "com.point2points.kdusurveysystem.subject.code";
     private static final String EXTRA_SUBJECT_CATEGORY = "com.point2points.kdusurveysystem.subject.category";
-
 
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
@@ -188,12 +187,9 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
-        //viewHolder.itemView.setSelected(selectedPos == position);
-
         final Subject item = SubjectDataset.get(position);
         final String subjectName = (item.subjectName).substring(0, 1).toUpperCase() + (item.subjectName).substring(1);
         final String subjectCategory = item.subjectCategory;
-        //String subjectDepartment = item.subjectDepartment;
         String subjectSchool = item.subjectSchool;
         String subjectUid = item.subjectUid;
         String subjectCode = item.subjectCode;
@@ -284,7 +280,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
 
         //String subjectNameReformatted = subjectName.substring(subjectName.lastIndexOf("of") +3);
         //TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(subjectNameReformatted);
-        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(subjectName);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(subjectName, 64);
 
         viewHolder.letterimage.setImageDrawable(drawable);
         viewHolder.textViewSubjectName.setText(subjectName);

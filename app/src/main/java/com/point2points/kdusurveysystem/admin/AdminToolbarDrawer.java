@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -61,13 +60,13 @@ import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewStudent;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSubject;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
-import com.point2points.kdusurveysystem.adapter.NothingSelectedSpinnerAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerSurveyTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerProgrammeTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerSchoolTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerStudentPickListAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerStudentTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerSubjectTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerSurveyTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
 import com.point2points.kdusurveysystem.R;
@@ -83,10 +82,11 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.view.View.GONE;
-import static com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter.lecturerRetrieval;
-import static com.point2points.kdusurveysystem.adapter.RecyclerProgrammeTabAdapter.programmeRetrieval;
-import static com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter.schoolRetrieval;
-import static com.point2points.kdusurveysystem.adapter.RecyclerSubjectTabAdapter.subjectRetrieval;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerLecturerTabAdapter.lecturerRetrieval;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerProgrammeTabAdapter.programmeRetrieval;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerSchoolTabAdapter.schoolRetrieval;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerStudentPickListAdapter.studentRetrieval;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerSubjectTabAdapter.subjectRetrieval;
 
 public class AdminToolbarDrawer extends AppCompatActivity {
 
@@ -158,7 +158,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     String inputProgrammeName;
     String inputProgrammeCategory;
 
-    private ImageButton optionButton, addButton, searchButton, backButton;
+    private ImageButton optionButton, addButton, searchButton, backButton, forwardButton;
     private Spinner sortButton;
     private EditText searchEditText;
     private Toolbar mToolBar, mToolBar2;
@@ -178,7 +178,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
-    protected void loadUserProfileInfo(final Bundle savedInstanceState){
+    protected void loadUserProfileInfo(final Bundle savedInstanceState) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final String UID = user.getUid();
@@ -187,15 +187,15 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         ref = ref.child("users").child("admin");
         Query query = ref;
 
-        Log.e("lecturer: " ,UID);
+        Log.e("lecturer: ", UID);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     //Log.e("lecturer: " ,"hahawa");
-                    Log.e("Admin: ",(postSnapshot.getValue(Admin.class).getAdminName()));
+                    Log.e("Admin: ", (postSnapshot.getValue(Admin.class).getAdminName()));
                     if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                         mAdmin = postSnapshot.getValue(Admin.class);
 
@@ -203,14 +203,16 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         onCreateToolbar(savedInstanceState);
 
                         //No drawer if execute retrieve mode
-                        if(!schoolRetrieval) {
+                        if (!schoolRetrieval) {
                             onCreateDrawer();
                         }
-                    }}
+                    }
+                }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
     }
@@ -218,7 +220,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     protected void onCreateToolbar(Bundle savedInstanceState) {
         //get context
         mContext = this;
-        mActivity = (Activity)mContext;
+        mActivity = (Activity) mContext;
 
         //fix status bar
         Window window = mActivity.getWindow();
@@ -229,7 +231,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // finally change the color
             window.setStatusBarColor(mActivity.getResources().getColor(R.color.dark_kdu_blue));
         }
@@ -260,28 +262,19 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         setSupportActionBar(mToolBar2);
 
         optionButton = (ImageButton) findViewById(R.id.menu_item_option);
+        if (schoolRetrieval || lecturerRetrieval || programmeRetrieval || subjectRetrieval || studentRetrieval) {
+            optionButton.setVisibility(GONE);
+        } else {
+            optionButton.setVisibility(View.VISIBLE);
+        }
         optionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!schoolRetrieval){
                 adminDrawer.openDrawer();
-            }
-            else{
-                    final Toast toast = Toast.makeText(mContext, "Please select data from the list", Toast.LENGTH_SHORT);
-                    toast.show();
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            toast.cancel();
-                        }
-                    }, 1000);
-                }
             }
         });
 
-        backButton = (ImageButton)findViewById(R.id.menu_item_back);
+        backButton = (ImageButton) findViewById(R.id.menu_item_back);
         searchEditText = (EditText) findViewById(R.id.search_edit_text);
         searchEditText.addTextChangedListener(new TextWatcher() {
 
@@ -291,22 +284,25 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 String text = searchEditText.getText().toString().toLowerCase(Locale.getDefault());
                 switch (tabIdentifier) {
                     case 2:
-                    RecyclerLecturerTabAdapter.filter(text);
+                        RecyclerLecturerTabAdapter.filter(text);
                         break;
                     case 3:
-                    RecyclerStudentTabAdapter.filter(text);
+                        RecyclerStudentTabAdapter.filter(text);
                         break;
                     case 4:
-                    RecyclerSubjectTabAdapter.filter(text);
+                        RecyclerSubjectTabAdapter.filter(text);
                         break;
                     case 5:
-                    RecyclerSchoolTabAdapter.filter(text);
+                        RecyclerSchoolTabAdapter.filter(text);
                         break;
                     case 6:
                         RecyclerProgrammeTabAdapter.filter(text);
                         break;
                     case 7:
                         RecyclerSurveyTabAdapter.filter(text);
+                        break;
+                    case 11:
+                        RecyclerStudentPickListAdapter.filter(text);
                     default:
                         break;
                 }
@@ -324,6 +320,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
+
         searchButton = (ImageButton) findViewById(R.id.menu_item_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,6 +329,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 mToolBar2.setVisibility(View.VISIBLE);
             }
         });
+        if (tabIdentifier == 1) {
+            searchButton.setVisibility(GONE);
+        }
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -346,7 +347,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                if(selectedItemView != null) {
+                if (selectedItemView != null) {
                     ((TextView) selectedItemView).setVisibility(GONE);
                 }
 
@@ -354,36 +355,36 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 if (sortType.equals("A-Z")) {
                     sortoption = 1;
-                }
-                else if(sortType.equals("Z-A")) {
+                } else if (sortType.equals("Z-A")) {
                     sortoption = 2;
-                }
-                else if(sortType.equals("Latest")) {
+                } else if (sortType.equals("Latest")) {
                     sortoption = 3;
-                }
-                else if(sortType.equals("Earliest")) {
+                } else if (sortType.equals("Earliest")) {
                     sortoption = 4;
                 }
-                switch (tabIdentifier){
-                        case 2:
-                            RecyclerLecturerTabAdapter.sortingData(sortoption);
-                            break;
-                        case 3:
-                            RecyclerStudentTabAdapter.sortingData(sortoption);
-                            break;
-                        case 4:
-                            RecyclerSubjectTabAdapter.sortingData(sortoption);
-                            break;
-                        case 5:
-                            RecyclerSchoolTabAdapter.sortingData(sortoption);
-                            break;
-                        case 6:
-                            RecyclerProgrammeTabAdapter.sortingData(sortoption);
-                            break;
+                switch (tabIdentifier) {
+                    case 2:
+                        RecyclerLecturerTabAdapter.sortingData(sortoption);
+                        break;
+                    case 3:
+                        RecyclerStudentTabAdapter.sortingData(sortoption);
+                        break;
+                    case 4:
+                        RecyclerSubjectTabAdapter.sortingData(sortoption);
+                        break;
+                    case 5:
+                        RecyclerSchoolTabAdapter.sortingData(sortoption);
+                        break;
+                    case 6:
+                        RecyclerProgrammeTabAdapter.sortingData(sortoption);
+                        break;
                     case 7:
                         RecyclerSurveyTabAdapter.sortingData(sortoption);
                         break;
-                    }
+                    case 11:
+                        RecyclerStudentPickListAdapter.sortingData(sortoption);
+                        break;
+                }
             }
 
             @Override
@@ -392,23 +393,63 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             }
 
         });
+        if (tabIdentifier == 1) {
+            sortButton.setVisibility(GONE);
+        }
 
         addButton = (ImageButton) findViewById(R.id.menu_item_add);
+        if (lecturerRetrieval || programmeRetrieval || schoolRetrieval || subjectRetrieval || studentRetrieval || tabIdentifier == 1) {
+            addButton.setVisibility(GONE);
+        } else {
+            addButton.setVisibility(View.VISIBLE);
+        }
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(!lecturerRetrieval && !programmeRetrieval && !schoolRetrieval && !subjectRetrieval){
-
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-
                     dataCreation(tabIdentifier);
                 } else {
                     Toast.makeText(AdminToolbarDrawer.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                 }
-                }
+            }
+        });
+
+        forwardButton = (ImageButton) findViewById(R.id.menu_item_forward);
+        if (studentRetrieval) {
+            forwardButton.setVisibility(View.VISIBLE);
+        } else {
+            forwardButton.setVisibility(GONE);
+        }
+        forwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Context context = forwardButton.getContext();
+
+                final android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+
+                alertDialogBuilder.setMessage("Confirm to add the selected students?");
+
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                Toast.makeText(context, "Student added", Toast.LENGTH_SHORT).show();
+                                forwardButton.setVisibility(GONE);
+
+                                RecyclerStudentPickListAdapter.forwardPickedSurveyStudent();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 
@@ -428,9 +469,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
             schoolName = savedInstanceState.getString(INPUT_SCHOOL_NAME);
             schoolNameShort = savedInstanceState.getString(INPUT_SCHOOL_NAME_SHORT);
             programmeName = savedInstanceState.getString(INPUT_PROGRAMME_NAME);
-
         }
-
     }
 
     protected void onCreateDrawer() {
@@ -484,9 +523,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                        int drawerIdentifier = (int)drawerItem.getIdentifier();
+                        int drawerIdentifier = (int) drawerItem.getIdentifier();
 
-                        switch (drawerIdentifier){
+                        switch (drawerIdentifier) {
+                            case 1:
+                                Intent intentHome = new Intent(AdminToolbarDrawer.this, AdminHome.class);
+                                startActivity(intentHome);
+                                finish();
+                                break;
                             case 2:
                                 Intent intentLecturer = new Intent(AdminToolbarDrawer.this, RecyclerViewLecturer.class);
                                 startActivity(intentLecturer);
@@ -529,7 +573,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 finish();
                                 break;
                             default:
-                                Intent intent = new Intent(AdminToolbarDrawer.this, RecyclerViewLecturer.class);
+                                Intent intent = new Intent(AdminToolbarDrawer.this, AdminHome.class);
                                 startActivity(intent);
                                 finish();
                                 break;
@@ -540,15 +584,11 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 .build();
     }
 
-    public void dataCreation(final int tabIdentifier){
+    public void dataCreation(final int tabIdentifier) {
 
         LayoutInflater li = LayoutInflater.from(AdminToolbarDrawer.this);
 
-        //final int CAT1_ID = 101; //first radio button id
-        //final int CAT2_ID = 102; //second radio button id
-        //final int CAT3_ID = 103; //third radio button id
-
-        switch(tabIdentifier){
+        switch (tabIdentifier) {
             case 2:
                 View lecturerPromptsView = li.inflate(R.layout.lecturer_creation_dialog, null);
 
@@ -571,7 +611,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 showpass.setOnTouchListener(new View.OnTouchListener() {
                     public boolean onTouch(View v, MotionEvent event) {
 
-                        switch ( event.getAction() ) {
+                        switch (event.getAction()) {
                             case MotionEvent.ACTION_DOWN:
                                 password.setInputType(InputType.TYPE_CLASS_TEXT);
                                 break;
@@ -587,7 +627,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         inputLecturerEmail = email.getText().toString();
                                         inputLecturerEmailFormatted = inputLecturerEmail + "@kdu.edu.my";
                                         inputLecturerPassword = password.getText().toString();
@@ -621,7 +661,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
@@ -658,7 +698,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 showpassStudent.setOnTouchListener(new View.OnTouchListener() {
                     public boolean onTouch(View v, MotionEvent event) {
 
-                        switch ( event.getAction() ) {
+                        switch (event.getAction()) {
                             case MotionEvent.ACTION_DOWN:
                                 studentPassword.setInputType(InputType.TYPE_CLASS_TEXT);
                                 break;
@@ -674,7 +714,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         inputStudentName = studentName.getText().toString();
                                         final int inputCategorySelection = studentCategory.getCheckedRadioButtonId();
                                         inputStudentID = studentID.getText().toString();
@@ -754,7 +794,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
@@ -793,7 +833,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         inputSubjectName = subjectName.getText().toString();
                                         final int inputCategorySelection = subjectCategory.getCheckedRadioButtonId();
                                         inputSubjectCode = subjectCode.getText().toString();
@@ -851,7 +891,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
@@ -875,10 +915,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         final String inputSchoolName = schoolName.getText().toString();
 
-                                        if (!(inputSchoolName.contains("school")) && !(inputSchoolName.contains("School")) && !(inputSchoolName.contains("SCHOOL")) && !(inputSchoolName.contains("of")) && !(inputSchoolName.contains("OF")) && !(inputSchoolName.contains("Of"))){
+                                        if (!(inputSchoolName.contains("school")) && !(inputSchoolName.contains("School")) && !(inputSchoolName.contains("SCHOOL")) && !(inputSchoolName.contains("of")) && !(inputSchoolName.contains("OF")) && !(inputSchoolName.contains("Of"))) {
                                             Toast.makeText(getApplicationContext(), "Enter a proper format of school name!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
@@ -897,7 +937,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
@@ -929,7 +969,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         inputProgrammeName = programmeName.getText().toString();
                                         final int inputCategorySelection = programmeCategory.getCheckedRadioButtonId();
 
@@ -963,7 +1003,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
@@ -1005,7 +1045,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                 String myValue;
 
-                switch (month){
+                switch (month) {
                     case 1:
                     case 2:
                     case 3:
@@ -1033,19 +1073,19 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 spinnerYear.setSelection(getIndex(spinnerYear, String.valueOf(year)));
 
                 spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                    yearSelected = String.valueOf(spinnerYear.getSelectedItem());
+                        yearSelected = String.valueOf(spinnerYear.getSelectedItem());
 
-                }
+                    }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parentView) {
-                    // your code here
-                }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+                        // your code here
+                    }
 
-            });
+                });
 
                 spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -1066,9 +1106,10 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
 
-                                        inputSurveyCreationDate = String.valueOf(monthSelected + " " + yearSelected);;
+                                        inputSurveyCreationDate = String.valueOf(monthSelected + " " + yearSelected);
+                                        ;
                                         tabIdentifierMutex = tabIdentifier;
                                         Toast.makeText(AdminToolbarDrawer.this, "Select a school to complete data creation", Toast.LENGTH_SHORT).show();
                                         Intent intent = RecyclerSchoolTabAdapter.newIntent(mContext);
@@ -1077,7 +1118,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                                 })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
@@ -1090,7 +1131,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         }
     }
 
-    public void lecturerDataCreation(){
+    public void lecturerDataCreation() {
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -1104,7 +1145,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                         String uid = user.getUid();
 
                         Lecturer lecturer = new Lecturer();
-                        lecturer.createLecturer(inputLecturerEmailFormatted,inputLecturerPassword,inputLecturerFullName,inputLecturerUsername, uid, schoolName, schoolNameShort);
+                        lecturer.createLecturer(inputLecturerEmailFormatted, inputLecturerPassword, inputLecturerFullName, inputLecturerUsername, uid, schoolName, schoolNameShort);
 
                         Toast.makeText(AdminToolbarDrawer.this, R.string.lecturer_data_creation_success, Toast.LENGTH_SHORT).show();
 
@@ -1123,7 +1164,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 });
     }
 
-    public void studentDataCreation(){
+    public void studentDataCreation() {
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -1140,7 +1181,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
 
                         Student student = new Student();
                         student.createStudent(inputStudentName, inputStudentID, inputStudentPassword, inputStudentCategory, schoolName,
-                        schoolNameShort, UID, programmeName);
+                                schoolNameShort, UID, programmeName);
 
                         Toast.makeText(AdminToolbarDrawer.this, R.string.student_data_creation_success, Toast.LENGTH_SHORT).show();
 
@@ -1160,7 +1201,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                 });
     }
 
-    public void subjectDataCreation(){
+    public void subjectDataCreation() {
         Subject subject = new Subject();
         //subject.createSubject(inputName, inputCategory, inputDepartment, inputSchool);
         subject.createSubject(inputSubjectName, inputSubjectCategory, schoolName, schoolNameShort, inputSubjectCode);
@@ -1173,7 +1214,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         schoolName = null;
     }
 
-    public void programmeDataCreation(){
+    public void programmeDataCreation() {
         Programme programme = new Programme();
         programme.createProgramme(inputProgrammeName, inputProgrammeCategory, schoolName, schoolNameShort);
         Toast.makeText(AdminToolbarDrawer.this, R.string.programme_data_creation_success, Toast.LENGTH_SHORT).show();
@@ -1184,7 +1225,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         schoolName = null;
     }
 
-    public void surveyDataCreation(){
+    public void surveyDataCreation() {
         Survey survey = new Survey();
 
         survey.createSurvey(subjectName, subjectCode, subjectCategory, lecturerName, lecturerID, schoolName, schoolNameShort, inputSurveyCreationDate);
@@ -1201,7 +1242,7 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
+    public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putString(INPUT_LECTURER_EMAIL, inputLecturerEmail);
@@ -1227,12 +1268,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
@@ -1242,23 +1283,23 @@ public class AdminToolbarDrawer extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if (resultCode != Activity.RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if (requestCode == REQUEST_SCHOOL_RETRIEVE){
-            if (data == null){
+        if (requestCode == REQUEST_SCHOOL_RETRIEVE) {
+            if (data == null) {
                 return;
             }
             schoolName = RecyclerSchoolTabAdapter.schoolNameRetrieval(data);
             schoolNameShort = RecyclerSchoolTabAdapter.schoolNameShortRetrieval(data);
-            switch (tabIdentifier){
+            switch (tabIdentifier) {
                 case 2:
                     lecturerDataCreation();
                     break;
@@ -1280,12 +1321,12 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     break;
             }
         }
-        if (requestCode == REQUEST_PROGRAMME_RETRIEVE){
-            if (data == null){
+        if (requestCode == REQUEST_PROGRAMME_RETRIEVE) {
+            if (data == null) {
                 return;
             }
             programmeName = programmeRetrieval(data);
-            switch (tabIdentifier){
+            switch (tabIdentifier) {
                 case 2:
                     break;
                 case 3:
@@ -1303,14 +1344,14 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     break;
             }
         }
-        if (requestCode == REQUEST_SUBJECT_RETRIEVE){
-            if (data == null){
+        if (requestCode == REQUEST_SUBJECT_RETRIEVE) {
+            if (data == null) {
                 return;
             }
             subjectName = subjectRetrieval(data);
             subjectCode = RecyclerSubjectTabAdapter.subjectCodeRetrieval(data);
             subjectCategory = RecyclerSubjectTabAdapter.subjectCategoryRetrieval(data);
-            switch (tabIdentifier){
+            switch (tabIdentifier) {
                 case 2:
                     break;
                 case 3:
@@ -1328,13 +1369,13 @@ public class AdminToolbarDrawer extends AppCompatActivity {
                     break;
             }
         }
-        if (requestCode == REQUEST_LECTURER_RETRIEVE){
-            if (data == null){
+        if (requestCode == REQUEST_LECTURER_RETRIEVE) {
+            if (data == null) {
                 return;
             }
             lecturerName = RecyclerLecturerTabAdapter.lecturerNameRetrieval(data);
             lecturerID = RecyclerLecturerTabAdapter.lecturerIDRetrieval(data);
-            switch (tabIdentifier){
+            switch (tabIdentifier) {
                 case 2:
                     break;
                 case 3:
@@ -1354,37 +1395,65 @@ public class AdminToolbarDrawer extends AppCompatActivity {
         }
     }
 
-    public void retrieveProgrammeInfo(){
+    public void retrieveProgrammeInfo() {
         tabIdentifierMutex = tabIdentifier;
         Toast.makeText(AdminToolbarDrawer.this, "Select a programme to complete data creation", Toast.LENGTH_SHORT).show();
         Intent intent = RecyclerProgrammeTabAdapter.newIntent(mContext);
         startActivityForResult(intent, REQUEST_PROGRAMME_RETRIEVE);
     }
-    public void retrieveSubjectInfo(){
+
+    public void retrieveSubjectInfo() {
         tabIdentifierMutex = tabIdentifier;
         Toast.makeText(AdminToolbarDrawer.this, "Select a subject to complete data creation", Toast.LENGTH_SHORT).show();
         Intent intent = RecyclerSubjectTabAdapter.newIntent(mContext);
         startActivityForResult(intent, REQUEST_SUBJECT_RETRIEVE);
     }
-    public void retrieveLecturerInfo(){
+
+    public void retrieveLecturerInfo() {
         tabIdentifierMutex = tabIdentifier;
         Toast.makeText(AdminToolbarDrawer.this, "Select a lecturer to complete data creation", Toast.LENGTH_SHORT).show();
         Intent intent = RecyclerLecturerTabAdapter.newIntent(mContext);
         startActivityForResult(intent, REQUEST_LECTURER_RETRIEVE);
     }
 
-    //private method of your class
-    private int getIndex(Spinner spinner, String myString)
-    {
+    //to set the spinner position
+    private int getIndex(Spinner spinner, String myString) {
         int index = 0;
 
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
                 index = i;
                 break;
             }
         }
         return index;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (lecturerRetrieval || programmeRetrieval || schoolRetrieval || studentRetrieval || subjectRetrieval) {
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("")
+                    .setMessage("Are you sure you want to cancel this?\n(The creation progress will not be saved)")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            schoolRetrieval = false;
+                            lecturerRetrieval = false;
+                            programmeRetrieval = false;
+                            studentRetrieval = false;
+                            subjectRetrieval = false;
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        }
+        else {
+            Intent intentHome = new Intent(AdminToolbarDrawer.this, AdminHome.class);
+            startActivity(intentHome);
+            finish();
+        }
     }
 
 }

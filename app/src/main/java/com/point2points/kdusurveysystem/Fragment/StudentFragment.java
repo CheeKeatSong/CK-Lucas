@@ -37,9 +37,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerSchoolTabAdapter;
-import com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter;
-import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerSchoolTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerStudentTabAdapter;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Student;
 
@@ -49,7 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.point2points.kdusurveysystem.adapter.RecyclerStudentTabAdapter.StudentDataset;
+import static com.point2points.kdusurveysystem.adapter.admin.RecyclerStudentTabAdapter.StudentDataset;
 
 public class StudentFragment extends Fragment{
 

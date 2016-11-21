@@ -1,4 +1,4 @@
-package com.point2points.kdusurveysystem.adapter;
+package com.point2points.kdusurveysystem.adapter.admin;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,59 +27,65 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.point2points.kdusurveysystem.Fragment.ProgrammeFragmentPagerActivity;
+import com.point2points.kdusurveysystem.Fragment.SchoolFragmentPagerActivity;
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewProgramme;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSchool;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
-import com.point2points.kdusurveysystem.datamodel.Programme;
+import com.point2points.kdusurveysystem.datamodel.School;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerProgrammeTabAdapter.SimpleViewHolder> {
+public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoolTabAdapter.SimpleViewHolder> {
 
-    private static final String EXTRA_PROGRAMME = "com.point2points.kdusurveysystem.programme";
+    private static final String EXTRA_SCHOOL_NAME = "com.point2points.kdusurveysystem.school_name";
+    private static final String EXTRA_SCHOOL_NAME_SHORT = "com.point2points.kdusurveysystem.school_name_short";
 
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
     private static Context mContext;
+    private static ArrayList<School> schools = new ArrayList<>();
+    public static ArrayList<School> SchoolDataset = new ArrayList<>();
+
     private static Activity mActivity;
 
-    private static ArrayList<Programme> programmes = new ArrayList<>();
-    public static ArrayList<Programme> ProgrammeDataset = new ArrayList<>();
+    //private int selectedPos;
 
-    public static boolean programmeRetrieval = false;
+    public static boolean schoolRetrieval = false;
 
     public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, RecyclerViewProgramme.class);
-        programmeRetrieval = true;
+        Intent intent = new Intent(packageContext, RecyclerViewSchool.class);
+        schoolRetrieval = true;
         return intent;
     }
 
-    public static String programmeRetrieval(Intent result){
-        return result.getStringExtra(EXTRA_PROGRAMME);
+    public static String schoolNameRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_SCHOOL_NAME);
     }
 
-    private void setProgramme(String programme){
+    public static String schoolNameShortRetrieval(Intent result){
+        return result.getStringExtra(EXTRA_SCHOOL_NAME_SHORT);
+    }
+
+    private void setSchoolNameAndShort(String schoolName, String schoolNameShort){
         AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
-        data.putExtra(EXTRA_PROGRAMME, programme);
+        data.putExtra(EXTRA_SCHOOL_NAME, schoolName);
+        data.putExtra(EXTRA_SCHOOL_NAME_SHORT, schoolNameShort);
         mActivity.setResult(Activity.RESULT_OK, data);
         mActivity.finish();
-        Log.e("set " ,"programme");
+        Log.e("set " ,"school name");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
-        TextView textViewProgrammeName;
-        TextView textViewProgrammeCategory;
-        TextView textViewProgrammeSchool;
-        TextView textViewProgrammeUid;
+        TextView textViewSchoolName;
+        TextView textViewSchoolNameShort;
+        TextView textViewSchoolUid;
         ImageButton buttonDelete;
         ImageButton  buttonEdit;
         ImageView letterimage;
@@ -87,11 +93,9 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         public SimpleViewHolder(final View itemView) {
             super(itemView);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
-            textViewProgrammeName = (TextView) itemView.findViewById(R.id.programme_name_text_view);
-            textViewProgrammeCategory = (TextView) itemView.findViewById(R.id.programme_category_text_view);
-            //textViewProgrammeDepartment = (TextView) itemView.findViewById(R.id.programme_department_text_view);
-            textViewProgrammeSchool = (TextView) itemView.findViewById(R.id.programme_school_text_view);
-            textViewProgrammeUid = (TextView) itemView.findViewById(R.id.programme_uid_text_view);
+            textViewSchoolName = (TextView) itemView.findViewById(R.id.school_name_text_view);
+            textViewSchoolNameShort = (TextView) itemView.findViewById(R.id.school_name_short_text_view);
+            textViewSchoolUid = (TextView) itemView.findViewById(R.id.school_uid_text_view);
             buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
             buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
@@ -99,74 +103,74 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    programmeItemOnClickListener(view);
+                   schoolItemOnClickListener(view);
                 }
             });
         }
     }
 
     //protected SwipeItemRecyclerMangerImpl mItemManger = new SwipeItemRecyclerMangerImpl(this);
-    public RecyclerProgrammeTabAdapter(Context context) {
+    public RecyclerSchoolTabAdapter(Context context) {
         this.mContext = context;
         mActivity = (Activity) mContext;
-        FirebaseProgrammeDataRetrieval();
+        FirebaseSchoolDataRetrieval();
     }
 
     public static void sortingData(int sortoption){
 
-        FirebaseProgrammeDataRetrieval();
+        FirebaseSchoolDataRetrieval();
 
         switch (sortoption) {
             case 1:
-                Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
+                Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
-                        return (programme1.getProgrammeName().substring(0, 1).toUpperCase() + programme1.getProgrammeName().substring(1)).compareTo(programme2.getProgrammeName().substring(0, 1).toUpperCase() + programme2.getProgrammeName().substring(1));
+                    public int compare(School school1, School school2){
+                        return (school1.getSchoolName().substring(0, 1).toUpperCase() + school1.getSchoolName().substring(1)).compareTo(school2.getSchoolName().substring(0, 1).toUpperCase() + school2.getSchoolName().substring(1));
                     }
                 });
 
                 break;
             case 2:
-                Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
+                Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
-                        return (programme1.getProgrammeName().substring(0, 1).toUpperCase() + programme1.getProgrammeName().substring(1)).compareTo(programme2.getProgrammeName().substring(0, 1).toUpperCase() + programme2.getProgrammeName().substring(1));
+                    public int compare(School school1, School school2){
+                        return (school1.getSchoolName().substring(0, 1).toUpperCase() + school1.getSchoolName().substring(1)).compareTo(school2.getSchoolName().substring(0, 1).toUpperCase() + school2.getSchoolName().substring(1));
                     }
                 });
-                Collections.reverse(ProgrammeDataset);
+                Collections.reverse(SchoolDataset);
                 break;
 
             case 3:
-                Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
+                Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
-                        return programme1.getDate().compareTo(programme2.getDate());
+                    public int compare(School school1, School school2){
+                        return school1.getDate().compareTo(school2.getDate());
                     }
                 });
-                Collections.reverse(ProgrammeDataset);
+                Collections.reverse(SchoolDataset);
                 break;
             case 4:
-                Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
+                Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
-                        return programme1.getDate().compareTo(programme2.getDate());
+                    public int compare(School school1, School school2){
+                        return school1.getDate().compareTo(school2.getDate());
                     }
                 });
                 break;
             default:
                 break;
         }
-        RecyclerViewProgramme.notifyDataChanges();
+        RecyclerViewSchool.notifyDataChanges();
     }
 
-    public static void ProgrammeArrayListUpdate(ArrayList updatedProgrammes) {
-        programmes = updatedProgrammes;
-        RecyclerViewProgramme.notifyDataChanges();
+    public static void SchoolArrayListUpdate(ArrayList updatedSchools) {
+        schools = updatedSchools;
+        RecyclerViewSchool.notifyDataChanges();
     }
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.programme_recycler_view_items, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.school_recycler_view_items, parent, false);
         return new SimpleViewHolder(view);
     }
 
@@ -174,13 +178,10 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
         //viewHolder.itemView.setSelected(selectedPos == position);
-
-        final Programme item = ProgrammeDataset.get(position);
-        final String programmeName = (item.programmeName).substring(0, 1).toUpperCase() + (item.programmeName).substring(1);
-        String programmeCategory = item.programmeCategory;
-        //String programmeDepartment = item.programmeDepartment;
-        String programmeSchool = item.programmeSchool;
-        String programmeUid = item.programmeUid;
+        final School item = SchoolDataset.get(position);
+        final String schoolName = (item.schoolName).substring(0, 1).toUpperCase() + (item.schoolName).substring(1);
+        String schoolNameShort = item.schoolNameShort;
+        String schoolUid = item.schoolUid;
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -193,13 +194,14 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                if(!programmeRetrieval) {
-                    Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewProgrammeName.getText().toString());
-                    Intent intent = ProgrammeFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewProgrammeUid.getText().toString());
+                if(!schoolRetrieval) {
+                    Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSchoolName.getText().toString());
+                    Intent intent = SchoolFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSchoolUid.getText().toString());
                     viewHolder.swipeLayout.getContext().startActivity(intent);
                 }
-                else if(programmeRetrieval) {
-                    final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewProgrammeName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
+                else if(schoolRetrieval) {
+
+                    final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewSchoolName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
                     toastOnDoubleClick.show();
 
                     Handler handler = new Handler();
@@ -208,11 +210,12 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                         public void run() {
                             toastOnDoubleClick.cancel();
                         }
-                    }, 1500);
+                    }, 1000);
 
-                    String programme = viewHolder.textViewProgrammeName.getText().toString();
-                    programmeRetrieval = false;
-                    setProgramme(programme);
+                    String schoolName = viewHolder.textViewSchoolName.getText().toString();
+                    String schoolNameShort = viewHolder.textViewSchoolNameShort.getText().toString();
+                    schoolRetrieval = false;
+                    setSchoolNameAndShort(schoolName, schoolNameShort);
                 }
             }
         });
@@ -224,7 +227,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-                alertDialogBuilder.setMessage("Confirm deleting " + item.getProgrammeName() + "?");
+                alertDialogBuilder.setMessage("Confirm deleting " + item.getSchoolName() + "?");
 
                 alertDialogBuilder
                         .setCancelable(false)
@@ -232,15 +235,15 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                             public void onClick(DialogInterface dialog,int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
-                                ref.child(viewHolder.textViewProgrammeUid.getText().toString()).removeValue();
+                                ref.child(viewHolder.textViewSchoolUid.getText().toString()).removeValue();
                                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                                programmes.remove(position);
+                                schools.remove(position);
                                 notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, ProgrammeDataset.size());
+                                notifyItemRangeChanged(position, SchoolDataset.size());
                                 mItemManger.closeAllItems();
-                                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewProgrammeName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(view.getContext(), "Deleted " + viewHolder.textViewSchoolName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
 
-                                ProgrammeDataset = programmes;
+                                SchoolDataset = schools;
                             }
                         })
 
@@ -258,32 +261,24 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = ProgrammeFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewProgrammeUid.getText().toString());
+                Intent intent = SchoolFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSchoolUid.getText().toString());
                 viewHolder.swipeLayout.getContext().startActivity(intent);
             }
         });
 
-        String programmeNameReformatted = "";
-        if(programmeName.contains("of")){
-        programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") -1);
-        }
-        else if (programmeName.contains("in")){
-            programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("in") +3);
-        }
-        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(programmeNameReformatted);    // Fix this
+        String schoolNameReformatted = schoolName.substring(schoolName.lastIndexOf("of") +3);
+        TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(schoolNameReformatted, 64);
 
         viewHolder.letterimage.setImageDrawable(drawable);
-        viewHolder.textViewProgrammeName.setText(programmeName);
-        viewHolder.textViewProgrammeCategory.setText(programmeCategory);
-        //viewHolder.textViewProgrammeDepartment.setText(programmeDepartment);
-        viewHolder.textViewProgrammeSchool.setText(programmeSchool);
-        viewHolder.textViewProgrammeUid.setText(programmeUid);
+        viewHolder.textViewSchoolName.setText(schoolName);
+        viewHolder.textViewSchoolNameShort.setText(schoolNameShort);
+        viewHolder.textViewSchoolUid.setText(schoolUid);
         mItemManger.bindView(viewHolder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return ProgrammeDataset.size();
+        return SchoolDataset.size();
     }
 
     @Override
@@ -294,31 +289,30 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
     public static void filter(String charText) {
 
         charText = charText.toLowerCase(Locale.getDefault());
-        ProgrammeDataset = new ArrayList<Programme>();
+        SchoolDataset = new ArrayList<School>();
 
         if (charText.length() == 0) {
-            ProgrammeDataset = programmes;
+            SchoolDataset = schools;
         }
         else
         {
-            for (Programme programme : programmes)
+            for (School school : schools)
             {
-                if (programme.getProgrammeName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || programme.getProgrammeSchoolShort().toLowerCase(Locale.getDefault()).contains(charText)
-                        || programme.getProgrammeCategory().toLowerCase(Locale.getDefault()).contains(charText)
-                        || programme.getProgrammeSchool().toLowerCase(Locale.getDefault()).contains(charText))
+                if (school.getSchoolName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || school.getSchoolName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || school.getSchoolNameShort().toLowerCase(Locale.getDefault()).contains(charText))
                 {
-                    ProgrammeDataset.add(programme);
+                    SchoolDataset.add(school);
                 }
             }
         }
-        RecyclerViewProgramme.notifyDataChanges();
+        RecyclerViewSchool.notifyDataChanges();
     }
 
-    public static void FirebaseProgrammeDataRetrieval(){
+    public static void FirebaseSchoolDataRetrieval(){
         //String key = ref.push().getKey();
         ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child("programme");
+        ref = ref.child("school");
         query = ref;
 
         query.addValueEventListener(new ValueEventListener() {
@@ -327,18 +321,18 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     boolean found = false;
-                    for (Programme programme : programmes) {
-                        if (programme.getProgrammeUid() == postSnapshot.getValue(Programme.class).getProgrammeUid()) {
+                    for (School school : schools) {
+                        if (school.getSchoolUid() == postSnapshot.getValue(School.class).getSchoolUid()) {
                             found = true;
                         }
                     }
                     if (!found){
-                        programmes.add(postSnapshot.getValue(Programme.class));
-                        Log.e("Get Data", (postSnapshot.getValue(Programme.class).getProgrammeName()));
+                        schools.add(postSnapshot.getValue(School.class));
+                        Log.e("Get Data", (postSnapshot.getValue(School.class).getSchoolName()));
                     }}
-                if (programmes.size() == snapshot.getChildrenCount()){
-                    RecyclerViewProgramme.offProgressBar();
-                    RecyclerViewProgramme.notifyDataChanges();
+                if (schools.size() == snapshot.getChildrenCount()){
+                    RecyclerViewSchool.offProgressBar();
+                    RecyclerViewSchool.notifyDataChanges();
                 }
             }
             @Override
@@ -346,21 +340,22 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                 Log.e("The read failed: " ,firebaseError.getMessage());
             }
         });
-        ProgrammeDataset = programmes;
-        Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
+        SchoolDataset = schools;
+
+        Collections.sort(SchoolDataset, new Comparator<School>() {
             @Override
-            public int compare(Programme programme1, Programme programme2){
-                return programme1.getDate().compareTo(programme2.getDate());
+            public int compare(School school1, School school2){
+                return school1.getDate().compareTo(school2.getDate());
             }
         });
-        Collections.reverse(ProgrammeDataset);
+        Collections.reverse(SchoolDataset);
     }
 
-    public void programmeItemOnClickListener(View view){
+    public void schoolItemOnClickListener(View view){
 
         final Toast toastItemOnClick;
 
-        if (!programmeRetrieval) {
+        if (!schoolRetrieval) {
             toastItemOnClick = Toast.makeText(mContext, "Double Tap to Edit the data", Toast.LENGTH_SHORT);
             toastItemOnClick.show();
 
@@ -372,7 +367,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                 }
             }, 500);
         }
-        else if (programmeRetrieval){
+        else if (schoolRetrieval){
             toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
             toastItemOnClick.show();
 
@@ -385,5 +380,6 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             }, 500);
         }
     }
+
 }
 

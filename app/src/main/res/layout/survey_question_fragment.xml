@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:background="@color/kdu_blue"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/fragment_survey_question_abort_layout"
+                android:layout_width="110sp"
+                android:layout_height="48sp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2sp"
+                android:background="@drawable/border_rounded_transparent_white"
+                android:clickable="true"
+                android:visibility="gone">
+
+                <Button
+                    android:layout_width="50sp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_previous_icon"
+                    android:clickable="false"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50sp"
+                    android:gravity="center"
+                    android:text="Abort"
+                    android:textColor="@color/transparent_white"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:id="@+id/fragment_survey_question_back_layout"
+                android:layout_width="110sp"
+                android:layout_height="48sp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2sp"
+                android:background="@drawable/border_rounded_transparent_white"
+                android:clickable="true">
+
+                <Button
+                    android:layout_width="50sp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_previous_icon"
+                    android:clickable="false"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50sp"
+                    android:gravity="center"
+                    android:text="Back"
+                    android:textColor="@color/transparent_white"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/fragment_survey_question_next_layout"
+                android:layout_width="110sp"
+                android:layout_height="48sp"
+                android:layout_gravity="center"
+                android:layout_marginRight="2sp"
+                android:background="@drawable/border_rounded_transparent_white"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50sp"
+                    android:layout_marginLeft="20sp"
+                    android:gravity="center"
+                    android:text="Next"
+                    android:textColor="@color/transparent_white"
+                    android:textSize="20sp"/>
+
+                <Button
+                    android:layout_width="50sp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/action_next"
+                    android:clickable="false"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_survey_question_submit_layout"
+                android:layout_width="110sp"
+                android:layout_height="48sp"
+                android:layout_gravity="center"
+                android:layout_marginRight="2sp"
+                android:background="@drawable/border_rounded_transparent_white"
+                android:clickable="true"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50sp"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginRight="-10sp"
+                    android:gravity="center"
+                    android:text="Submit"
+                    android:textColor="@color/transparent_white"
+                    android:textSize="20sp"/>
+
+                <Button
+                    android:layout_width="50sp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/action_next"
+                    android:clickable="false"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginLeft="20sp"
+                android:layout_marginRight="20sp"
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_numbering_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:layout_marginLeft="40sp"
+            android:layout_marginRight="40sp"
+            android:layout_gravity="center"
+            android:id="@+id/fragment_survey_question_rating_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15sp"
+            android:layout_marginTop="15sp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_rating_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_rating_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_rating_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_rating_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:textColor="@color/dark_kdu_blue"
+                android:id="@+id/fragment_survey_question_rating_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:textSize="20sp"/>
+
+        </RadioGroup>
+        
+        <EditText
+            android:textColor="@color/kdu_blue"
+            android:layout_marginRight="20sp"
+            android:layout_marginLeft="20sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5sp"
+            android:id="@+id/fragment_survey_question_subjective_respond"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</ScrollView>

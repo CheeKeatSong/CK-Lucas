@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import com.daimajia.swipe.util.Attributes;
 
 import com.point2points.kdusurveysystem.R;
-import com.point2points.kdusurveysystem.adapter.RecyclerLecturerTabAdapter;
+import com.point2points.kdusurveysystem.adapter.admin.RecyclerLecturerTabAdapter;
 import com.point2points.kdusurveysystem.adapter.util.DividerItemDecoration;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
@@ -47,8 +47,6 @@ public class RecyclerViewLecturer extends AdminToolbarDrawer {
         super.loadUserProfileInfo(savedInstanceState);
 
         RecyclerViewLecturer.context = getApplicationContext();
-
-        
 
         recyclerView = (android.support.v7.widget.RecyclerView) findViewById(R.id.recycler_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
