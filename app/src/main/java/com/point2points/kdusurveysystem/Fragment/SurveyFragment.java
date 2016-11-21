@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
@@ -279,11 +281,25 @@ public class SurveyFragment extends Fragment {
                                         ref.child(surveyStudent1.getSurveyStudentUID()).setValue(surveyStudent1);
                                     }
 
+                                // Update total attendance count.
+                                DatabaseReference mDatabase;
+                                mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(mSurvey.getSurveyUID());
+
+                                Map<String, Object> updateSurvey = new HashMap<String, Object>();
+                                //Log.e("SIZE", String.valueOf(surveyStudentDataSet.size()));
+                                updateSurvey.put("surveyTotalAttendance", surveyStudentDataSet.size());
+
+                                mDatabase.updateChildren(updateSurvey);
+
+                                mSurvey.setSurveyTotalAttendance(surveyStudentDataSet.size());
+                                ////////////////////////////////
 
                                 Toast.makeText(context, "Changes applied to " + mSurvey.getSurveySubject(), Toast.LENGTH_SHORT).show();
                                 refreshAdapter(mSurvey);
                                 offProgressBar();
                                 getActivity().onBackPressed();
+
+
                             }
                         })
 
