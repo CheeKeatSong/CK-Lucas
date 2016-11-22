@@ -89,6 +89,8 @@ public class SurveyFragment extends Fragment {
     //The retrieved set from survey fragment list
     public static ArrayList<SurveyStudent> surveyStudentDataSetDelete = new ArrayList<>();
 
+    String uid;
+
     public static SurveyFragment newInstance(String uid) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_SURVEY_ID, uid);
@@ -110,7 +112,7 @@ public class SurveyFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.surveyData = SurveyDataset;
 
-        String uid = (String) getArguments().getSerializable(ARG_SURVEY_ID);
+        uid = (String) getArguments().getSerializable(ARG_SURVEY_ID);
 
         mSurvey = getSurvey(uid);
     }
@@ -274,6 +276,15 @@ public class SurveyFragment extends Fragment {
                                         }
                                     }
                                     if(!surveyStudentChecker){
+                                        if(surveyStudent1.isSurveyStudentStatus() == true){
+                                            DatabaseReference mDatabase;
+                                            mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
+                                            Map<String, Object> updateSurvey = new HashMap<String, Object>();
+
+                                            updateSurvey.put("surveyAttendance", mSurvey.getSurveyAttendance() - 1);
+
+                                            mDatabase.updateChildren(updateSurvey);
+                                        }
                                         ref.child(surveyStudent1.getSurveyStudentUID()).removeValue();
                                     }
                                 }

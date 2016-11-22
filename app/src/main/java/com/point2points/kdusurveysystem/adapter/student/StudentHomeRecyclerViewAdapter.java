@@ -30,6 +30,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.SurveyQuestionPagerActivity;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.datamodel.Survey;
 import com.point2points.kdusurveysystem.datamodel.SurveyStudent;
@@ -193,6 +194,7 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
 
     public static void FirebaseSurveyDataRetrieval() {
 
+        StudentHome.onProgressBar();
         retrieveCounter = 0;
 
         surveys = new ArrayList<>();
@@ -203,8 +205,48 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (final DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    retrieveCounter++;
+                    boolean found = false;
+                    for (Survey survey : surveys) {
+                        if (survey.getSurveyUID() == postSnapshot.getValue(Survey.class).getSurveyUID()) {
+                            found = true;
+                        }
+                    }
+                    if (!found) { query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.e("DO I RUN 2", "YES 2");
+
+
+                                //get the involved survey for the following student
+                                for (final DataSnapshot postSnapshot2 : dataSnapshot.getChildren()) {
+                                    if (UID.equals(postSnapshot2.getValue(SurveyStudent.class).getSurveyStudentUID())) {
+
+                                        surveys.add(postSnapshot.getValue(Survey.class));
+
+                                        if (postSnapshot.getChildrenCount() >= retrieveCounter || postSnapshot.getChildrenCount() == 0) {
+                                            StudentHome.offProgressBar();
+                                            StudentHome.notifyDataChanges();
+                                        }
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e("The read failed: ", databaseError.getMessage());
+                            }
+                        });
+                    }
+                }
+            }
+            /*
+            @Override
             public void onDataChange(final DataSnapshot snapshot) {
-                StudentHome.onProgressBar();
+
                 final long totalCount = snapshot.getChildrenCount();
 
                 for (final DataSnapshot postSnapshot : snapshot.getChildren()) {
@@ -263,21 +305,26 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                     Log.e("Get Data", (postSnapshot.getValue(Survey.class).getSurveySubject()));
                 }
             }
-
+ */
             @Override
             public void onCancelled(DatabaseError firebaseError) {
                 Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        SurveyDataSet = surveys;
-        Collections.sort(SurveyDataSet, new Comparator<Survey>() {
-            @Override
-            public int compare(Survey survey1, Survey survey2) {
+
+            SurveyDataSet=surveys;
+            Collections.sort(SurveyDataSet,new Comparator<Survey>()
+
+            {
+                @Override
+                public int compare (Survey survey1, Survey survey2){
                 return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
             }
-        });
-        Collections.reverse(SurveyDataSet);
-    }
+            }
+
+            );
+            Collections.reverse(SurveyDataSet);
+        }
 
     public static void sortingData(int sortoption) {
 
