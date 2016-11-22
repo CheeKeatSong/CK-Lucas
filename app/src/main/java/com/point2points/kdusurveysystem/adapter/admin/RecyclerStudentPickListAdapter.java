@@ -32,6 +32,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 public class RecyclerStudentPickListAdapter extends RecyclerView.Adapter<RecyclerStudentPickListAdapter.SimpleViewHolder> {
@@ -170,8 +172,10 @@ public class RecyclerStudentPickListAdapter extends RecyclerView.Adapter<Recycle
         //check the boolean status
         for (SurveyStudent surveyStudent : surveyStudentCheckList) {
             if (item.getStudentUid().equals(surveyStudent.getSurveyStudentUID())){
-                viewHolder.checkBoxSurvey.setChecked(true);
-                surveyStudentList.add(item);
+                //viewHolder.checkBoxSurvey.setChecked(true);
+                viewHolder.checkBoxSurvey.setEnabled(false);
+                //surveyStudentList.add(item);
+                    // Method 1: For students already in the survey, mark disabled.
             }
         }
 
@@ -272,6 +276,25 @@ public class RecyclerStudentPickListAdapter extends RecyclerView.Adapter<Recycle
     public static void forwardPickedSurveyStudent() {
         studentRetrieval = false;
         setSurveyStudentList(surveyStudentList);
+
+        // Method 2: Remove duplicates via hash set. Doesn't work, no duplicates at this point of the List.
+        //setSurveyStudentList(removeDuplicates(surveyStudentList));
     }
+
+    /*public static ArrayList removeDuplicates(ArrayList list) {
+        Log.e("SIZE 1: ", String.valueOf(list.size()));
+        HashSet<Student> hashSet = new HashSet<Student>();
+
+        hashSet.addAll(list);
+        list.clear();
+        list.addAll(hashSet);
+        Log.e("SIZE 2: ", String.valueOf(list.size()));
+        return list;
+    }*/
 }
+
+// Ideas to avoid duplicates:
+// 1: Don't allow selecting of exiting data. (Method 1)
+// 2: Remove duplicated data before returning list to be added. (Method 2)
+// 3: Clear/empty the data set in SurveyFragment before adding to it.
 

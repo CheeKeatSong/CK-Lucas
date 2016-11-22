@@ -274,7 +274,30 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
         query = ref;
 
         query.addValueEventListener(new ValueEventListener() {
+
+            // Don't need to get attendance count. Attendance count is recorded/updated in its appropriate node data value when changes occur.
             @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    boolean found = false;
+                    for (Survey survey : surveys) {
+                        if (survey.getSurveyUID() == postSnapshot.getValue(Survey.class).getSurveyUID()) {
+                            found = true;
+                        }
+                    }
+                    if (!found){
+                        surveys.add(postSnapshot.getValue(Survey.class));
+                        Log.e("Get Data", (postSnapshot.getValue(Survey.class).getSurveySubject()));
+                    }}
+                if (surveys.size() == snapshot.getChildrenCount()){
+                    RecyclerViewSurvey.offProgressBar();
+                    RecyclerViewSurvey.notifyDataChanges();
+                }
+            }
+
+            // Old: Get correct attendance count by counting number of students participating and their completion status.
+            /*@Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count ", "" + snapshot.getChildrenCount());
                 for (final DataSnapshot postSnapshot : snapshot.getChildren()) {
@@ -331,7 +354,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                     RecyclerViewSurvey.offProgressBar();
                     RecyclerViewSurvey.notifyDataChanges();
                 }
-            }
+            }*/
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
