@@ -29,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.admin.AdminHome;
 import com.point2points.kdusurveysystem.datamodel.Admin;
 import com.point2points.kdusurveysystem.datamodel.Lecturer;
@@ -51,8 +50,8 @@ public class Login extends Activity{
     private ImageButton showpass;
 
     // Store logged in admin's credentials for reauthentication when necessary.
-    public static String adminLoginUID;
-    public static String adminLoginEmail;
+    public static String loginUID;
+    public static String loginEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,8 +156,8 @@ public class Login extends Activity{
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     final String UID = user.getUid();
 
-                                    adminLoginUID = UID;
-                                    adminLoginEmail = user.getEmail();
+                                    loginUID = UID;
+                                    loginEmail = user.getEmail();
                                     //Log.e("LOGGED IN: ", user.getEmail());
 
                                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();

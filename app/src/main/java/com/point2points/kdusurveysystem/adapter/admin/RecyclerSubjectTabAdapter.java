@@ -128,7 +128,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
 
     public static void sortingData(int sortoption){
 
-        FirebaseSubjectDataRetrieval();
+        //FirebaseSubjectDataRetrieval();
 
         switch (sortoption) {
             case 1:

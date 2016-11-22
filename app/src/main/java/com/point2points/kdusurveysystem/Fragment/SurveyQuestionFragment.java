@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.R;
+import com.point2points.kdusurveysystem.adapter.student.StudentHomeRecyclerViewAdapter;
 import com.point2points.kdusurveysystem.datamodel.Survey;
 import com.point2points.kdusurveysystem.datamodel.SurveyQuestion;
 
@@ -242,6 +243,7 @@ public class SurveyQuestionFragment extends Fragment {
 
                                 ref = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
                                 ref.addValueEventListener(new ValueEventListener() {
+
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
                                         mSurvey = snapshot.getValue(Survey.class);
@@ -288,6 +290,9 @@ public class SurveyQuestionFragment extends Fragment {
                                             mDatabase.updateChildren(updateSurveyStudent);
 
                                             saveData = false;
+                                            //StudentHome.notifyDataChanges();
+                                            //StudentHomeRecyclerViewAdapter.SurveyArrayListUpdate();
+                                            StudentHomeRecyclerViewAdapter.FirebaseSurveyDataRetrieval();
 
                                             mActivity.finish();
                                         }

@@ -92,7 +92,7 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
 
     public static void sortingData(int sortoption) {
 
-        FirebaseSurveyDataRetrieval();
+        //FirebaseSurveyDataRetrieval();
 
         switch (sortoption) {
             case 1:

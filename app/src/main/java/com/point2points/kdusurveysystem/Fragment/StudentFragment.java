@@ -342,7 +342,7 @@ public class StudentFragment extends Fragment{
                                     String newPassword = mStudent.getStudentPassword();
 
                                     if (!(newEmail.equals(currEmail)) || !(newPassword.equals(currPassword)) ) {
-                                        Log.d("UPDATE", "I RUN");
+                                        Log.d("UPDATE", "I RUN");   // Troubleshooting
                                         Log.d("NEW EMAIL", newEmail);
                                         Log.d("OLD EMAIL", currEmail);
                                         Log.d("NEW PW", newPassword);
@@ -351,7 +351,7 @@ public class StudentFragment extends Fragment{
                                     }
 
                                     else
-                                        Log.d("UPDATE", "I DONT RUN");
+                                        Log.d("UPDATE", "I DONT RUN");  // Troubleshooting
 
                                     Toast.makeText(context, "Changes applied to " + mStudent.getStudentName(), Toast.LENGTH_SHORT).show();
                                     refreshAdapter(mStudent);
@@ -384,8 +384,8 @@ public class StudentFragment extends Fragment{
             //Context context = studentDataEditButton.getContext();
             //Activity mActivity = (Activity) context;
 
-            UID = Login.adminLoginUID;  // Get logged in admin's credential from Login class
-            adminEmail = Login.adminLoginEmail;
+            UID = Login.loginUID;  // Get logged in admin's credential from Login class
+            adminEmail = Login.loginEmail;
 
             FirebaseAuth.getInstance().signOut();
 

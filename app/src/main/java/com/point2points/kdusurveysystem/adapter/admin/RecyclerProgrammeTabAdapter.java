@@ -113,7 +113,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
 
     public static void sortingData(int sortoption){
 
-        FirebaseProgrammeDataRetrieval();
+        //FirebaseProgrammeDataRetrieval();
 
         switch (sortoption) {
             case 1:
