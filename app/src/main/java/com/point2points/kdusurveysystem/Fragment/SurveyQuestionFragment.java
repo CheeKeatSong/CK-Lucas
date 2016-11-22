@@ -1,11 +1,13 @@
 package com.point2points.kdusurveysystem.Fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -38,6 +40,8 @@ import static com.point2points.kdusurveysystem.Fragment.SurveyQuestionPagerActiv
 
 public class SurveyQuestionFragment extends Fragment {
 
+    protected FragmentActivity mActivity;
+
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
@@ -45,6 +49,9 @@ public class SurveyQuestionFragment extends Fragment {
     private static final String ARG_QUESTION_ID = "com.point2points.kdusurveysystem.question_id";
 
     private long pointer;
+
+    //To check whether to save data or not status
+    boolean saveData;
 
     private String uid, subjectiveRespond;
     private long qid;
@@ -97,11 +104,9 @@ public class SurveyQuestionFragment extends Fragment {
         surveyQuestionNumberingTextView = (TextView) v.findViewById(R.id.fragment_survey_question_numbering_text_view);
         if (qid < 11) {
             surveyQuestionNumberingTextView.setText(Long.toString(qid) + ". ");
-        }
-        else if (qid < 19){
+        } else if (qid < 19) {
             surveyQuestionNumberingTextView.setText(Long.toString(qid - 10) + ". ");
-        }
-        else{
+        } else {
             surveyQuestionNumberingTextView.setText("");
         }
 
@@ -211,6 +216,7 @@ public class SurveyQuestionFragment extends Fragment {
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+
                                 for (int i = 0; i <= 17; i++) {
                                     long j = responses[i];
                                     switch ((int) j) {
@@ -231,56 +237,60 @@ public class SurveyQuestionFragment extends Fragment {
                                             break;
                                     }
                                 }
+
+                                saveData = true;
+
                                 ref = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
                                 ref.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
                                         mSurvey = snapshot.getValue(Survey.class);
+                                        if (saveData) {
+                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                            final String UID = user.getUid();
 
-                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        final String UID = user.getUid();
+                                            DatabaseReference mDatabase;
+                                            mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
+                                            Map<String, Object> updateSurvey = new HashMap<String, Object>();
 
-                                        DatabaseReference mDatabase;
-                                        mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
-                                        Map<String, Object> updateSurvey = new HashMap<String, Object>();
+                                            updateSurvey.put("surveyQ1", mSurvey.getSurveyQ1() + responses[0]);
+                                            updateSurvey.put("surveyQ2", mSurvey.getSurveyQ2() + responses[1]);
+                                            updateSurvey.put("surveyQ3", mSurvey.getSurveyQ3() + responses[2]);
+                                            updateSurvey.put("surveyQ4", mSurvey.getSurveyQ4() + responses[3]);
+                                            updateSurvey.put("surveyQ5", mSurvey.getSurveyQ5() + responses[4]);
+                                            updateSurvey.put("surveyQ6", mSurvey.getSurveyQ6() + responses[5]);
+                                            updateSurvey.put("surveyQ7", mSurvey.getSurveyQ7() + responses[6]);
+                                            updateSurvey.put("surveyQ8", mSurvey.getSurveyQ8() + responses[7]);
+                                            updateSurvey.put("surveyQ9", mSurvey.getSurveyQ9() + responses[8]);
+                                            updateSurvey.put("surveyQ10", mSurvey.getSurveyQ10() + responses[9]);
+                                            updateSurvey.put("surveyQ11", mSurvey.getSurveyQ11() + responses[10]);
+                                            updateSurvey.put("surveyQ12", mSurvey.getSurveyQ12() + responses[11]);
+                                            updateSurvey.put("surveyQ13", mSurvey.getSurveyQ13() + responses[12]);
+                                            updateSurvey.put("surveyQ14", mSurvey.getSurveyQ14() + responses[13]);
+                                            updateSurvey.put("surveyQ15", mSurvey.getSurveyQ15() + responses[14]);
+                                            updateSurvey.put("surveyQ16", mSurvey.getSurveyQ16() + responses[15]);
+                                            updateSurvey.put("surveyQ17", mSurvey.getSurveyQ17() + responses[16]);
+                                            updateSurvey.put("surveyQ18", mSurvey.getSurveyQ18() + responses[17]);
+                                            updateSurvey.put("surveyRatingScale1", mSurvey.getSurveyRatingScale1() + totalRating[0]);
+                                            updateSurvey.put("surveyRatingScale2", mSurvey.getSurveyRatingScale2() + totalRating[1]);
+                                            updateSurvey.put("surveyRatingScale3", mSurvey.getSurveyRatingScale3() + totalRating[2]);
+                                            updateSurvey.put("surveyRatingScale4", mSurvey.getSurveyRatingScale4() + totalRating[3]);
+                                            updateSurvey.put("surveyRatingScale5", mSurvey.getSurveyRatingScale5() + totalRating[4]);
+                                            updateSurvey.put("surveyAttendance", mSurvey.getSurveyAttendance() + 1);
 
-                                        updateSurvey.put("surveyQ1", mSurvey.getSurveyQ1() + responses[0]);
-                                        updateSurvey.put("surveyQ2", mSurvey.getSurveyQ2() + responses[1]);
-                                        updateSurvey.put("surveyQ3", mSurvey.getSurveyQ3() + responses[2]);
-                                        updateSurvey.put("surveyQ4", mSurvey.getSurveyQ4() + responses[3]);
-                                        updateSurvey.put("surveyQ5", mSurvey.getSurveyQ5() + responses[4]);
-                                        updateSurvey.put("surveyQ6", mSurvey.getSurveyQ6() + responses[5]);
-                                        updateSurvey.put("surveyQ7", mSurvey.getSurveyQ7() + responses[6]);
-                                        updateSurvey.put("surveyQ8", mSurvey.getSurveyQ8() + responses[7]);
-                                        updateSurvey.put("surveyQ9", mSurvey.getSurveyQ9() + responses[8]);
-                                        updateSurvey.put("surveyQ10", mSurvey.getSurveyQ10() + responses[9]);
-                                        updateSurvey.put("surveyQ11", mSurvey.getSurveyQ11() + responses[10]);
-                                        updateSurvey.put("surveyQ12", mSurvey.getSurveyQ12() + responses[11]);
-                                        updateSurvey.put("surveyQ13", mSurvey.getSurveyQ13() + responses[12]);
-                                        updateSurvey.put("surveyQ14", mSurvey.getSurveyQ14() + responses[13]);
-                                        updateSurvey.put("surveyQ15", mSurvey.getSurveyQ15() + responses[14]);
-                                        updateSurvey.put("surveyQ16", mSurvey.getSurveyQ16() + responses[15]);
-                                        updateSurvey.put("surveyQ17", mSurvey.getSurveyQ17() + responses[16]);
-                                        updateSurvey.put("surveyQ18", mSurvey.getSurveyQ18() + responses[17]);
-                                        updateSurvey.put("surveyRatingScale1", mSurvey.getSurveyRatingScale1() + totalRating[0]);
-                                        updateSurvey.put("surveyRatingScale2", mSurvey.getSurveyRatingScale2() + totalRating[1]);
-                                        updateSurvey.put("surveyRatingScale3", mSurvey.getSurveyRatingScale3() + totalRating[2]);
-                                        updateSurvey.put("surveyRatingScale4", mSurvey.getSurveyRatingScale4() + totalRating[3]);
-                                        updateSurvey.put("surveyRatingScale5", mSurvey.getSurveyRatingScale5() + totalRating[4]);
+                                            mDatabase.updateChildren(updateSurvey);
 
-                                        mDatabase.updateChildren(updateSurvey);
+                                            mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid).child("student").child(UID);
+                                            Map<String, Object> updateSurveyStudent = new HashMap<String, Object>();
 
-                                        mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid).child("student").child(UID);
-                                        Map<String, Object> updateSurveyStudent = new HashMap<String, Object>();
+                                            updateSurveyStudent.put("surveyStudentStatus", true);
 
-                                        updateSurveyStudent.put("SubjectiveRespond", subjectiveRespond);
-                                        updateSurveyStudent.put("SurveyStudentStatus", true);
+                                            mDatabase.updateChildren(updateSurveyStudent);
 
-                                        mDatabase.updateChildren(updateSurveyStudent);
+                                            saveData = false;
 
-                                        Log.e("The read failed: ", "Prestige");
-                                        getActivity().finish();
-                                        return;
+                                            mActivity.finish();
+                                        }
                                     }
 
                                     @Override
@@ -389,8 +399,6 @@ public class SurveyQuestionFragment extends Fragment {
                 responses[(int) (qid - 1)] = pointer;
             }
         });
-
-
         return v;
     }
 
@@ -401,6 +409,13 @@ public class SurveyQuestionFragment extends Fragment {
             }
         }
         return null;
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (FragmentActivity) activity;
     }
 
 }
