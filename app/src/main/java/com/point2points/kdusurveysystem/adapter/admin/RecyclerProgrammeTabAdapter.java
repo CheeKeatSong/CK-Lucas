@@ -60,17 +60,17 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         return intent;
     }
 
-    public static String programmeRetrieval(Intent result){
+    public static String programmeRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_PROGRAMME);
     }
 
-    private void setProgramme(String programme){
+    private void setProgramme(String programme) {
         AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
         data.putExtra(EXTRA_PROGRAMME, programme);
         mActivity.setResult(Activity.RESULT_OK, data);
         mActivity.finish();
-        Log.e("set " ,"programme");
+        Log.e("set ", "programme");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -80,7 +80,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         TextView textViewProgrammeSchool;
         TextView textViewProgrammeUid;
         ImageButton buttonDelete;
-        ImageButton  buttonEdit;
+        ImageButton buttonEdit;
         ImageView letterimage;
 
         public SimpleViewHolder(final View itemView) {
@@ -91,8 +91,8 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             //textViewProgrammeDepartment = (TextView) itemView.findViewById(R.id.programme_department_text_view);
             textViewProgrammeSchool = (TextView) itemView.findViewById(R.id.programme_school_text_view);
             textViewProgrammeUid = (TextView) itemView.findViewById(R.id.programme_uid_text_view);
-            buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
-            buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
+            buttonDelete = (ImageButton) itemView.findViewById(R.id.delete);
+            buttonEdit = (ImageButton) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +111,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         FirebaseProgrammeDataRetrieval();
     }
 
-    public static void sortingData(int sortoption){
+    public static void sortingData(int sortoption) {
 
         //FirebaseProgrammeDataRetrieval();
 
@@ -119,7 +119,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             case 1:
                 Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
+                    public int compare(Programme programme1, Programme programme2) {
                         return (programme1.getProgrammeName().substring(0, 1).toUpperCase() + programme1.getProgrammeName().substring(1)).compareTo(programme2.getProgrammeName().substring(0, 1).toUpperCase() + programme2.getProgrammeName().substring(1));
                     }
                 });
@@ -128,7 +128,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             case 2:
                 Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
+                    public int compare(Programme programme1, Programme programme2) {
                         return (programme1.getProgrammeName().substring(0, 1).toUpperCase() + programme1.getProgrammeName().substring(1)).compareTo(programme2.getProgrammeName().substring(0, 1).toUpperCase() + programme2.getProgrammeName().substring(1));
                     }
                 });
@@ -138,7 +138,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             case 3:
                 Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
+                    public int compare(Programme programme1, Programme programme2) {
                         return programme1.getDate().compareTo(programme2.getDate());
                     }
                 });
@@ -147,7 +147,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
             case 4:
                 Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
                     @Override
-                    public int compare(Programme programme1, Programme programme2){
+                    public int compare(Programme programme1, Programme programme2) {
                         return programme1.getDate().compareTo(programme2.getDate());
                     }
                 });
@@ -192,12 +192,11 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                if(!programmeRetrieval) {
+                if (!programmeRetrieval) {
                     Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewProgrammeName.getText().toString());
                     Intent intent = ProgrammeFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewProgrammeUid.getText().toString());
                     viewHolder.swipeLayout.getContext().startActivity(intent);
-                }
-                else if(programmeRetrieval) {
+                } else if (programmeRetrieval) {
                     final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewProgrammeName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
                     toastOnDoubleClick.show();
 
@@ -228,7 +227,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
                                 ref.child(viewHolder.textViewProgrammeUid.getText().toString()).removeValue();
@@ -244,7 +243,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -263,11 +262,10 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         });
 
         String programmeNameReformatted = "";
-        if(programmeName.contains("of")){
-        programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") -1);
-        }
-        else if (programmeName.contains("in")){
-            programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("in") +3);
+        if (programmeName.contains("of")) {
+            programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("of") - 1);
+        } else if (programmeName.contains("in")) {
+            programmeNameReformatted = programmeName.substring(programmeName.lastIndexOf("in") + 3);
         }
         TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(programmeNameReformatted, 64);    // Fix this
 
@@ -297,16 +295,12 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
 
         if (charText.length() == 0) {
             ProgrammeDataset = programmes;
-        }
-        else
-        {
-            for (Programme programme : programmes)
-            {
+        } else {
+            for (Programme programme : programmes) {
                 if (programme.getProgrammeName().toLowerCase(Locale.getDefault()).contains(charText)
                         || programme.getProgrammeSchoolShort().toLowerCase(Locale.getDefault()).contains(charText)
                         || programme.getProgrammeCategory().toLowerCase(Locale.getDefault()).contains(charText)
-                        || programme.getProgrammeSchool().toLowerCase(Locale.getDefault()).contains(charText))
-                {
+                        || programme.getProgrammeSchool().toLowerCase(Locale.getDefault()).contains(charText)) {
                     ProgrammeDataset.add(programme);
                 }
             }
@@ -314,7 +308,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         RecyclerViewProgramme.notifyDataChanges();
     }
 
-    public static void FirebaseProgrammeDataRetrieval(){
+    public static void FirebaseProgrammeDataRetrieval() {
         //String key = ref.push().getKey();
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("programme");
@@ -323,39 +317,43 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     boolean found = false;
                     for (Programme programme : programmes) {
                         if (programme.getProgrammeUid() == postSnapshot.getValue(Programme.class).getProgrammeUid()) {
                             found = true;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         programmes.add(postSnapshot.getValue(Programme.class));
                         Log.e("Get Data", (postSnapshot.getValue(Programme.class).getProgrammeName()));
-                    }}
-                if (programmes.size() == snapshot.getChildrenCount()){
+                    }
+                }
+                if (programmes.size() == snapshot.getChildrenCount()) {
+
+                    ProgrammeDataset = programmes;
+                    Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
+                        @Override
+                        public int compare(Programme programme1, Programme programme2) {
+                            return programme1.getDate().compareTo(programme2.getDate());
+                        }
+                    });
+                    Collections.reverse(ProgrammeDataset);
+
                     RecyclerViewProgramme.offProgressBar();
                     RecyclerViewProgramme.notifyDataChanges();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        ProgrammeDataset = programmes;
-        Collections.sort(ProgrammeDataset, new Comparator<Programme>() {
-            @Override
-            public int compare(Programme programme1, Programme programme2){
-                return programme1.getDate().compareTo(programme2.getDate());
-            }
-        });
-        Collections.reverse(ProgrammeDataset);
     }
 
-    public void programmeItemOnClickListener(View view){
+    public void programmeItemOnClickListener(View view) {
 
         final Toast toastItemOnClick;
 
@@ -370,8 +368,7 @@ public class RecyclerProgrammeTabAdapter extends RecyclerSwipeAdapter<RecyclerPr
                     toastItemOnClick.cancel();
                 }
             }, 500);
-        }
-        else if (programmeRetrieval){
+        } else if (programmeRetrieval) {
             toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
             toastItemOnClick.show();
 

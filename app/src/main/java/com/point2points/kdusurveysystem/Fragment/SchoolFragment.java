@@ -116,7 +116,7 @@ public class SchoolFragment extends Fragment{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
             long schoolEpoch = Long.parseLong(mSchool.getDate());
             String schoolDate = sdf.format(new Date(schoolEpoch));
-            schoolDateTextView.setText("Creation Date: " + schoolDate);
+            schoolDateTextView.setText(schoolDate);
 
             schoolDataEditButton = (Button) v.findViewById(R.id.fragment_school_data_edit_button);
             schoolDataEditButton.setOnClickListener(new View.OnClickListener(){

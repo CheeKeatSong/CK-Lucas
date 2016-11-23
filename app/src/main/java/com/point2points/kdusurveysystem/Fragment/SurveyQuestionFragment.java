@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.point2points.kdusurveysystem.Fragment.SurveyQuestionPagerActivity.surveyQuestionSet;
+import static com.point2points.kdusurveysystem.student.StudentToolbarDrawer.mStudent;
 
 public class SurveyQuestionFragment extends Fragment {
 
@@ -51,10 +52,13 @@ public class SurveyQuestionFragment extends Fragment {
 
     private long pointer;
 
+    //To check answer status
+    boolean answerStatusChecker;
+
     //To check whether to save data or not status
     boolean saveData;
 
-    private String uid, subjectiveRespond;
+    private String uid, subjectiveRespond, subjectiveRespondRecorder;
     private long qid;
 
     private Survey mSurvey;
@@ -114,6 +118,7 @@ public class SurveyQuestionFragment extends Fragment {
         surveyQuestionTextView = (TextView) v.findViewById(R.id.fragment_survey_question_text_view);
         surveyQuestionTextView.setText(mSurveyQuestion.getSurveyQuestion());
 
+        //subject respond edit text
         subjectiveRespondEditText = (EditText) v.findViewById(R.id.fragment_survey_question_subjective_respond);
         subjectiveRespondEditText.getBackground().setColorFilter(getResources().getColor(R.color.dark_kdu_blue), PorterDuff.Mode.SRC_IN);
         if (qid == 19) {
@@ -124,7 +129,6 @@ public class SurveyQuestionFragment extends Fragment {
         subjectiveRespondEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -134,7 +138,6 @@ public class SurveyQuestionFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -147,7 +150,7 @@ public class SurveyQuestionFragment extends Fragment {
                 final Context context = surveyQuestionAbort.getContext();
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-                alertDialogBuilder.setMessage("Are you sure you want to abort this survey?\n(Survey progress will not be saved.)");
+                alertDialogBuilder.setMessage("Are you sure you want to abort this survey?");
 
                 alertDialogBuilder
                         .setCancelable(false)
@@ -208,6 +211,8 @@ public class SurveyQuestionFragment extends Fragment {
         surveyQuestionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                answerStatusChecker = false;
+
                 final Context context = surveyQuestionSubmit.getContext();
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
@@ -217,92 +222,135 @@ public class SurveyQuestionFragment extends Fragment {
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
                                 for (int i = 0; i <= 17; i++) {
-                                    long j = responses[i];
-                                    switch ((int) j) {
-                                        case 1:
-                                            totalRating[0]++;
-                                            break;
-                                        case 2:
-                                            totalRating[1]++;
-                                            break;
-                                        case 3:
-                                            totalRating[2]++;
-                                            break;
-                                        case 4:
-                                            totalRating[3]++;
-                                            break;
-                                        case 5:
-                                            totalRating[4]++;
-                                            break;
+                                    if (responses[i] == 0) {
+                                        answerStatusChecker = true;
+
+                                        final AlertDialog.Builder alertDialogBuilder2 = new AlertDialog.Builder(context);
+
+                                        alertDialogBuilder2.setMessage("Please answer all the questions.(Subjective respond is optional)");
+
+                                        alertDialogBuilder2
+                                                .setCancelable(false)
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                    }
+                                                });
+                                        AlertDialog alertDialog = alertDialogBuilder2.create();
+                                        alertDialog.show();
+                                        return;
                                     }
                                 }
 
-                                saveData = true;
-
-                                ref = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
-                                ref.addValueEventListener(new ValueEventListener() {
-
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        mSurvey = snapshot.getValue(Survey.class);
-                                        if (saveData) {
-                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                            final String UID = user.getUid();
-
-                                            DatabaseReference mDatabase;
-                                            mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
-                                            Map<String, Object> updateSurvey = new HashMap<String, Object>();
-
-                                            updateSurvey.put("surveyQ1", mSurvey.getSurveyQ1() + responses[0]);
-                                            updateSurvey.put("surveyQ2", mSurvey.getSurveyQ2() + responses[1]);
-                                            updateSurvey.put("surveyQ3", mSurvey.getSurveyQ3() + responses[2]);
-                                            updateSurvey.put("surveyQ4", mSurvey.getSurveyQ4() + responses[3]);
-                                            updateSurvey.put("surveyQ5", mSurvey.getSurveyQ5() + responses[4]);
-                                            updateSurvey.put("surveyQ6", mSurvey.getSurveyQ6() + responses[5]);
-                                            updateSurvey.put("surveyQ7", mSurvey.getSurveyQ7() + responses[6]);
-                                            updateSurvey.put("surveyQ8", mSurvey.getSurveyQ8() + responses[7]);
-                                            updateSurvey.put("surveyQ9", mSurvey.getSurveyQ9() + responses[8]);
-                                            updateSurvey.put("surveyQ10", mSurvey.getSurveyQ10() + responses[9]);
-                                            updateSurvey.put("surveyQ11", mSurvey.getSurveyQ11() + responses[10]);
-                                            updateSurvey.put("surveyQ12", mSurvey.getSurveyQ12() + responses[11]);
-                                            updateSurvey.put("surveyQ13", mSurvey.getSurveyQ13() + responses[12]);
-                                            updateSurvey.put("surveyQ14", mSurvey.getSurveyQ14() + responses[13]);
-                                            updateSurvey.put("surveyQ15", mSurvey.getSurveyQ15() + responses[14]);
-                                            updateSurvey.put("surveyQ16", mSurvey.getSurveyQ16() + responses[15]);
-                                            updateSurvey.put("surveyQ17", mSurvey.getSurveyQ17() + responses[16]);
-                                            updateSurvey.put("surveyQ18", mSurvey.getSurveyQ18() + responses[17]);
-                                            updateSurvey.put("surveyRatingScale1", mSurvey.getSurveyRatingScale1() + totalRating[0]);
-                                            updateSurvey.put("surveyRatingScale2", mSurvey.getSurveyRatingScale2() + totalRating[1]);
-                                            updateSurvey.put("surveyRatingScale3", mSurvey.getSurveyRatingScale3() + totalRating[2]);
-                                            updateSurvey.put("surveyRatingScale4", mSurvey.getSurveyRatingScale4() + totalRating[3]);
-                                            updateSurvey.put("surveyRatingScale5", mSurvey.getSurveyRatingScale5() + totalRating[4]);
-                                            updateSurvey.put("surveyAttendance", mSurvey.getSurveyAttendance() + 1);
-
-                                            mDatabase.updateChildren(updateSurvey);
-
-                                            mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid).child("student").child(UID);
-                                            Map<String, Object> updateSurveyStudent = new HashMap<String, Object>();
-
-                                            updateSurveyStudent.put("surveyStudentStatus", true);
-
-                                            mDatabase.updateChildren(updateSurveyStudent);
-
-                                            saveData = false;
-                                            //StudentHome.notifyDataChanges();
-                                            //StudentHomeRecyclerViewAdapter.SurveyArrayListUpdate();
-                                            StudentHomeRecyclerViewAdapter.FirebaseSurveyDataRetrieval();
-
-                                            mActivity.finish();
+                                if (!answerStatusChecker) {
+                                    for (int i = 0; i <= 17; i++) {
+                                        long j = responses[i];
+                                        switch ((int) j) {
+                                            case 1:
+                                                totalRating[0]++;
+                                                break;
+                                            case 2:
+                                                totalRating[1]++;
+                                                break;
+                                            case 3:
+                                                totalRating[2]++;
+                                                break;
+                                            case 4:
+                                                totalRating[3]++;
+                                                break;
+                                            case 5:
+                                                totalRating[4]++;
+                                                break;
                                         }
                                     }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError firebaseError) {
-                                        Log.e("The read failed: ", firebaseError.getMessage());
-                                    }
-                                });
+                                    saveData = true;
+
+                                    ref = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
+                                    ref.addValueEventListener(new ValueEventListener() {
+
+                                        @Override
+                                        public void onDataChange(DataSnapshot snapshot) {
+                                            mSurvey = snapshot.getValue(Survey.class);
+                                            if (saveData) {
+                                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                final String UID = user.getUid();
+
+                                                DatabaseReference mDatabase;
+                                                mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
+                                                Map<String, Object> updateSurvey = new HashMap<String, Object>();
+
+                                                updateSurvey.put("surveyQ1", mSurvey.getSurveyQ1() + responses[0]);
+                                                updateSurvey.put("surveyQ2", mSurvey.getSurveyQ2() + responses[1]);
+                                                updateSurvey.put("surveyQ3", mSurvey.getSurveyQ3() + responses[2]);
+                                                updateSurvey.put("surveyQ4", mSurvey.getSurveyQ4() + responses[3]);
+                                                updateSurvey.put("surveyQ5", mSurvey.getSurveyQ5() + responses[4]);
+                                                updateSurvey.put("surveyQ6", mSurvey.getSurveyQ6() + responses[5]);
+                                                updateSurvey.put("surveyQ7", mSurvey.getSurveyQ7() + responses[6]);
+                                                updateSurvey.put("surveyQ8", mSurvey.getSurveyQ8() + responses[7]);
+                                                updateSurvey.put("surveyQ9", mSurvey.getSurveyQ9() + responses[8]);
+                                                updateSurvey.put("surveyQ10", mSurvey.getSurveyQ10() + responses[9]);
+                                                updateSurvey.put("surveyQ11", mSurvey.getSurveyQ11() + responses[10]);
+                                                updateSurvey.put("surveyQ12", mSurvey.getSurveyQ12() + responses[11]);
+                                                updateSurvey.put("surveyQ13", mSurvey.getSurveyQ13() + responses[12]);
+                                                updateSurvey.put("surveyQ14", mSurvey.getSurveyQ14() + responses[13]);
+                                                updateSurvey.put("surveyQ15", mSurvey.getSurveyQ15() + responses[14]);
+                                                updateSurvey.put("surveyQ16", mSurvey.getSurveyQ16() + responses[15]);
+                                                updateSurvey.put("surveyQ17", mSurvey.getSurveyQ17() + responses[16]);
+                                                updateSurvey.put("surveyQ18", mSurvey.getSurveyQ18() + responses[17]);
+                                                updateSurvey.put("surveyRatingScale1", mSurvey.getSurveyRatingScale1() + totalRating[0]);
+                                                updateSurvey.put("surveyRatingScale2", mSurvey.getSurveyRatingScale2() + totalRating[1]);
+                                                updateSurvey.put("surveyRatingScale3", mSurvey.getSurveyRatingScale3() + totalRating[2]);
+                                                updateSurvey.put("surveyRatingScale4", mSurvey.getSurveyRatingScale4() + totalRating[3]);
+                                                updateSurvey.put("surveyRatingScale5", mSurvey.getSurveyRatingScale5() + totalRating[4]);
+                                                updateSurvey.put("surveyAttendance", mSurvey.getSurveyAttendance() + 1);
+
+                                                mDatabase.updateChildren(updateSurvey);
+
+
+                                                mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid).child("student").child(UID);
+                                                Map<String, Object> updateSurveyStudent = new HashMap<String, Object>();
+
+                                                updateSurveyStudent.put("surveyStudentStatus", true);
+
+                                                mDatabase.updateChildren(updateSurveyStudent);
+
+                                                //Update point (might not work for repetition, unless mStudent refreshed)
+                                                mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("student").child(UID);
+                                                Map<String, Object> updateStudent = new HashMap<String, Object>();
+
+                                                updateStudent.put("studentPoint", Long.toString(Long.parseLong(mStudent.getStudentPoint()) + 50));
+
+                                                mDatabase.updateChildren(updateStudent);
+
+                                                saveData = false;
+                                                //StudentHome.notifyDataChanges();
+                                                //StudentHomeRecyclerViewAdapter.SurveyArrayListUpdate();
+                                                StudentHomeRecyclerViewAdapter.FirebaseSurveyDataRetrieval();
+
+                                                final AlertDialog.Builder alertDialogBuilder2 = new AlertDialog.Builder(context);
+
+                                                alertDialogBuilder2.setMessage("You got 50 points!");
+
+                                                alertDialogBuilder2
+                                                        .setCancelable(false)
+                                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                            }
+                                                        });
+                                                AlertDialog alertDialog = alertDialogBuilder2.create();
+                                                alertDialog.show();
+
+                                                mActivity.finish();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError firebaseError) {
+                                            Log.e("The read failed: ", firebaseError.getMessage());
+                                        }
+                                    });
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

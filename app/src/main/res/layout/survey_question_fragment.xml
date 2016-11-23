@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-    android:background="@color/light_sky_blue">
+    android:background="@color/md_grey_100">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,6 @@
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="2sp"
-                android:background="@drawable/border_rounded_transparent_white"
                 android:clickable="true"
                 android:visibility="gone">
 
@@ -33,6 +32,7 @@
                     android:gravity="center"/>
 
                 <TextView
+                    android:paddingBottom="4sp"
                     android:layout_width="wrap_content"
                     android:layout_height="50sp"
                     android:gravity="center"
@@ -48,7 +48,6 @@
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="2sp"
-                android:background="@drawable/border_rounded_transparent_white"
                 android:clickable="true">
 
                 <Button
@@ -59,10 +58,11 @@
                     android:gravity="center"/>
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:layout_marginBottom="10sp"
                     android:layout_width="wrap_content"
                     android:layout_height="50sp"
                     android:gravity="center"
+                    android:paddingBottom="4sp"
                     android:text="Back"
                     android:textColor="@color/transparent_white"
                     android:textSize="20sp"/>
@@ -79,10 +79,11 @@
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:layout_marginRight="2sp"
-                android:background="@drawable/border_rounded_transparent_white"
+                android:paddingBottom="4sp"
                 android:clickable="true">
 
                 <TextView
+                    android:paddingBottom="4sp"
                     android:layout_width="wrap_content"
                     android:layout_height="50sp"
                     android:layout_marginLeft="20sp"
@@ -105,11 +106,11 @@
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:layout_marginRight="2sp"
-                android:background="@drawable/border_rounded_transparent_white"
                 android:clickable="true"
                 android:visibility="gone">
 
                 <TextView
+                    android:paddingBottom="4sp"
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="50sp"

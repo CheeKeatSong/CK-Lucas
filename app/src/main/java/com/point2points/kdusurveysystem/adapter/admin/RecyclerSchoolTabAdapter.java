@@ -63,22 +63,22 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         return intent;
     }
 
-    public static String schoolNameRetrieval(Intent result){
+    public static String schoolNameRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_SCHOOL_NAME);
     }
 
-    public static String schoolNameShortRetrieval(Intent result){
+    public static String schoolNameShortRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_SCHOOL_NAME_SHORT);
     }
 
-    private void setSchoolNameAndShort(String schoolName, String schoolNameShort){
+    private void setSchoolNameAndShort(String schoolName, String schoolNameShort) {
         AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
         data.putExtra(EXTRA_SCHOOL_NAME, schoolName);
         data.putExtra(EXTRA_SCHOOL_NAME_SHORT, schoolNameShort);
         mActivity.setResult(Activity.RESULT_OK, data);
         mActivity.finish();
-        Log.e("set " ,"school name");
+        Log.e("set ", "school name");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -87,7 +87,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         TextView textViewSchoolNameShort;
         TextView textViewSchoolUid;
         ImageButton buttonDelete;
-        ImageButton  buttonEdit;
+        ImageButton buttonEdit;
         ImageView letterimage;
 
         public SimpleViewHolder(final View itemView) {
@@ -96,14 +96,14 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             textViewSchoolName = (TextView) itemView.findViewById(R.id.school_name_text_view);
             textViewSchoolNameShort = (TextView) itemView.findViewById(R.id.school_name_short_text_view);
             textViewSchoolUid = (TextView) itemView.findViewById(R.id.school_uid_text_view);
-            buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
-            buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
+            buttonDelete = (ImageButton) itemView.findViewById(R.id.delete);
+            buttonEdit = (ImageButton) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   schoolItemOnClickListener(view);
+                    schoolItemOnClickListener(view);
                 }
             });
         }
@@ -116,7 +116,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         FirebaseSchoolDataRetrieval();
     }
 
-    public static void sortingData(int sortoption){
+    public static void sortingData(int sortoption) {
 
         //irebaseSchoolDataRetrieval();
 
@@ -124,7 +124,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             case 1:
                 Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(School school1, School school2){
+                    public int compare(School school1, School school2) {
                         return (school1.getSchoolName().substring(0, 1).toUpperCase() + school1.getSchoolName().substring(1)).compareTo(school2.getSchoolName().substring(0, 1).toUpperCase() + school2.getSchoolName().substring(1));
                     }
                 });
@@ -133,7 +133,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             case 2:
                 Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(School school1, School school2){
+                    public int compare(School school1, School school2) {
                         return (school1.getSchoolName().substring(0, 1).toUpperCase() + school1.getSchoolName().substring(1)).compareTo(school2.getSchoolName().substring(0, 1).toUpperCase() + school2.getSchoolName().substring(1));
                     }
                 });
@@ -143,7 +143,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             case 3:
                 Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(School school1, School school2){
+                    public int compare(School school1, School school2) {
                         return school1.getDate().compareTo(school2.getDate());
                     }
                 });
@@ -152,7 +152,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             case 4:
                 Collections.sort(SchoolDataset, new Comparator<School>() {
                     @Override
-                    public int compare(School school1, School school2){
+                    public int compare(School school1, School school2) {
                         return school1.getDate().compareTo(school2.getDate());
                     }
                 });
@@ -194,12 +194,11 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                if(!schoolRetrieval) {
+                if (!schoolRetrieval) {
                     Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSchoolName.getText().toString());
                     Intent intent = SchoolFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSchoolUid.getText().toString());
                     viewHolder.swipeLayout.getContext().startActivity(intent);
-                }
-                else if(schoolRetrieval) {
+                } else if (schoolRetrieval) {
 
                     final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewSchoolName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
                     toastOnDoubleClick.show();
@@ -232,7 +231,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
                                 ref.child(viewHolder.textViewSchoolUid.getText().toString()).removeValue();
@@ -248,7 +247,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -266,7 +265,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
             }
         });
 
-        String schoolNameReformatted = schoolName.substring(schoolName.lastIndexOf("of") +3);
+        String schoolNameReformatted = schoolName.substring(schoolName.lastIndexOf("of") + 3);
         TextDrawable drawable = RecyclerLetterIcon.GenerateRecyclerLetterIcon(schoolNameReformatted, 64);
 
         viewHolder.letterimage.setImageDrawable(drawable);
@@ -293,15 +292,11 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
 
         if (charText.length() == 0) {
             SchoolDataset = schools;
-        }
-        else
-        {
-            for (School school : schools)
-            {
+        } else {
+            for (School school : schools) {
                 if (school.getSchoolName().toLowerCase(Locale.getDefault()).contains(charText)
                         || school.getSchoolName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || school.getSchoolNameShort().toLowerCase(Locale.getDefault()).contains(charText))
-                {
+                        || school.getSchoolNameShort().toLowerCase(Locale.getDefault()).contains(charText)) {
                     SchoolDataset.add(school);
                 }
             }
@@ -309,7 +304,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         RecyclerViewSchool.notifyDataChanges();
     }
 
-    public static void FirebaseSchoolDataRetrieval(){
+    public static void FirebaseSchoolDataRetrieval() {
         //String key = ref.push().getKey();
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("school");
@@ -318,40 +313,43 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     boolean found = false;
                     for (School school : schools) {
                         if (school.getSchoolUid() == postSnapshot.getValue(School.class).getSchoolUid()) {
                             found = true;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         schools.add(postSnapshot.getValue(School.class));
                         Log.e("Get Data", (postSnapshot.getValue(School.class).getSchoolName()));
-                    }}
-                if (schools.size() == snapshot.getChildrenCount()){
+                    }
+                }
+                if (schools.size() == snapshot.getChildrenCount()) {
+
+                    SchoolDataset = schools;
+                    Collections.sort(SchoolDataset, new Comparator<School>() {
+                        @Override
+                        public int compare(School school1, School school2) {
+                            return school1.getDate().compareTo(school2.getDate());
+                        }
+                    });
+                    Collections.reverse(SchoolDataset);
+
                     RecyclerViewSchool.offProgressBar();
                     RecyclerViewSchool.notifyDataChanges();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        SchoolDataset = schools;
-
-        Collections.sort(SchoolDataset, new Comparator<School>() {
-            @Override
-            public int compare(School school1, School school2){
-                return school1.getDate().compareTo(school2.getDate());
-            }
-        });
-        Collections.reverse(SchoolDataset);
     }
 
-    public void schoolItemOnClickListener(View view){
+    public void schoolItemOnClickListener(View view) {
 
         final Toast toastItemOnClick;
 
@@ -366,8 +364,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
                     toastItemOnClick.cancel();
                 }
             }, 500);
-        }
-        else if (schoolRetrieval){
+        } else if (schoolRetrieval) {
             toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
             toastItemOnClick.show();
 

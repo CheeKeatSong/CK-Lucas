@@ -145,6 +145,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
         mToolBar3 = (Toolbar) findViewById(R.id.t2Toolbar);
         setSupportActionBar(mToolBar3);
 
+        /*
         //UserProfileToolBar
         userProfileButton = (ImageButton) findViewById(R.id.menu_item_profile_student);
         userProfileButton.setOnClickListener(new View.OnClickListener(){
@@ -158,6 +159,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
 
         userLecturerSchool = (TextView) findViewById(R.id.menu_item_programme_student);
         userLecturerSchool.setText(mLecturer.getSchoolName());
+*/
 
         userLecturerSPoints = (TextView) findViewById(R.id.menu_item_point_student);
         userLecturerSPoints.setText(mLecturer.getPoint());
@@ -172,6 +174,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
             }
         });
 
+        /*
         backButton = (ImageButton)findViewById(R.id.menu_item_back);
         searchEditText = (EditText) findViewById(R.id.search_edit_text);
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -254,6 +257,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
             }
 
         });
+*/
 
         if (savedInstanceState != null) {
         }

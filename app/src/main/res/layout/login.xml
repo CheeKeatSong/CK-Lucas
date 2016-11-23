@@ -42,12 +42,10 @@
             android:background="@color/dark_kdu_blue">
 
         <TextView
-            android:typeface="serif"
             android:layout_gravity="center_horizontal"
-            android:textSize="20dp"
+            android:textSize="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/teaching_survey"
             android:textColor="@color/white"/>
         </LinearLayout>
 
@@ -67,6 +65,7 @@
             android:layout_gravity="center_horizontal"/>
 
         <LinearLayout
+            android:typeface="sans"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
@@ -74,6 +73,8 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:typeface="sans"
+                android:textStyle="normal"
                 android:hint="@string/password"
                 android:textColorHint="@color/white"
                 android:paddingLeft="5dp"

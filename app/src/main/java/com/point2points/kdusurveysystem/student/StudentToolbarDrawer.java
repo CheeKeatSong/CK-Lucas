@@ -64,7 +64,7 @@ public class StudentToolbarDrawer extends AppCompatActivity {
 
     private Drawer adminDrawer;
 
-    private Student mStudent;
+    public static Student mStudent;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -146,6 +146,7 @@ public class StudentToolbarDrawer extends AppCompatActivity {
         setSupportActionBar(mToolBar3);
 
         //UserProfileToolBar
+        /*
         userProfileButton = (ImageButton) findViewById(R.id.menu_item_profile_student);
         userProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,11 +154,13 @@ public class StudentToolbarDrawer extends AppCompatActivity {
             }
         });
 
+
         userStudentName = (TextView) findViewById(R.id.menu_item_username_student);
-        userStudentName.setText(mStudent.getStudentUsername());
+        userStudentName.setText(mStudent.getStudentName());
 
         userStudentProgramme = (TextView) findViewById(R.id.menu_item_programme_student);
         userStudentProgramme.setText(mStudent.getStudentProgramme());
+        */
 
         userStudentPoints = (TextView) findViewById(R.id.menu_item_point_student);
         userStudentPoints.setText(mStudent.getStudentPoint());
@@ -171,6 +174,7 @@ public class StudentToolbarDrawer extends AppCompatActivity {
             }
         });
 
+        /*
         backButton = (ImageButton) findViewById(R.id.menu_item_back);
         searchEditText = (EditText) findViewById(R.id.search_edit_text);
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -217,6 +221,7 @@ public class StudentToolbarDrawer extends AppCompatActivity {
             }
         });
 
+
         sortButton = (Spinner) findViewById(R.id.menu_item_sort_student);
         sortButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -250,6 +255,7 @@ public class StudentToolbarDrawer extends AppCompatActivity {
             }
 
         });
+         */
 
         if (savedInstanceState != null) {
         }

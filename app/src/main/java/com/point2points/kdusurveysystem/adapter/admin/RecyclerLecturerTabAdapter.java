@@ -76,22 +76,22 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         return intent;
     }
 
-    public static String lecturerNameRetrieval(Intent result){
+    public static String lecturerNameRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_LECTURER_NAME);
     }
 
-    public static String lecturerIDRetrieval(Intent result){
+    public static String lecturerIDRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_LECTURER_ID);
     }
 
-    private void setLecturerName(String lecturerName, String lecturerID){
+    private void setLecturerName(String lecturerName, String lecturerID) {
         AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
         data.putExtra(EXTRA_LECTURER_NAME, lecturerName);
         data.putExtra(EXTRA_LECTURER_ID, lecturerID);
         mActivity.setResult(Activity.RESULT_OK, data);
         mActivity.finish();
-        Log.e("set " ,"lecturer name");
+        Log.e("set ", "lecturer name");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -102,7 +102,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         TextView textViewPoint;
         TextView textViewUid;
         ImageButton buttonDelete;
-        ImageButton  buttonEdit;
+        ImageButton buttonEdit;
         ImageView letterimage;
 
         public SimpleViewHolder(final View itemView) {
@@ -112,8 +112,8 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             textViewID = (TextView) itemView.findViewById(R.id.lecturer_ID_text_view);
             textViewEmail = (TextView) itemView.findViewById(R.id.lecturer_email_text_view);
             textViewPoint = (TextView) itemView.findViewById(R.id.lecturer_point_text_view);
-            buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
-            buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
+            buttonDelete = (ImageButton) itemView.findViewById(R.id.delete);
+            buttonEdit = (ImageButton) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
             textViewUid = (TextView) itemView.findViewById(R.id.lecturer_uid_text_view);
 
@@ -137,9 +137,9 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
         //String key = ref.push().getKey();
         FirebaseLecturerDataRetrieval();
-        }
+    }
 
-    public static void sortingData(int sortoption){
+    public static void sortingData(int sortoption) {
 
         //FirebaseLecturerDataRetrieval();
 
@@ -147,7 +147,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             case 1:
                 Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
-                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2) {
                         return (lecturer1.getFullName().substring(0, 1).toUpperCase() + lecturer1.getFullName().substring(1)).compareTo(lecturer2.getFullName().substring(0, 1).toUpperCase() + lecturer2.getFullName().substring(1));
                     }
                 });
@@ -156,7 +156,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             case 2:
                 Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
-                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2) {
                         return (lecturer1.getFullName().substring(0, 1).toUpperCase() + lecturer1.getFullName().substring(1)).compareTo(lecturer2.getFullName().substring(0, 1).toUpperCase() + lecturer2.getFullName().substring(1));
                     }
                 });
@@ -165,7 +165,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             case 3:
                 Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
-                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2) {
                         return lecturer1.getDate().compareTo(lecturer2.getDate());
                     }
                 });
@@ -174,7 +174,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             case 4:
                 Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
                     @Override
-                    public int compare(Lecturer lecturer1, Lecturer lecturer2){
+                    public int compare(Lecturer lecturer1, Lecturer lecturer2) {
                         return lecturer1.getDate().compareTo(lecturer2.getDate());
                     }
                 });
@@ -219,12 +219,11 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                if(!lecturerRetrieval) {
-                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewFullName.getText().toString());
-                Intent intent = LecturerFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewUid.getText().toString());
-                viewHolder.swipeLayout.getContext().startActivity(intent);
-                }
-                else if(lecturerRetrieval) {
+                if (!lecturerRetrieval) {
+                    Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewFullName.getText().toString());
+                    Intent intent = LecturerFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewUid.getText().toString());
+                    viewHolder.swipeLayout.getContext().startActivity(intent);
+                } else if (lecturerRetrieval) {
                     final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewFullName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
                     toastOnDoubleClick.show();
 
@@ -239,7 +238,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                     String lecturerName = viewHolder.textViewFullName.getText().toString();
                     String lecturerID = viewHolder.textViewID.getText().toString();
                     lecturerRetrieval = false;
-                    setLecturerName(lecturerName,lecturerID);
+                    setLecturerName(lecturerName, lecturerID);
                 }
             }
         });
@@ -256,7 +255,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
                                 //removeUserFromAuth(item.getEmailAddress(), item.getPassword());
@@ -278,7 +277,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -324,17 +323,14 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
         if (charText.length() == 0) {
             LecturerDataset = lecturers;
-        }
-        else
-        {
+        } else {
             for (Lecturer lecturer : lecturers) {
                 if (lecturer.getFullName().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getEmailAddress().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getLecturer_ID().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getUsername().toLowerCase(Locale.getDefault()).contains(charText)
                         || lecturer.getSchoolName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || lecturer.getSchoolNameShort().toLowerCase(Locale.getDefault()).contains(charText))
-                {
+                        || lecturer.getSchoolNameShort().toLowerCase(Locale.getDefault()).contains(charText)) {
                     LecturerDataset.add(lecturer);
                 }
             }
@@ -342,7 +338,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
         RecyclerViewLecturer.notifyDataChanges();
     }
 
-    public static void FirebaseLecturerDataRetrieval(){
+    public static void FirebaseLecturerDataRetrieval() {
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("users").child("lecturer");
         query = ref;
@@ -351,36 +347,40 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 RecyclerViewLecturer.onProgressBar();
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     boolean found = false;
                     for (Lecturer lecturer : lecturers) {
                         if (lecturer.getUid() == postSnapshot.getValue(Lecturer.class).getUid()) {
                             found = true;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         lecturers.add(postSnapshot.getValue(Lecturer.class));
                         Log.e("Get Data", (postSnapshot.getValue(Lecturer.class).getFullName()));
-                    }}
-                if (lecturers.size() == snapshot.getChildrenCount()){
+                    }
+                }
+                if (lecturers.size() == snapshot.getChildrenCount()) {
+
+                    LecturerDataset = lecturers;
+                    Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
+                        @Override
+                        public int compare(Lecturer lecturer1, Lecturer lecturer2) {
+                            return lecturer1.getDate().compareTo(lecturer2.getDate());
+                        }
+                    });
+                    Collections.reverse(LecturerDataset);
+
                     RecyclerViewLecturer.offProgressBar();
                     RecyclerViewLecturer.notifyDataChanges();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        LecturerDataset = lecturers;
-        Collections.sort(LecturerDataset, new Comparator<Lecturer>() {
-            @Override
-            public int compare(Lecturer lecturer1, Lecturer lecturer2){
-                return lecturer1.getDate().compareTo(lecturer2.getDate());
-            }
-        });
-        Collections.reverse(LecturerDataset);
     }
 
     public void removeUserFromAuth(final String email, final String password) {
@@ -434,8 +434,8 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 //Log.d(TAG, "EVENT LISTENER RUN"); // Troubleshooting.
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     //Log.d(TAG, "DATA SNAPSHOT RUN"); // Troubleshooting.
                     if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                         admin = postSnapshot.getValue(Admin.class);
@@ -456,14 +456,15 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
     }
 
-    public void lecturerItemOnClickListener(View view){
+    public void lecturerItemOnClickListener(View view) {
 
         final Toast toastItemOnClick;
 
@@ -478,8 +479,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                     toastItemOnClick.cancel();
                 }
             }, 500);
-        }
-        else if (lecturerRetrieval){
+        } else if (lecturerRetrieval) {
             toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
             toastItemOnClick.show();
 

@@ -291,6 +291,17 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                         Log.e("Get Data", (postSnapshot.getValue(Survey.class).getSurveySubject()));
                     }}
                 if (surveys.size() == snapshot.getChildrenCount()){
+
+                    //copy and sort data
+                    SurveyDataset = surveys;
+                    Collections.sort(SurveyDataset, new Comparator<Survey>() {
+                        @Override
+                        public int compare(Survey survey1, Survey survey2) {
+                            return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
+                        }
+                    });
+                    Collections.reverse(SurveyDataset);
+
                     RecyclerViewSurvey.offProgressBar();
                     RecyclerViewSurvey.notifyDataChanges();
                 }
@@ -361,14 +372,6 @@ public class RecyclerSurveyTabAdapter extends RecyclerSwipeAdapter<RecyclerSurve
                 Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        SurveyDataset = surveys;
-        Collections.sort(SurveyDataset, new Comparator<Survey>() {
-            @Override
-            public int compare(Survey survey1, Survey survey2) {
-                return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
-            }
-        });
-        Collections.reverse(SurveyDataset);
     }
 
 }

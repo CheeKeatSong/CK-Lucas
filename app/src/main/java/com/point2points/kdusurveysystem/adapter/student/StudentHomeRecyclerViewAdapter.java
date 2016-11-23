@@ -223,7 +223,8 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                             found = true;
                         }
                     }
-                    if (!found) { query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
+                    if (!found) {
+                        query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
                         //query.addValueEventListener(new ValueEventListener() {
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -237,12 +238,27 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                                         surveys.add(postSnapshot.getValue(Survey.class));
 
                                         if (postSnapshot.getChildrenCount() >= retrieveCounter || postSnapshot.getChildrenCount() == 0) {
+
+                                            //copy data set and sort
+                                            SurveyDataSet = surveys;
+                                            Collections.sort(SurveyDataSet, new Comparator<Survey>()
+
+                                                    {
+                                                        @Override
+                                                        public int compare(Survey survey1, Survey survey2) {
+                                                            return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
+                                                        }
+                                                    }
+                                            );
+                                            Collections.reverse(SurveyDataSet);
+
                                             StudentHome.offProgressBar();
                                             StudentHome.notifyDataChanges();
                                         }
                                     }
                                 }
                             }
+
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.e("The read failed: ", databaseError.getMessage());
@@ -256,6 +272,7 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                 if (surveys.size() == snapshot.getChildrenCount())
                     StudentHome.offProgressBar();
             }
+
             /*
             @Override
             public void onDataChange(final DataSnapshot snapshot) {
@@ -324,20 +341,7 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                 Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-
-            SurveyDataSet=surveys;
-            Collections.sort(SurveyDataSet,new Comparator<Survey>()
-
-            {
-                @Override
-                public int compare (Survey survey1, Survey survey2){
-                return survey1.getSurveyDate().compareTo(survey2.getSurveyDate());
-            }
-            }
-
-            );
-            Collections.reverse(SurveyDataSet);
-        }
+    }
 
     public static void sortingData(int sortoption) {
 

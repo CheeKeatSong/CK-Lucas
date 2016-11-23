@@ -17,11 +17,13 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ImageButton android:src="@drawable/ic_option"
+        <ImageButton
+            android:paddingRight="20sp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_option"
                      android:background="?attr/actionBarItemBackground"
                      android:layout_width="?attr/actionBarSize"
                      android:layout_height="match_parent"
-                     android:scaleType="centerInside"
                      android:id="@+id/menu_item_option"/>
 
         <android.support.v4.widget.Space

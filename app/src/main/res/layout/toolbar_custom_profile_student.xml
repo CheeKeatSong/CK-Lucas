@@ -35,7 +35,6 @@
 
         <LinearLayout
             android:layout_gravity="center"
-            android:background="@drawable/border_rounded_white"
             android:layout_marginLeft="4dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -80,7 +79,6 @@
         <LinearLayout
             android:layout_gravity="center"
             android:layout_marginRight="15dp"
-            android:background="@drawable/border_rounded_white"
             android:layout_marginLeft="4dp"
             android:layout_width="96dp"
             android:layout_height="50dp"
