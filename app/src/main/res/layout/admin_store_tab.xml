@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/kdu_blue">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:textStyle="normal"
+            android:layout_marginTop="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STORE MANAGEMENT"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"/>
+
+    </LinearLayout>
+
+   <LinearLayout
+       android:layout_marginTop="30sp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal">
+
+       <Space
+           android:layout_width="28sp"
+           android:layout_height="80sp"/>
+
+       <ImageView
+           android:src="@color/a_red"
+           android:layout_width="150sp"
+           android:layout_height="80sp"
+           android:id="@+id/store_item_image_1"/>
+
+       <Space
+           android:layout_width="28sp"
+           android:layout_height="80sp"/>
+
+       <ImageView
+           android:id="@+id/store_item_image_2"
+           android:src="@color/a_red"
+           android:layout_width="150sp"
+           android:layout_height="80sp"
+           vzzzzz/>
+
+       <Space
+           android:layout_width="28sp"
+           android:layout_height="80sp"/>
+
+   </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="28sp"
+            android:layout_height="80sp"/>
+
+        <ImageView
+            android:src="@color/a_red"
+            android:layout_width="150sp"
+            android:layout_height="80sp"
+            android:id="@+id/store_item_image_3"/>
+
+        <Space
+            android:layout_width="28sp"
+            android:layout_height="80sp"/>
+
+        <ImageView
+            android:id="@+id/store_item_image_4"
+            android:src="@color/a_red"
+            android:layout_width="150sp"
+            android:layout_height="80sp"
+            vzzzzz/>
+
+        <Space
+            android:layout_width="28sp"
+            android:layout_height="80sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="28sp"
+            android:layout_height="80sp"/>
+
+        <ImageView
+            android:src="@color/a_red"
+            android:layout_width="150sp"
+            android:layout_height="80sp"
+            android:id="@+id/store_item_image_5"/>
+
+        <Space
+            android:layout_width="28sp"
+            android:layout_height="80sp"/>
+
+        <ImageView
+            android:id="@+id/store_item_image_6"
+            android:src="@color/a_red"
+            android:layout_width="150sp"
+            android:layout_height="80sp"
+            vzzzzz/>
+
+        <Space
+            android:layout_width="28sp"
+            android:layout_height="80sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

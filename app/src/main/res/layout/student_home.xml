@@ -6,13 +6,6 @@
               android:fitsSystemWindows="true">
 
     <include
-        android:fitsSystemWindows="true"
-        android:id="@+id/studentProfileToolbar"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        layout="@layout/toolbar_custom_profile_student" />
-
-    <include
         android:id="@+id/studentToolbar"
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
@@ -37,8 +30,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/student_home_recycler_view"
-        android:layout_below="@+id/studentProfileToolbar"
-        android:layout_toEndOf="@+id/t2Toolbar">
+        android:layout_below="@+id/studentToolbar"
+        android:layout_alignParentStart="true">
     </android.support.v7.widget.RecyclerView>
+
+    <!--
+
+    <include
+        android:fitsSystemWindows="true"
+        android:id="@+id/studentProfileToolbar"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        layout="@layout/toolbar_custom_profile_student"
+        android:layout_below="@+id/t2Toolbar"
+        android:layout_alignParentStart="true"/>
+
+         -->
 
 </RelativeLayout>

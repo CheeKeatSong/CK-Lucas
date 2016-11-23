@@ -156,10 +156,10 @@ public class StudentFragment extends Fragment{
             });
 
             studentUsernameTextView = (TextView) v.findViewById(R.id.fragment_student_username_text_view);
-            studentUsernameTextView.setText("Username: " + mStudent.getStudentUsername());
+            studentUsernameTextView.setText(mStudent.getStudentUsername());
 
             studentEmailTextView = (TextView) v.findViewById(R.id.fragment_student_email_text_view);
-            studentEmailTextView.setText("Email: " + mStudent.getStudentEmail());
+            studentEmailTextView.setText(mStudent.getStudentEmail());
 
             studentCategoryTextView = (TextView) v.findViewById(R.id.fragment_student_category_text_view);
             studentCategoryTextView.setText("Student Category: ");
@@ -299,7 +299,7 @@ public class StudentFragment extends Fragment{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
             long studentEpoch = Long.parseLong(mStudent.getDate());
             String studentDate = sdf.format(new Date(studentEpoch));
-            studentDateTextView.setText("Creation Date: " + studentDate);
+            studentDateTextView.setText(studentDate);
 
             studentDataEditButton = (Button) v.findViewById(R.id.fragment_student_data_edit_button);
             studentDataEditButton.setOnClickListener(new View.OnClickListener(){

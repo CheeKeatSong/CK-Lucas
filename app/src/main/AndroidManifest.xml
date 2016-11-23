@@ -33,15 +33,15 @@
         </activity>
         <activity
             android:name=".lecturer.LecturerHome"
-            android:configChanges="orientation">
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         <activity
             android:name=".student.StudentHome"
-            android:configChanges="orientation">
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         <activity
             android:name=".admin.AdminHome"
-            android:configChanges="orientation">
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         <activity
             android:name=".RecyclerView.RecyclerViewLecturer"

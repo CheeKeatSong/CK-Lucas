@@ -80,7 +80,7 @@ public class LecturerFragment extends Fragment{
         View v = inflater.inflate(R.layout.lecturer_fragment, container, false);
 
         lecturerIdTextView = (TextView) v.findViewById(R.id.fragment_lecturer_id_text_view);
-        lecturerIdTextView.setText("Lecturer ID: " + mLecturer.getLecturer_ID());
+        lecturerIdTextView.setText(mLecturer.getLecturer_ID());
 
         lecturerFullNameTextView = (TextView) v.findViewById(R.id.fragment_lecturer_full_name_text_view);
         lecturerFullNameTextView.setText("Name: ");
@@ -152,7 +152,7 @@ public class LecturerFragment extends Fragment{
         });
 
         lecturerEmailTextView = (TextView) v.findViewById(R.id.fragment_lecturer_email_text_view);
-        lecturerEmailTextView.setText("Lecturer Email: " + mLecturer.getEmailAddress());
+        lecturerEmailTextView.setText(mLecturer.getEmailAddress());
 
         lecturerPasswordTextView = (TextView) v.findViewById(R.id.fragment_lecturer_password_text_view);
         lecturerPasswordTextView.setText("Password: ");
@@ -184,7 +184,7 @@ public class LecturerFragment extends Fragment{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
         long lecturerEpoch = Long.parseLong(mLecturer.getDate());
         String lecturerDate = sdf.format(new Date(lecturerEpoch));
-        lecturerDateTextView.setText("Creation Date: " + lecturerDate);
+        lecturerDateTextView.setText(lecturerDate);
 
         lecturerDataEditButton = (Button) v.findViewById(R.id.fragment_lecturer_data_edit_button);
         lecturerDataEditButton.setOnClickListener(new View.OnClickListener(){

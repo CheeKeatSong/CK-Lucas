@@ -77,7 +77,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
         TextView textViewStudentPoint;
         TextView textViewStudentUid;
         ImageButton buttonDelete;
-        ImageButton  buttonEdit;
+        ImageButton buttonEdit;
         ImageView letterimage;
 
         public SimpleViewHolder(final View itemView) {
@@ -90,8 +90,8 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             textViewStudentSchool = (TextView) itemView.findViewById(R.id.student_school_text_view);
             textViewStudentPoint = (TextView) itemView.findViewById(R.id.student_point_text_view);
             textViewStudentUid = (TextView) itemView.findViewById(R.id.student_uid_text_view);
-            buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
-            buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
+            buttonDelete = (ImageButton) itemView.findViewById(R.id.delete);
+            buttonEdit = (ImageButton) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -102,8 +102,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                     //notifyItemChanged(selectedPos);
                     if (!studentRetrieval) {
                         Toast.makeText(view.getContext(), "Double Tap to Edit the data", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (studentRetrieval) {
+                    } else if (studentRetrieval) {
                         Toast.makeText(view.getContext(), "Double Tap to select the data", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -122,7 +121,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
         FirebaseStudentDataRetrieval();
     }
 
-    public static void sortingData(int sortoption){
+    public static void sortingData(int sortoption) {
 
         //FirebaseStudentDataRetrieval();
 
@@ -130,7 +129,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             case 1:
                 Collections.sort(StudentDataset, new Comparator<Student>() {
                     @Override
-                    public int compare(Student student1, Student student2){
+                    public int compare(Student student1, Student student2) {
                         return (student1.getStudentName().substring(0, 1).toUpperCase() + student1.getStudentName().substring(1)).compareTo(student2.getStudentName().substring(0, 1).toUpperCase() + student2.getStudentName().substring(1));
                     }
                 });
@@ -139,7 +138,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             case 2:
                 Collections.sort(StudentDataset, new Comparator<Student>() {
                     @Override
-                    public int compare(Student student1, Student student2){
+                    public int compare(Student student1, Student student2) {
                         return (student1.getStudentName().substring(0, 1).toUpperCase() + student1.getStudentName().substring(1)).compareTo(student2.getStudentName().substring(0, 1).toUpperCase() + student2.getStudentName().substring(1));
                     }
                 });
@@ -149,7 +148,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             case 3:
                 Collections.sort(StudentDataset, new Comparator<Student>() {
                     @Override
-                    public int compare(Student student1, Student student2){
+                    public int compare(Student student1, Student student2) {
                         return student1.getDate().compareTo(student2.getDate());
                     }
                 });
@@ -158,7 +157,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             case 4:
                 Collections.sort(StudentDataset, new Comparator<Student>() {
                     @Override
-                    public int compare(Student student1, Student student2){
+                    public int compare(Student student1, Student student2) {
                         return student1.getDate().compareTo(student2.getDate());
                     }
                 });
@@ -205,9 +204,9 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
                 //if(!studentRetrieval) {
-                    Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewStudentName.getText().toString());
-                    Intent intent = StudentFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewStudentUid.getText().toString());
-                    viewHolder.swipeLayout.getContext().startActivity(intent);
+                Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewStudentName.getText().toString());
+                Intent intent = StudentFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewStudentUid.getText().toString());
+                viewHolder.swipeLayout.getContext().startActivity(intent);
                 //}
                 /*else if(studentRetrieval) {
                     String studentName = viewHolder.textViewStudentName.getText().toString();
@@ -231,7 +230,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
 
@@ -252,7 +251,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -299,17 +298,13 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
 
         if (charText.length() == 0) {
             StudentDataset = students;
-        }
-        else
-        {
-            for (Student student : students)
-            {
+        } else {
+            for (Student student : students) {
                 if (student.getStudentName().toLowerCase(Locale.getDefault()).contains(charText)
                         || student.getStudentID().toLowerCase(Locale.getDefault()).contains(charText)
                         || student.getStudentCategory().toLowerCase(Locale.getDefault()).contains(charText)
                         || student.getStudentSchool().toLowerCase(Locale.getDefault()).contains(charText)
-                        || student.getStudentSchoolShort().toLowerCase(Locale.getDefault()).contains(charText))
-                {
+                        || student.getStudentSchoolShort().toLowerCase(Locale.getDefault()).contains(charText)) {
                     StudentDataset.add(student);
                 }
             }
@@ -317,7 +312,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
         RecyclerViewStudent.notifyDataChanges();
     }
 
-    public static void FirebaseStudentDataRetrieval(){
+    public static void FirebaseStudentDataRetrieval() {
         //String key = ref.push().getKey();
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("users").child("student");
@@ -326,36 +321,38 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     boolean found = false;
                     for (Student student : students) {
                         if (student.getStudentUid() == postSnapshot.getValue(Student.class).getStudentUid()) {
                             found = true;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         students.add(postSnapshot.getValue(Student.class));
                         Log.e("Get Data", (postSnapshot.getValue(Student.class).getStudentName()));
-                    }}
-                if (students.size() == snapshot.getChildrenCount()){
+                    }
+                }
+                if (students.size() == snapshot.getChildrenCount()) {
+                    StudentDataset = students;
+                    Collections.sort(StudentDataset, new Comparator<Student>() {
+                        @Override
+                        public int compare(Student student1, Student student2) {
+                            return student1.getDate().compareTo(student2.getDate());
+                        }
+                    });
+                    Collections.reverse(StudentDataset);
                     RecyclerViewStudent.offProgressBar();
                     RecyclerViewStudent.notifyDataChanges();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        StudentDataset = students;
-        Collections.sort(StudentDataset, new Comparator<Student>() {
-            @Override
-            public int compare(Student student1, Student student2){
-                return student1.getDate().compareTo(student2.getDate());
-            }
-        });
-        Collections.reverse(StudentDataset);
     }
 
     public void removeUserFromAuth(final String email, final String password) {
@@ -449,8 +446,8 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 //Log.d(TAG, "EVENT LISTENER RUN"); // Troubleshooting.
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     //Log.d(TAG, "DATA SNAPSHOT RUN"); // Troubleshooting.
                     if (UID.equals(postSnapshot.getValue(Admin.class).getAdminUid())) {
                         admin = postSnapshot.getValue(Admin.class);
@@ -471,9 +468,10 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
     }

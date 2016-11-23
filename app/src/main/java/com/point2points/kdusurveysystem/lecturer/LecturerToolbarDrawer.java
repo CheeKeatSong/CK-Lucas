@@ -35,7 +35,7 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.point2points.kdusurveysystem.Login;
@@ -145,6 +145,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
         mToolBar3 = (Toolbar) findViewById(R.id.t2Toolbar);
         setSupportActionBar(mToolBar3);
 
+        /*
         //UserProfileToolBar
         userProfileButton = (ImageButton) findViewById(R.id.menu_item_profile_student);
         userProfileButton.setOnClickListener(new View.OnClickListener(){
@@ -158,6 +159,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
 
         userLecturerSchool = (TextView) findViewById(R.id.menu_item_programme_student);
         userLecturerSchool.setText(mLecturer.getSchoolName());
+*/
 
         userLecturerSPoints = (TextView) findViewById(R.id.menu_item_point_student);
         userLecturerSPoints.setText(mLecturer.getPoint());
@@ -172,6 +174,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
             }
         });
 
+        /*
         backButton = (ImageButton)findViewById(R.id.menu_item_back);
         searchEditText = (EditText) findViewById(R.id.search_edit_text);
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -254,6 +257,7 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
             }
 
         });
+*/
 
         if (savedInstanceState != null) {
         }
@@ -262,10 +266,11 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
     protected void onCreateDrawer() {
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.store);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.drawer_item_settings);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName(R.string.sign_out);
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home).withIcon(R.drawable.ic_action_home);
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.store).withIcon(R.drawable.ic_action_store);
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.leaderboard).withIcon(R.drawable.ic_action_leaderboard);
+        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.drawer_item_settings).withIcon(R.drawable.ic_action_settings);
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.sign_out).withIcon(R.drawable.ic_action_sign_out);
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -288,9 +293,10 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
                 .addDrawerItems(
                         item1,
                         item2,
-                        new DividerDrawerItem(),
                         item3,
-                        item4
+                        new DividerDrawerItem(),
+                        item4,
+                        item5
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -299,7 +305,12 @@ public class LecturerToolbarDrawer extends AppCompatActivity {
                         int drawerIdentifier = (int)drawerItem.getIdentifier();
 
                         switch (drawerIdentifier){
-                            case 4:
+                            case 1:
+                                Intent intentHome = new Intent(LecturerToolbarDrawer.this, LecturerHome.class);
+                                startActivity(intentHome);
+                                finish();
+                                break;
+                            case 5:
                                 FirebaseAuth.getInstance().signOut();
                                 Intent intentLogout = new Intent(LecturerToolbarDrawer.this, Login.class);
                                 startActivity(intentLogout);

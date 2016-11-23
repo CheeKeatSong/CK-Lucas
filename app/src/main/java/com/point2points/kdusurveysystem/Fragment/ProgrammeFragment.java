@@ -93,9 +93,6 @@ public class ProgrammeFragment extends Fragment{
                 }
             });
 
-            programmeCategoryTextView = (TextView) v.findViewById(R.id.fragment_programme_category_text_view);
-            programmeCategoryTextView.setText("Programme Category: ");
-
             programmeCategoryRadioGroup = (RadioGroup) v.findViewById(R.id.fragment_programme_category_radio_group);
             programmeCategoryRadioDiploma = (RadioButton) v.findViewById(R.id.fragment_programme_category_radio_diploma);
             programmeCategoryRadioDegree = (RadioButton) v.findViewById(R.id.fragment_programme_category_radio_degree);
@@ -151,7 +148,7 @@ public class ProgrammeFragment extends Fragment{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
             long programmeEpoch = Long.parseLong(mProgramme.getDate());
             String programmeDate = sdf.format(new Date(programmeEpoch));
-            programmeDateTextView.setText("Creation Date: " + programmeDate);
+            programmeDateTextView.setText(programmeDate);
 
             programmeDataEditButton = (Button) v.findViewById(R.id.fragment_programme_data_edit_button);
             programmeDataEditButton.setOnClickListener(new View.OnClickListener(){

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -75,7 +76,7 @@ public class SurveyFragment extends Fragment {
     private Button surveyDataOkayButton, surveyCancelButton;
     private Button surveyAddStudentButton, surveyDeleteStudentButton;
     private Button surveyRespondOverviewButton, surveySubjectiveRespondButton;
-    private TextView surveyQuestionR1, surveyQuestionR2, surveyQuestionR3, surveyQuestionR4, surveyTotalRating1, surveyTotalRating2, surveyTotalRating3,  surveyTotalRating4,  surveyTotalRating5;
+    private TextView surveyQuestionR1, surveyQuestionR2, surveyQuestionR3, surveyQuestionR4, surveyTotalRating1, surveyTotalRating2, surveyTotalRating3, surveyTotalRating4, surveyTotalRating5;
     private LinearLayout respondOverview, subjectiveRespond;
 
     private static ArrayList<Student> surveyStudentList = new ArrayList<>();
@@ -186,9 +187,9 @@ public class SurveyFragment extends Fragment {
         surveyDateTextView.setText(surveyDate);
 
         surveyAddStudentButton = (Button) v.findViewById(R.id.survey_fragment_add_icon);
-        surveyAddStudentButton.setOnClickListener(new View.OnClickListener(){
+        surveyAddStudentButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
 
                 surveyStudentDataSetSelected = new ArrayList<>();
 
@@ -199,9 +200,9 @@ public class SurveyFragment extends Fragment {
         });
 
         surveyDeleteStudentButton = (Button) v.findViewById(R.id.survey_fragment_delete_icon);
-        surveyDeleteStudentButton.setOnClickListener(new View.OnClickListener(){
+        surveyDeleteStudentButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 //delete the arraylist and data in database
                 final Context context = surveyDeleteStudentButton.getContext();
 
@@ -212,18 +213,46 @@ public class SurveyFragment extends Fragment {
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 //get children, compare children, if same, then remove value.
+                                //responded student cannot be delete.
                                 ArrayList<SurveyStudent> toRemove = new ArrayList<>();
                                 for (SurveyStudent surveyStudent1 : surveyStudentDataSet) {
-                                    for (SurveyStudent surveyStudent2 : surveyStudentDataSetDelete){
-                                        if (!surveyStudent2.getSurveyStudentID().equals(surveyStudent1.getSurveyStudentID())){
-                                            toRemove.add(surveyStudent2);
-                                        }
-                                        if (surveyStudentDataSetDelete.size() == 1){
-                                            if (surveyStudent2.getSurveyStudentID().equals(surveyStudent1.getSurveyStudentID())){
+                                    for (SurveyStudent surveyStudent2 : surveyStudentDataSetDelete) {
+                                        if (surveyStudentDataSetDelete.size() == 1) {
+                                            if (!surveyStudent2.getSurveyStudentID().equals(surveyStudent1.getSurveyStudentID())) {
+                                                if (surveyStudent1.isSurveyStudentStatus()) {
+                                                    toRemove.add(surveyStudent2);
+                                                } else {
+                                                    final Toast toastItemOnClick;
+                                                    toastItemOnClick = Toast.makeText(context, "Responded student cannot be delete.", Toast.LENGTH_SHORT);
+                                                    toastItemOnClick.show();
+
+                                                    Handler handler = new Handler();
+                                                    handler.postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            toastItemOnClick.cancel();
+                                                        }
+                                                    }, 500);
+                                                }
+                                            }
+                                        } else if (!surveyStudent2.getSurveyStudentID().equals(surveyStudent1.getSurveyStudentID())) {
+                                            if (surveyStudent1.isSurveyStudentStatus()) {
                                                 toRemove.add(surveyStudent2);
+                                            } else {
+                                                final Toast toastItemOnClick;
+                                                toastItemOnClick = Toast.makeText(context, "Responded student cannot be delete.", Toast.LENGTH_SHORT);
+                                                toastItemOnClick.show();
+
+                                                Handler handler = new Handler();
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        toastItemOnClick.cancel();
+                                                    }
+                                                }, 500);
                                             }
                                         }
                                     }
@@ -238,7 +267,7 @@ public class SurveyFragment extends Fragment {
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -249,9 +278,9 @@ public class SurveyFragment extends Fragment {
         });
 
         surveyDataOkayButton = (Button) v.findViewById(R.id.fragment_survey_data_okay_button);
-        surveyDataOkayButton.setOnClickListener(new View.OnClickListener(){
+        surveyDataOkayButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
 
                 final Context context = surveyDataOkayButton.getContext();
 
@@ -262,7 +291,7 @@ public class SurveyFragment extends Fragment {
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 ref = FirebaseDatabase.getInstance().getReference().child("survey").child(mSurvey.getSurveyUID()).child("student");
 
@@ -270,13 +299,13 @@ public class SurveyFragment extends Fragment {
 
                                 for (SurveyStudent surveyStudent1 : surveyStudentOnline) {
                                     boolean surveyStudentChecker = false;
-                                    for (SurveyStudent surveyStudent2 : surveyStudentDataSet){
-                                        if (surveyStudent1.getSurveyStudentID().equals(surveyStudent2.getSurveyStudentID())){
+                                    for (SurveyStudent surveyStudent2 : surveyStudentDataSet) {
+                                        if (surveyStudent1.getSurveyStudentID().equals(surveyStudent2.getSurveyStudentID())) {
                                             surveyStudentChecker = true;
                                         }
                                     }
-                                    if(!surveyStudentChecker){
-                                        if(surveyStudent1.isSurveyStudentStatus() == true){
+                                    if (!surveyStudentChecker) {
+                                        /*if(surveyStudent1.isSurveyStudentStatus() == true){
                                             DatabaseReference mDatabase;
                                             mDatabase = FirebaseDatabase.getInstance().getReference().child("survey").child(uid);
                                             Map<String, Object> updateSurvey = new HashMap<String, Object>();
@@ -284,13 +313,13 @@ public class SurveyFragment extends Fragment {
                                             updateSurvey.put("surveyAttendance", mSurvey.getSurveyAttendance() - 1);
 
                                             mDatabase.updateChildren(updateSurvey);
-                                        }
+                                        }*/
                                         ref.child(surveyStudent1.getSurveyStudentUID()).removeValue();
                                     }
                                 }
                                 for (SurveyStudent surveyStudent1 : surveyStudentDataSet) {
-                                        ref.child(surveyStudent1.getSurveyStudentUID()).setValue(surveyStudent1);
-                                    }
+                                    ref.child(surveyStudent1.getSurveyStudentUID()).setValue(surveyStudent1);
+                                }
 
                                 // Update total attendance count.
                                 DatabaseReference mDatabase;
@@ -309,13 +338,11 @@ public class SurveyFragment extends Fragment {
                                 refreshAdapter(mSurvey);
                                 offProgressBar();
                                 getActivity().onBackPressed();
-
-
                             }
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -326,41 +353,39 @@ public class SurveyFragment extends Fragment {
         });
 
         surveyCancelButton = (Button) v.findViewById(R.id.fragment_survey_data_cancel_button);
-        surveyCancelButton.setOnClickListener(new View.OnClickListener(){
+        surveyCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
         respondOverview = (LinearLayout) v.findViewById(R.id.survey_fragment_linear_layout_respond_overview);
         subjectiveRespond = (LinearLayout) v.findViewById(R.id.survey_fragment_linear_layout_subjective_response);
-        
+
         surveyRespondOverviewButton = (Button) v.findViewById(R.id.survey_fragment_respond_overview_button);
-        surveyRespondOverviewButton.setOnClickListener(new View.OnClickListener(){
+        surveyRespondOverviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 if (!respondOverviewTab) {
                     respondOverview.setVisibility(View.VISIBLE);
                     respondOverviewTab = true;
                     return;
-                }
-                else{
+                } else {
                     respondOverview.setVisibility(View.GONE);
                     respondOverviewTab = false;
                 }
             }
         });
         surveySubjectiveRespondButton = (Button) v.findViewById(R.id.survey_fragment_subjective_respond_button);
-        surveySubjectiveRespondButton.setOnClickListener(new View.OnClickListener(){
+        surveySubjectiveRespondButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 if (!subjectiveRespondTab) {
                     subjectiveRespond.setVisibility(View.VISIBLE);
                     subjectiveRespondTab = true;
                     return;
-                }
-                else{
+                } else {
                     subjectiveRespond.setVisibility(View.GONE);
                     subjectiveRespondTab = false;
                 }
@@ -368,16 +393,16 @@ public class SurveyFragment extends Fragment {
         });
 
         surveyQuestionR1 = (TextView) v.findViewById(R.id.fragment_survey_queston_rating1);
-        surveyQuestionR1.setText("A1 : " + mSurvey.getSurveyQ1() + "\nA5 : " + mSurvey.getSurveyQ5() + "\nA9 : " + mSurvey.getSurveyQ9() + "\n\nB1 : "+ mSurvey.getSurveyQ11() +"\nB5 : "+ mSurvey.getSurveyQ15());
+        surveyQuestionR1.setText("A1 : " + mSurvey.getSurveyQ1() + "\nA5 : " + mSurvey.getSurveyQ5() + "\nA9 : " + mSurvey.getSurveyQ9() + "\n\nB1 : " + mSurvey.getSurveyQ11() + "\nB5 : " + mSurvey.getSurveyQ15());
 
         surveyQuestionR2 = (TextView) v.findViewById(R.id.fragment_survey_queston_rating2);
-        surveyQuestionR2.setText("A2   : " + mSurvey.getSurveyQ2() + "\nA6   : " + mSurvey.getSurveyQ6() + "\nA10 : " + mSurvey.getSurveyQ10() + "\n\nB2 : "+ mSurvey.getSurveyQ12() +"\nB6 : "+ mSurvey.getSurveyQ16());
+        surveyQuestionR2.setText("A2   : " + mSurvey.getSurveyQ2() + "\nA6   : " + mSurvey.getSurveyQ6() + "\nA10 : " + mSurvey.getSurveyQ10() + "\n\nB2 : " + mSurvey.getSurveyQ12() + "\nB6 : " + mSurvey.getSurveyQ16());
 
         surveyQuestionR3 = (TextView) v.findViewById(R.id.fragment_survey_queston_rating3);
-        surveyQuestionR3.setText("A3 : " + mSurvey.getSurveyQ3() + "\nA7 : " + mSurvey.getSurveyQ7() +"\n" + "\n\nB3 : "+ mSurvey.getSurveyQ13() +"\nB7 : "+ mSurvey.getSurveyQ17());
+        surveyQuestionR3.setText("A3 : " + mSurvey.getSurveyQ3() + "\nA7 : " + mSurvey.getSurveyQ7() + "\n" + "\n\nB3 : " + mSurvey.getSurveyQ13() + "\nB7 : " + mSurvey.getSurveyQ17());
 
         surveyQuestionR4 = (TextView) v.findViewById(R.id.fragment_survey_queston_rating4);
-        surveyQuestionR4.setText("A4 : " + mSurvey.getSurveyQ4() + "\nA8 : " + mSurvey.getSurveyQ8() + "\n"+ "\n\nB4 : "+ mSurvey.getSurveyQ14() +"\nB8 : "+ mSurvey.getSurveyQ18());
+        surveyQuestionR4.setText("A4 : " + mSurvey.getSurveyQ4() + "\nA8 : " + mSurvey.getSurveyQ8() + "\n" + "\n\nB4 : " + mSurvey.getSurveyQ14() + "\nB8 : " + mSurvey.getSurveyQ18());
 
         surveyTotalRating1 = (TextView) v.findViewById(R.id.fragment_survey_total_rating1);
         surveyTotalRating1.setText("1: " + mSurvey.getSurveyRatingScale1());
@@ -403,12 +428,12 @@ public class SurveyFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if (requestCode == REQUEST_STUDENT_RETRIEVE){
-            if(data == null){
+        if (requestCode == REQUEST_STUDENT_RETRIEVE) {
+            if (data == null) {
                 return;
             }
             Bundle args = data.getBundleExtra("BUNDLE");
-            surveyStudentList = (ArrayList<Student>)args.getSerializable(EXTRA_STUDENT_PICK_LIST);
+            surveyStudentList = (ArrayList<Student>) args.getSerializable(EXTRA_STUDENT_PICK_LIST);
             for (Student student : surveyStudentList) {
                 SurveyStudent surveyStudent = new SurveyStudent(student.getStudentID(), student.getStudentName(), false, null, student.getStudentUid());
                 surveyStudentDataSetSelected.add(surveyStudent);
@@ -424,14 +449,14 @@ public class SurveyFragment extends Fragment {
                     surveyStudentDataSet.remove(surveyStudent1);
                 }
             }*/
-            for (SurveyStudent surveyStudent1 : surveyStudentDataSetSelected){
+            for (SurveyStudent surveyStudent1 : surveyStudentDataSetSelected) {
                 boolean surveyStudentChecker = false;
-                for (SurveyStudent surveyStudent2 : surveyStudentDataSet){
-                    if (surveyStudent1.getSurveyStudentID() == (surveyStudent2.getSurveyStudentID())){
+                for (SurveyStudent surveyStudent2 : surveyStudentDataSet) {
+                    if (surveyStudent1.getSurveyStudentID() == (surveyStudent2.getSurveyStudentID())) {
                         surveyStudentChecker = true;
                     }
                 }
-                if(!surveyStudentChecker){
+                if (!surveyStudentChecker) {
                     surveyStudentDataSet.add(surveyStudent1);
                 }
             }
@@ -461,7 +486,7 @@ public class SurveyFragment extends Fragment {
     }
 
     //Retrieve survey students
-    public void FirebaseSurveyStudentDataRetrieval(){
+    public void FirebaseSurveyStudentDataRetrieval() {
         //String key = ref.push().getKey();
         ref = FirebaseDatabase.getInstance().getReference().child("survey").child(mSurvey.getSurveyUID()).child("student");
         query = ref;
@@ -469,41 +494,43 @@ public class SurveyFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     boolean found = false;
                     for (SurveyStudent Surveystudent : surveyStudentOnline) {
                         if (Surveystudent.getSurveyStudentUID() == postSnapshot.getValue(SurveyStudent.class).getSurveyStudentUID()) {
                             found = true;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         surveyStudentOnline.add(postSnapshot.getValue(SurveyStudent.class));
-                    }}
-                if(surveyStudentOnline.size() == snapshot.getChildrenCount()) {
+                    }
+                }
+                if (surveyStudentOnline.size() == snapshot.getChildrenCount()) {
                     offProgressBar();
                     notifyDataChanges();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
         surveyStudentDataSet = surveyStudentOnline;
         Collections.sort(surveyStudentDataSet, new Comparator<SurveyStudent>() {
             @Override
-            public int compare(SurveyStudent surveyStudent1, SurveyStudent surveyStudent2){
+            public int compare(SurveyStudent surveyStudent1, SurveyStudent surveyStudent2) {
                 return surveyStudent1.getSurveyStudentID().compareTo(surveyStudent2.getSurveyStudentID());
             }
         });
         Collections.reverse(surveyStudentDataSet);
     }
 
-    public static void onProgressBar(){
+    public static void onProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    public static void offProgressBar(){
+    public static void offProgressBar() {
         progressBar.setVisibility(View.GONE);
     }
 
@@ -530,6 +557,6 @@ public class SurveyFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-       notifyDataChanges();
+        notifyDataChanges();
     }
 }

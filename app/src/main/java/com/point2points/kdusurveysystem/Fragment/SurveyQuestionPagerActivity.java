@@ -44,6 +44,7 @@ public class SurveyQuestionPagerActivity extends AppCompatActivity{
 
         this.surveyData = SurveyDataSet;
 
+        surveyQuestionSet = new ArrayList<>();
         surveyQuestionSet.add(surveyQuestion = new SurveyQuestion(1, "The lecturer is punctual."));
         surveyQuestionSet.add(surveyQuestion = new SurveyQuestion(2, "The lecturer is well organized."));
         surveyQuestionSet.add(surveyQuestion = new SurveyQuestion(3, "The lecturer communicates well (explanation / instruction)."));
@@ -93,18 +94,15 @@ public class SurveyQuestionPagerActivity extends AppCompatActivity{
     public void onBackPressed() {
         new AlertDialog.Builder(this)
                 .setTitle("Closing Survey")
-                .setMessage("Are you sure you want to exit this survey?\n(The survey progress will not be saved)")
+                .setMessage("Are you sure you want to exit this survey?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         finish();
                     }
-
                 })
                 .setNegativeButton("No", null)
                 .show();
     }
-
 }

@@ -1,95 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/fragment_school_name_text_view"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:text=""
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
-
-    <EditText
-        android:id="@+id/fragment_school_name_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="18dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="6dp">
-
-    <TextView
-        android:id="@+id/fragment_school_name_short_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:text=""
-        android:layout_weight="0"/>
-
-    <EditText
-        android:id="@+id/fragment_school_name_short_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="18dp"
-        android:layout_weight="1"/>
-
-</LinearLayout>
-
-    <TextView
-        android:id="@+id/fragment_school_date_text_view"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:text=""
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/fragment_school_data_edit_button"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/kdu_blue">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="2dp"
+                android:text="SCHOOL DETAILS"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:textSize="16dp"
-            android:textColor="@color/white"
-            android:background="@color/dark_kdu_blue"
-            android:layout_weight="1"
-            android:text="@string/okay"/>
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-        <Button
-            android:text="@string/cancel"
-            android:layout_weight="1"
-            android:id="@+id/fragment_school_data_cancel_button"
+            <TextView
+                android:layout_marginBottom="-10dp"
+                android:id="@+id/fragment_school_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:text="Name:"
+                android:textColor="@color/dark_kdu_blue"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:layout_marginBottom="-4dp"
+                android:id="@+id/fragment_school_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/dark_kdu_blue"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:textSize="16dp"
-            android:textColor="@color/white"
-            android:background="@color/dark_kdu_blue"/>
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginBottom="-10dp"
+                android:id="@+id/fragment_school_name_short_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:text="Short Form:"
+                android:textColor="@color/dark_kdu_blue"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:layout_marginBottom="-4dp"
+                android:id="@+id/fragment_school_name_short_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/dark_kdu_blue"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:text="Date:"
+                android:textColor="@color/dark_kdu_blue"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/fragment_school_date_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:textColor="@color/dark_kdu_blue"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fragment_school_data_edit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@color/kdu_blue"
+                android:text="@string/okay"
+                android:textColor="@color/white"
+                android:textSize="16dp"/>
+
+            <Button
+                android:id="@+id/fragment_school_data_cancel_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:background="@color/kdu_blue"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

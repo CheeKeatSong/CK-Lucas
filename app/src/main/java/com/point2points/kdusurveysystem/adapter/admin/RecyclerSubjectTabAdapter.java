@@ -58,19 +58,19 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         return intent;
     }
 
-    public static String subjectRetrieval(Intent result){
+    public static String subjectRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_SUBJECT);
     }
 
-    public static String subjectCodeRetrieval(Intent result){
+    public static String subjectCodeRetrieval(Intent result) {
         return result.getStringExtra(EXTRA_SUBJECT_CODE);
     }
 
-    public static String subjectCategoryRetrieval(Intent result){
-        return  result.getStringExtra(EXTRA_SUBJECT_CATEGORY);
+    public static String subjectCategoryRetrieval(Intent result) {
+        return result.getStringExtra(EXTRA_SUBJECT_CATEGORY);
     }
 
-    private void setSubjectAndCode(String subject, String subjectCode, String subjectCategory){
+    private void setSubjectAndCode(String subject, String subjectCode, String subjectCategory) {
         AdminToolbarDrawer.tabIdentifier = AdminToolbarDrawer.tabIdentifierMutex;
         Intent data = new Intent();
         data.putExtra(EXTRA_SUBJECT, subject);
@@ -78,7 +78,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         data.putExtra(EXTRA_SUBJECT_CATEGORY, subjectCategory);
         mActivity.setResult(Activity.RESULT_OK, data);
         mActivity.finish();
-        Log.e("set " ,"subject");
+        Log.e("set ", "subject");
     }
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -90,7 +90,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         TextView textViewSubjectSchool;
         TextView textViewSubjectUid;
         ImageButton buttonDelete;
-        ImageButton  buttonEdit;
+        ImageButton buttonEdit;
         ImageView letterimage;
 
         public SimpleViewHolder(final View itemView) {
@@ -101,15 +101,15 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             //textViewSubjectDepartment = (TextView) itemView.findViewById(R.id.subject_department_text_view);
             textViewSubjectSchool = (TextView) itemView.findViewById(R.id.subject_school_text_view);
             textViewSubjectUid = (TextView) itemView.findViewById(R.id.subject_uid_text_view);
-            textViewSubjectCode = (TextView)itemView.findViewById(R.id.subject_code_text_view);
-            buttonDelete = (ImageButton ) itemView.findViewById(R.id.delete);
-            buttonEdit = (ImageButton ) itemView.findViewById(R.id.edit);
+            textViewSubjectCode = (TextView) itemView.findViewById(R.id.subject_code_text_view);
+            buttonDelete = (ImageButton) itemView.findViewById(R.id.delete);
+            buttonEdit = (ImageButton) itemView.findViewById(R.id.edit);
             letterimage = (ImageView) itemView.findViewById(R.id.letter_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                  subjectItemOnClickListener(view);
+                    subjectItemOnClickListener(view);
                 }
             });
         }
@@ -126,7 +126,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         FirebaseSubjectDataRetrieval();
     }
 
-    public static void sortingData(int sortoption){
+    public static void sortingData(int sortoption) {
 
         //FirebaseSubjectDataRetrieval();
 
@@ -134,7 +134,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             case 1:
                 Collections.sort(SubjectDataset, new Comparator<Subject>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
+                    public int compare(Subject subject1, Subject subject2) {
                         return (subject1.getSubjectName().substring(0, 1).toUpperCase() + subject1.getSubjectName().substring(1)).compareTo(subject2.getSubjectName().substring(0, 1).toUpperCase() + subject2.getSubjectName().substring(1));
                     }
                 });
@@ -143,7 +143,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             case 2:
                 Collections.sort(SubjectDataset, new Comparator<Subject>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
+                    public int compare(Subject subject1, Subject subject2) {
                         return (subject1.getSubjectName().substring(0, 1).toUpperCase() + subject1.getSubjectName().substring(1)).compareTo(subject2.getSubjectName().substring(0, 1).toUpperCase() + subject2.getSubjectName().substring(1));
                     }
                 });
@@ -153,7 +153,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             case 3:
                 Collections.sort(SubjectDataset, new Comparator<Subject>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
+                    public int compare(Subject subject1, Subject subject2) {
                         return subject1.getDate().compareTo(subject2.getDate());
                     }
                 });
@@ -162,7 +162,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
             case 4:
                 Collections.sort(SubjectDataset, new Comparator<Subject>() {
                     @Override
-                    public int compare(Subject subject1, Subject subject2){
+                    public int compare(Subject subject1, Subject subject2) {
                         return subject1.getDate().compareTo(subject2.getDate());
                     }
                 });
@@ -205,12 +205,11 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                if(!subjectRetrieval) {
+                if (!subjectRetrieval) {
                     Log.d(getClass().getSimpleName(), "onItemSelected: " + viewHolder.textViewSubjectName.getText().toString());
                     Intent intent = SubjectFragmentPagerActivity.newIntent(viewHolder.swipeLayout.getContext(), viewHolder.textViewSubjectUid.getText().toString());
                     viewHolder.swipeLayout.getContext().startActivity(intent);
-                }
-                else if(subjectRetrieval) {
+                } else if (subjectRetrieval) {
 
                     final Toast toastOnDoubleClick = Toast.makeText(mContext, viewHolder.textViewSubjectName.getText().toString() + " Selected.", Toast.LENGTH_SHORT);
                     toastOnDoubleClick.show();
@@ -244,7 +243,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
 
                                 //Log.d("Deletion", viewHolder.textViewUid.getText().toString());
                                 ref.child(viewHolder.textViewSubjectUid.getText().toString()).removeValue();
@@ -260,7 +259,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
                         })
 
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -309,17 +308,13 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
 
         if (charText.length() == 0) {
             SubjectDataset = subjects;
-        }
-        else
-        {
-            for (Subject subject : subjects)
-            {
+        } else {
+            for (Subject subject : subjects) {
                 if (subject.getSubjectName().toLowerCase(Locale.getDefault()).contains(charText)
                         || subject.getSubjectSchoolShort().toLowerCase(Locale.getDefault()).contains(charText)
                         || subject.getSubjectCategory().toLowerCase(Locale.getDefault()).contains(charText)
                         || subject.getSubjectCode().toLowerCase(Locale.getDefault()).contains(charText)
-                        || subject.getSubjectSchool().toLowerCase(Locale.getDefault()).contains(charText))
-                {
+                        || subject.getSubjectSchool().toLowerCase(Locale.getDefault()).contains(charText)) {
                     SubjectDataset.add(subject);
                 }
             }
@@ -327,7 +322,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         RecyclerViewSubject.notifyDataChanges();
     }
 
-    public static void FirebaseSubjectDataRetrieval(){
+    public static void FirebaseSubjectDataRetrieval() {
         //String key = ref.push().getKey();
         ref = FirebaseDatabase.getInstance().getReference();
         ref = ref.child("subject");
@@ -336,39 +331,41 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     boolean found = false;
                     for (Subject subject : subjects) {
                         if (subject.getSubjectUid() == postSnapshot.getValue(Subject.class).getSubjectUid()) {
                             found = true;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         subjects.add(postSnapshot.getValue(Subject.class));
                         Log.e("Get Data", (postSnapshot.getValue(Subject.class).getSubjectName()));
-                    }}
-                if (subjects.size() == snapshot.getChildrenCount()){
+                    }
+                }
+                if (subjects.size() == snapshot.getChildrenCount()) {
+                    SubjectDataset = subjects;
+                    Collections.sort(SubjectDataset, new Comparator<Subject>() {
+                        @Override
+                        public int compare(Subject subject1, Subject subject2) {
+                            return subject1.getDate().compareTo(subject2.getDate());
+                        }
+                    });
+                    Collections.reverse(SubjectDataset);
                     RecyclerViewSubject.offProgressBar();
                     RecyclerViewSubject.notifyDataChanges();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-                Log.e("The read failed: " ,firebaseError.getMessage());
+                Log.e("The read failed: ", firebaseError.getMessage());
             }
         });
-        SubjectDataset = subjects;
-        Collections.sort(SubjectDataset, new Comparator<Subject>() {
-            @Override
-            public int compare(Subject subject1, Subject subject2){
-                return subject1.getDate().compareTo(subject2.getDate());
-            }
-        });
-        Collections.reverse(SubjectDataset);
     }
 
-    public void subjectItemOnClickListener(View view){
+    public void subjectItemOnClickListener(View view) {
 
         final Toast toastItemOnClick;
 
@@ -383,8 +380,7 @@ public class RecyclerSubjectTabAdapter extends RecyclerSwipeAdapter<RecyclerSubj
                     toastItemOnClick.cancel();
                 }
             }, 500);
-        }
-        else if (subjectRetrieval){
+        } else if (subjectRetrieval) {
             toastItemOnClick = Toast.makeText(mContext, "Double Tap to select the data", Toast.LENGTH_SHORT);
             toastItemOnClick.show();
 

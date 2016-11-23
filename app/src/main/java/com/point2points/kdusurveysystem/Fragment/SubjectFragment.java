@@ -171,7 +171,7 @@ public class SubjectFragment extends Fragment{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
             long subjectEpoch = Long.parseLong(mSubject.getDate());
             String subjectDate = sdf.format(new Date(subjectEpoch));
-            subjectDateTextView.setText("Creation Date: " + subjectDate);
+            subjectDateTextView.setText(subjectDate);
 
             subjectDataEditButton = (Button) v.findViewById(R.id.fragment_subject_data_edit_button);
             subjectDataEditButton.setOnClickListener(new View.OnClickListener(){
