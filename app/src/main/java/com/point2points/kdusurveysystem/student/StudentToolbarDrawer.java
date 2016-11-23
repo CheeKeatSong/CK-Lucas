@@ -35,7 +35,7 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.point2points.kdusurveysystem.Login;
@@ -180,7 +180,7 @@ public class StudentToolbarDrawer extends AppCompatActivity {
                 // TODO Auto-generated method stub
                 String text = searchEditText.getText().toString().toLowerCase(Locale.getDefault());
                 switch (tabIdentifier) {
-                    case 2:
+                    case 1:
                         StudentHomeRecyclerViewAdapter.filter(text);
                         break;
                     default:
@@ -259,11 +259,11 @@ public class StudentToolbarDrawer extends AppCompatActivity {
     protected void onCreateDrawer() {
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.history);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.store);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName(R.string.drawer_item_settings);
-        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName(R.string.sign_out);
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home).withIcon(R.drawable.ic_action_home);
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.history).withIcon(R.drawable.ic_action_history);
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.store).withIcon(R.drawable.ic_action_store);
+        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.drawer_item_settings).withIcon(R.drawable.ic_action_settings);
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.sign_out).withIcon(R.drawable.ic_action_sign_out);
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)

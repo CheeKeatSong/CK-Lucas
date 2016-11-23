@@ -309,8 +309,6 @@ public class SurveyFragment extends Fragment {
                                 refreshAdapter(mSurvey);
                                 offProgressBar();
                                 getActivity().onBackPressed();
-
-
                             }
                         })
 

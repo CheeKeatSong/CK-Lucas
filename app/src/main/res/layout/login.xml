@@ -42,8 +42,7 @@
             android:background="@color/dark_kdu_blue">
 
         <TextView
-            android:textStyle="bold"
-            android:fontFamily="monospace"
+            android:typeface="serif"
             android:layout_gravity="center_horizontal"
             android:textSize="20dp"
             android:layout_width="wrap_content"
@@ -53,8 +52,6 @@
         </LinearLayout>
 
         <EditText
-            android:textStyle="bold"
-            android:fontFamily="monospace"
             android:textColor="@color/white"
             android:layout_marginTop="30dp"
             android:hint="@string/email_address"
@@ -77,8 +74,6 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:textStyle="bold"
-                android:fontFamily="monospace"
                 android:hint="@string/password"
                 android:textColorHint="@color/white"
                 android:paddingLeft="5dp"

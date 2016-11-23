@@ -73,6 +73,7 @@
     <string name="store">STORE</string>
     <string name="history">HISTORY</string>
     <string name="manage_store">MANAGE STORE</string>
+    <string name="leaderboard">Leaderboard</string>
 
     //sort list
     <string-array name="sort_array">

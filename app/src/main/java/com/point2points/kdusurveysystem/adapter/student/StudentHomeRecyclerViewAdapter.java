@@ -54,7 +54,6 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
     public static ArrayList<Survey> SurveyDataSet = new ArrayList<>();
     private SurveyStudent mSurveyStudent = new SurveyStudent();
 
-    static long total;
     static int retrieveCounter;
 
     private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

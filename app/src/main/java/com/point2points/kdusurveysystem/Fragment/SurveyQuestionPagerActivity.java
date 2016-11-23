@@ -98,13 +98,10 @@ public class SurveyQuestionPagerActivity extends AppCompatActivity{
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         finish();
                     }
-
                 })
                 .setNegativeButton("No", null)
                 .show();
     }
-
 }
