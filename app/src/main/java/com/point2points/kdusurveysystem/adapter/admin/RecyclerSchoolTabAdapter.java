@@ -118,7 +118,7 @@ public class RecyclerSchoolTabAdapter extends RecyclerSwipeAdapter<RecyclerSchoo
 
     public static void sortingData(int sortoption){
 
-        FirebaseSchoolDataRetrieval();
+        //irebaseSchoolDataRetrieval();
 
         switch (sortoption) {
             case 1:

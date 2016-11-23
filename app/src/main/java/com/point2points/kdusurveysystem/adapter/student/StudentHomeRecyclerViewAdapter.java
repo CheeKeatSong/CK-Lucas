@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.SurveyQuestionPagerActivity;
+import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.R;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewSurvey;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
@@ -57,7 +58,7 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
     static int retrieveCounter;
 
     private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private final static String UID = user.getUid();
+    private static String UID = user.getUid();
 
     public class SimpleViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
         SwipeLayout swipeLayout;
@@ -148,6 +149,8 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
         viewHolder.textViewSurveySubjectName.setText(surveySubjectName);
 
         Log.e(Long.toString(item.getSurveyAttendance()), Long.toString(item.getSurveyTotalAttendance()));
+        //Log.e("ATTENDANCE", Long.toString(item.getSurveyAttendance()));
+        //Log.e("TOTAL", Long.toString(item.getSurveyTotalAttendance()));
 
         viewHolder.textViewSurveyStatus.setText("Attendance: " + item.getSurveyAttendance() + "/" + item.getSurveyTotalAttendance());
         //viewHolder.textViewSurveyStatus.setText("Attendance: " + getAttendance(studentsAttendance, position) + "/" + getTotalStudents(totalStudents, position));
@@ -200,10 +203,16 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
         surveys = new ArrayList<>();
         SurveyDataSet = new ArrayList<>();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        UID = user.getUid();
+        //final String UID = Login.loginUID;
+
         ref = FirebaseDatabase.getInstance().getReference().child("survey");
         query = ref;
 
-        query.addValueEventListener(new ValueEventListener() {
+        // ListneverForSignleValueEvent to avoid repeated refreshes on multiple simultaneous data updates (from SurveyQuestionFragment).
+        //query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count ", "" + snapshot.getChildrenCount());
@@ -216,11 +225,11 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                         }
                     }
                     if (!found) { query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
-                        query.addValueEventListener(new ValueEventListener() {
+                        //query.addValueEventListener(new ValueEventListener() {
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Log.e("DO I RUN 2", "YES 2");
-
+                                //Log.e("DO I RUN 2", "YES 2");
 
                                 //get the involved survey for the following student
                                 for (final DataSnapshot postSnapshot2 : dataSnapshot.getChildren()) {
@@ -242,6 +251,11 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
                         });
                     }
                 }
+                //Log.e("Size 1: ", String.valueOf(surveys.size()));
+                //Log.e("Size 2: ", String.valueOf(snapshot.getChildrenCount()));
+                // Execute block if no data (no surveys). Turn off progress bar.
+                if (surveys.size() == snapshot.getChildrenCount())
+                    StudentHome.offProgressBar();
             }
             /*
             @Override
@@ -328,7 +342,7 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
 
     public static void sortingData(int sortoption) {
 
-        FirebaseSurveyDataRetrieval();
+        //FirebaseSurveyDataRetrieval();    // Was causing issues with sorting and duplicated data due to execution on view load.
 
         switch (sortoption) {
             case 1:
@@ -377,16 +391,70 @@ public class StudentHomeRecyclerViewAdapter extends RecyclerSwipeAdapter<Student
         StudentHome.notifyDataChanges();
     }
 
+    /*public static void SurveyArrayListUpdate() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (final DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    retrieveCounter++;
+                    boolean found = false;
+                    for (Survey survey : surveys) {
+                        if (survey.getSurveyUID() == postSnapshot.getValue(Survey.class).getSurveyUID()) {
+                            found = true;
+                        }
+                    }
+                    if (!found) { query = ref.child(postSnapshot.getValue(Survey.class).getSurveyUID()).child("student");
+                        //query.addValueEventListener(new ValueEventListener() {
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.e("DO I RUN 2", "YES 2");
+
+                                //get the involved survey for the following student
+                                for (final DataSnapshot postSnapshot2 : dataSnapshot.getChildren()) {
+                                    if (UID.equals(postSnapshot2.getValue(SurveyStudent.class).getSurveyStudentUID())) {
+
+                                        surveys.add(postSnapshot.getValue(Survey.class));
+
+                                        if (postSnapshot.getChildrenCount() >= retrieveCounter || postSnapshot.getChildrenCount() == 0) {
+                                            StudentHome.offProgressBar();
+                                            StudentHome.notifyDataChanges();
+                                        }
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e("The read failed: ", databaseError.getMessage());
+                            }
+                        });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                Log.e("The read failed: ", firebaseError.getMessage());
+            }
+        });
+    }*/
+
     public void checkSurveyStatus(final Context context, final String surveyUID) {
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        UID = user.getUid();
+        //final String UID = Login.loginUID;
 
         ref = FirebaseDatabase.getInstance().getReference().child("survey").child(surveyUID).child("student");
         query = ref;
-        query.addValueEventListener(new ValueEventListener() {
+        //query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (final DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("test 1", postSnapshot.getValue(SurveyStudent.class).getSurveyStudentName());
                     if (UID.equals(postSnapshot.getValue(SurveyStudent.class).getSurveyStudentUID())) {
+                        Log.e("test 2", postSnapshot.getValue(SurveyStudent.class).getSurveyStudentUID());
                         mSurveyStudent = postSnapshot.getValue(SurveyStudent.class);
                         if (!mSurveyStudent.isSurveyStudentStatus()) {
                             Intent intent = SurveyQuestionPagerActivity.newIntent(context, surveyUID);

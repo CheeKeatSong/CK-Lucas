@@ -124,7 +124,7 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
 
     public static void sortingData(int sortoption){
 
-        FirebaseStudentDataRetrieval();
+        //FirebaseStudentDataRetrieval();
 
         switch (sortoption) {
             case 1:
@@ -362,8 +362,11 @@ public class RecyclerStudentTabAdapter extends RecyclerSwipeAdapter<RecyclerStud
 
         RecyclerViewStudent.onProgressBar();
 
-        UID = Login.adminLoginUID;  // Get logged in admin's credential from Login class
-        adminEmail = Login.adminLoginEmail;
+        //FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        //UID = currentUser.getUid(); // Get logged in admin's user ID through checking current logged in user's ID. Doesn't work because other logins can take place through account creation.
+
+        UID = Login.loginUID;  // Get logged in admin's user ID from Login class
+        adminEmail = Login.loginEmail;
 
         //Log.d(TAG, "FIND ME: " + UID + " | " + adminEmail); // Troubleshooting
 

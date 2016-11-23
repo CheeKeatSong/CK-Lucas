@@ -141,7 +141,7 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
     public static void sortingData(int sortoption){
 
-        FirebaseLecturerDataRetrieval();
+        //FirebaseLecturerDataRetrieval();
 
         switch (sortoption) {
             case 1:
