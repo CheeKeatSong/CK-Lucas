@@ -36,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.point2points.kdusurveysystem.Fragment.LecturerFragmentPagerActivity;
+import com.point2points.kdusurveysystem.Login;
 import com.point2points.kdusurveysystem.RecyclerView.RecyclerViewLecturer;
 import com.point2points.kdusurveysystem.adapter.util.RecyclerLetterIcon;
 import com.point2points.kdusurveysystem.admin.AdminToolbarDrawer;
@@ -59,10 +60,11 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
     static DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
     static Query query;
 
-    String UID;
-
     //relogin after delete data
     Admin admin = new Admin();
+
+    String UID;
+    String adminEmail;
 
     private Activity mActivity;
 
@@ -387,8 +389,12 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
 
         RecyclerViewLecturer.onProgressBar();
 
-        FirebaseUser Adminuser = FirebaseAuth.getInstance().getCurrentUser();
-        UID = Adminuser.getUid();
+        //FirebaseUser Adminuser = FirebaseAuth.getInstance().getCurrentUser();
+        //UID = Adminuser.getUid(); // Get logged in admin's user ID through checking current logged in user's ID. Doesn't work because other logins can take place through account creation.
+
+        UID = Login.loginUID;  // Get logged in admin's user ID from Login class
+        adminEmail = Login.loginEmail;
+
         FirebaseAuth.getInstance().signOut();
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -398,10 +404,10 @@ public class RecyclerLecturerTabAdapter extends RecyclerSwipeAdapter<RecyclerLec
                         if (!task.isSuccessful()) {
                             // there was an error
                         } else {
+                            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
                             AuthCredential credential = EmailAuthProvider
                                     .getCredential(email, password);
-
-                            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                             currentUser.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
