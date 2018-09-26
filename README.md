@@ -10,22 +10,41 @@ This solution with gamification concept was developed to replace the old survey 
 
 #### Management (CRUD)
 
-* **Survey**. 
+* **Survey**
 
-* **User**. 
+* **User**
 
-* **Subject**. 
+* **Subject**
 
-* **School/Department**. 
+* **School/Department**
 
-* **Program**. 
+* **Program**
 
-#### In-app-store
-More points you accumulate, more coupons for you. The store allows you to exchange dining coupon with points to save even more.
+* **Coupon Store**
 
-### User 
+### User - Student
 
-* **In-app-currency**. For every new receipt scanned, you get points!
+* **Complete Survey**
+
+* **In-app-currency** 
+
+* **Coupon Store** Claim dining coupons with coins!
+
+### Users
+
+* **Coupon Store** Claim dining coupons with coins!
+
+#### Student
+
+* **In-app-currency**. Based on student's performace on completing the survey.
+
+* **Complete Survey** 
+
+ - Based on student's performace on completing the survey.
+
+#### Lecturer 
+
+* **In-app-currency**. Based on the student's survey feedback on a particular subject.
 
 ## User Interface
 
@@ -34,9 +53,13 @@ More points you accumulate, more coupons for you. The store allows you to exchan
 ## Tools & Library
 
 [Google Firebase Client Android - NoSQL database](https://firebase.google.com/docs/android/setup).
+
 [amulyakhare - Text Drawable](https://github.com/amulyakhare/TextDrawable).
+
 [daimajia - AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout).
+
 [mikepenz - MaterialDrawer](https://github.com/mikepenz/MaterialDrawer).
+
 [wasabeef - recyclerview-animators](https://github.com/wasabeef/recyclerview-animators).
 
 ## Contributors
