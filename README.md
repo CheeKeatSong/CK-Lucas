@@ -1,3 +1,9 @@
+<head>
+<style>
+img.inset {border-style: inset;}
+</style>
+</head>
+
 # KDU_UC-Survey-System
 
 This solution with gamification concept was developed to replace the old survey system on an external website in KDU University College. 
@@ -12,15 +18,15 @@ This solution with gamification concept was developed to replace the old survey 
 
 * **Survey**
 <div> 
-  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360" border="1px">
-  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360">
+  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360" class="inset">
+  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360" class="inset">
 </div>
 
 * **User**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360">
+<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360" class="inset">
 
 * **Subject**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-subject.png" width="202" height="360">
+<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-subject.png" width="202" height="360" class="inset">
 
 * **School/Department**
 <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-school.png" width="202" height="360">
@@ -42,8 +48,10 @@ This solution with gamification concept was developed to replace the old survey 
 * **In-app-currency**. Based on student's performace on completing the survey.
 
 * **Complete Survey** 
+<div> 
 <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-list.png" width="202" height="360">
 <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-question.png" width="202" height="360">
+</div>
 
 #### Lecturer 
 
