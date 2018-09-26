@@ -11,8 +11,10 @@ This solution with gamification concept was developed to replace the old survey 
 #### Management (CRUD)
 
 * **Survey**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360">
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360">
+<div> 
+  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360">
+  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360">
+</div>
 
 * **User**
 <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360">
