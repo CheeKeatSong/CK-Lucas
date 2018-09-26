@@ -1,56 +1,50 @@
-<head>
-<style>
-img.inset {border-style: inset;}
-</style>
-</head>
-
 # KDU_UC-Survey-System
 
 This solution with gamification concept was developed to replace the old survey system on an external website in KDU University College. 
 
 ## Features
 
-* **Authentication**. Login using firebase authentication
-
+* **Authentication**. Login using firebase authenticatio
 ### Admin
 
 #### Management (CRUD)
 
 * **Survey**
 <div> 
-  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360" class="inset">
-  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360" class="inset">
+  <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360"></kbd>
+   <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360" class="inset">
+  </kbd>
 </div>
 
 * **User**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360" class="inset">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360"></kbd>
 
 * **Subject**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-subject.png" width="202" height="360" class="inset">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-subject.png" width="202" height="360">/<kbd>
 
 * **School/Department**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-school.png" width="202" height="360">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-school.png" width="202" height="360"></kbd>
 
 * **Program**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-programme.png" width="202" height="360">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-programme.png" width="202" height="360"></kbd>
 
 * **Coupon Store**
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-store.png" width="202" height="360">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-store.png" width="202" height="360"></kbd>
 
 ### Users
 
 * **Coupon Store**. Claim dining coupons with coins!
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/user-store.png" width="202" height="360">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/user-store.png" width="202" height="360"></kbd>
 
 #### Student
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-hamburger.png" width="202" height="360">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-hamburger.png" width="202" height="360"></kbd>
 
 * **In-app-currency**. Based on student's performace on completing the survey.
 
 * **Complete Survey** 
 <div> 
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-list.png" width="202" height="360">
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-question.png" width="202" height="360">
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-list.png" width="202" height="360"></kbd>
+<kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-question.png" width="202" height="360"></kbd>
 </div>
 
 #### Lecturer 
