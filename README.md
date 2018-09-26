@@ -4,7 +4,7 @@ This solution with gamification concept was developed to replace the old survey 
 
 ## Features
 
-* **Authentication**. Login using firebase authenticatio
+* **Authentication**. Login using firebase authentication
 ### Admin
 
 #### Management (CRUD)
