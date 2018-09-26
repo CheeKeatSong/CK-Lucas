@@ -16,16 +16,12 @@ This solution with gamification concept was developed to replace the old survey 
   </kbd>
 </div>
 
-
 * **User**
-
 <kbd>
   <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360">
 </kbd>
 
-
 * **Subject**
-
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-subject.png" width="202" height="360"></kbd>
 
 * **School/Department**
