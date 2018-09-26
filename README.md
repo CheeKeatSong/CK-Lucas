@@ -12,7 +12,7 @@ This solution with gamification concept was developed to replace the old survey 
 
 * **Survey**
 <div> 
-  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360">
+  <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-survey-list.png" width="202" height="360" border="1px">
   <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-create-survey.png" width="202" height="360">
 </div>
 
