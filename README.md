@@ -31,7 +31,7 @@ This solution with gamification concept was developed to replace the old survey 
 
 ### Users
 
-* **Coupon Store** Claim dining coupons with coins!
+* **Coupon Store**. Claim dining coupons with coins!
 <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/user-store.png" width="202" height="360">
 
 #### Student
@@ -40,7 +40,7 @@ This solution with gamification concept was developed to replace the old survey 
 * **In-app-currency**. Based on student's performace on completing the survey.
 
 * **Complete Survey** 
-<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-store.png" width="202" height="360">
+<img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-list.png" width="202" height="360">
 <img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-survey-question.png" width="202" height="360">
 
 #### Lecturer 
