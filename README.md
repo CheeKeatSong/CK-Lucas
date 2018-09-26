@@ -42,15 +42,15 @@ This solution with gamification concept was developed to replace the old survey 
 
 ## Tools & Library
 
-[Google Firebase Client Android - NoSQL database](https://firebase.google.com/docs/android/setup).
+1. [Google Firebase Client Android - NoSQL database](https://firebase.google.com/docs/android/setup).
 
-[amulyakhare - Text Drawable](https://github.com/amulyakhare/TextDrawable).
+2. [amulyakhare - Text Drawable](https://github.com/amulyakhare/TextDrawable).
 
-[daimajia - AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout).
+3. [daimajia - AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout).
 
-[mikepenz - MaterialDrawer](https://github.com/mikepenz/MaterialDrawer).
+4. [mikepenz - MaterialDrawer](https://github.com/mikepenz/MaterialDrawer).
 
-[wasabeef - recyclerview-animators](https://github.com/wasabeef/recyclerview-animators).
+5. [wasabeef - recyclerview-animators](https://github.com/wasabeef/recyclerview-animators).
 
 ## Contributors
 
