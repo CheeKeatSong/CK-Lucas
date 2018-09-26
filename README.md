@@ -22,14 +22,6 @@ This solution with gamification concept was developed to replace the old survey 
 
 * **Coupon Store**
 
-### User - Student
-
-* **Complete Survey**
-
-* **In-app-currency** 
-
-* **Coupon Store** Claim dining coupons with coins!
-
 ### Users
 
 * **Coupon Store** Claim dining coupons with coins!
@@ -39,8 +31,6 @@ This solution with gamification concept was developed to replace the old survey 
 * **In-app-currency**. Based on student's performace on completing the survey.
 
 * **Complete Survey** 
-
- - Based on student's performace on completing the survey.
 
 #### Lecturer 
 
