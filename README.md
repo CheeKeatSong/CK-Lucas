@@ -17,26 +17,33 @@ This solution with gamification concept was developed to replace the old survey 
 </div>
 
 * **User**
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-lecture.png" width="202" height="360"></kbd>
 
 * **Subject**
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-subject.png" width="202" height="360">/<kbd>
 
 * **School/Department**
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-school.png" width="202" height="360"></kbd>
 
 * **Program**
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-programme.png" width="202" height="360"></kbd>
 
 * **Coupon Store**
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/admin-store.png" width="202" height="360"></kbd>
 
 ### Users
 
 * **Coupon Store**. Claim dining coupons with coins!
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/user-store.png" width="202" height="360"></kbd>
 
 #### Student
+
 <kbd><img src="https://github.com/CheeKeatSong/KDU-Survey-System/blob/master/screen/student-hamburger.png" width="202" height="360"></kbd>
 
 * **In-app-currency**. Based on student's performace on completing the survey.
